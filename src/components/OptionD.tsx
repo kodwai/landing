@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { allLogos } from "./CompanyLogos";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION D — "Forge"
@@ -265,15 +265,7 @@ export default function OptionD() {
             <div style={{ width: 24, height: 2, background: D.textMuted }} />
             <span style={{ fontFamily: D.fontMono, fontSize: 10, color: D.textMuted, letterSpacing: 3, textTransform: "uppercase" }}>Built for teams at</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "16px 40px" }}>
-            {allLogos.map(({ name, Component }) => (
-              <div key={name} style={{ opacity: 0.35, transition: "opacity 0.3s" }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = "0.75"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "0.35"; }}>
-                <Component color={D.textDim} />
-              </div>
-            ))}
-          </div>
+          <LogoStrip filter="brightness(0) invert(1)" opacity={0.25} hoverOpacity={0.6} height={20} gap={40} />
         </div>
       </section>
 

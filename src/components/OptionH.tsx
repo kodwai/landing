@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { allLogos } from "./CompanyLogos";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION H — "Midnight Garden"
@@ -297,15 +297,7 @@ export default function OptionH() {
             <Leaf size={10} color={H.textMuted} />
             <span style={{ fontFamily: H.fontMono, fontSize: 11, color: H.textMuted, letterSpacing: 1 }}>Trusted by teams at</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "16px 40px" }}>
-            {allLogos.map(({ name, Component }) => (
-              <div key={name} style={{ opacity: 0.3, transition: "opacity 0.4s" }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = "0.7"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "0.3"; }}>
-                <Component color="#3d5346" />
-              </div>
-            ))}
-          </div>
+          <LogoStrip filter="brightness(0) invert(1)" opacity={0.2} hoverOpacity={0.5} height={20} gap={40} />
         </div>
       </section>
 

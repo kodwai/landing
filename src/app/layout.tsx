@@ -13,6 +13,14 @@ export const metadata: Metadata = {
     "interview platform",
     "engineering hiring",
   ],
+  icons: {
+    icon: [
+      { url: "/icon", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-icon", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: "kodwai — Technical Interviews for the AI Era",
     description:

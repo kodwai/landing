@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION B — "Holographic Noir"
@@ -360,18 +361,7 @@ export default function OptionB() {
           fontFamily: B.fontMono, fontSize: 11, color: B.textMuted,
           letterSpacing: 3, textTransform: "uppercase", textAlign: "center", marginBottom: 28,
         }}>Built for teams hiring at</p>
-        <div style={{
-          display: "flex", justifyContent: "center", alignItems: "center",
-          flexWrap: "wrap", gap: "24px 48px",
-        }}>
-          {companies.map(name => (
-            <div key={name} style={{ opacity: 0.5, transition: "opacity 0.3s" }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "0.5"; }}>
-              <CompanyLogo name={name} />
-            </div>
-          ))}
-        </div>
+        <LogoStrip filter="brightness(0) invert(1)" opacity={0.3} hoverOpacity={0.6} height={20} gap={44} />
       </section>
 
       {/* ═══ HERO IMAGE SHOWCASE ═══ */}

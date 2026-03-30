@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { allLogos } from "./CompanyLogos";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION G — "Swiss Poster"
@@ -262,11 +262,7 @@ export default function OptionG() {
           <div style={{ fontFamily: G.fontMono, fontSize: 10, color: G.muted, letterSpacing: 4, textTransform: "uppercase", marginBottom: 24 }}>
             BUILT FOR TEAMS AT
           </div>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "16px 44px" }}>
-            {allLogos.map(({ name, Component }) => (
-              <Component key={name} color="#999" />
-            ))}
-          </div>
+          <LogoStrip filter="brightness(0)" opacity={0.3} hoverOpacity={0.6} height={20} gap={44} />
         </div>
       </section>
 

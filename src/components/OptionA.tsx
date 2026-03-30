@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import LogoStrip from "./LogoStrip";
 
 /* ─────────────────────── TERMINAL TYPING ANIMATION ─────────────────────── */
 
@@ -206,7 +207,7 @@ export default function OptionA() {
       {/* TRUSTED BY */}
       <section style={{ borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)", background: "var(--bg-secondary)", textAlign: "center", padding: "16px 0" }}>
         <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-muted)", letterSpacing: 2, textTransform: "uppercase", marginBottom: 4, paddingTop: 12 }}>Built for teams hiring at</p>
-        <CompanyMarquee />
+        <LogoStrip filter="brightness(0) invert(1)" opacity={0.3} hoverOpacity={0.6} height={18} gap={40} />
       </section>
 
       {/* PROBLEM */}

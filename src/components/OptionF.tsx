@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { allLogos } from "./CompanyLogos";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION F — "Neon Arcade"
@@ -373,15 +373,7 @@ export default function OptionF() {
             <div style={{ width: 24, height: 2, background: F.muted }} />
             <span style={{ fontFamily: F.fontPixel, fontSize: 7, color: F.muted, letterSpacing: 3 }}>BUILT FOR TEAMS AT</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "16px 40px" }}>
-            {allLogos.map(({ name, Component }) => (
-              <div key={name} style={{ opacity: 0.3, transition: "opacity 0.3s" }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = "0.7"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "0.3"; }}>
-                <Component color={F.muted} />
-              </div>
-            ))}
-          </div>
+          <LogoStrip filter="brightness(0) invert(1)" opacity={0.2} hoverOpacity={0.5} height={20} gap={40} />
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { allLogos } from "./CompanyLogos";
+import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
    OPTION C — "Celestial"
@@ -259,15 +259,7 @@ export default function OptionC() {
         <p style={{ fontFamily: C.fontMono, fontSize: 10, color: C.textMuted, letterSpacing: 3, textTransform: "uppercase", textAlign: "center", marginBottom: 24 }}>
           Built for teams hiring at
         </p>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: "20px 44px" }}>
-          {allLogos.map(({ name, Component }) => (
-            <div key={name} style={{ opacity: 0.4, transition: "opacity 0.3s", display: "flex", alignItems: "center", gap: 8 }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = "0.8"; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = "0.4"; }}>
-              <Component color={C.textDim} />
-            </div>
-          ))}
-        </div>
+        <LogoStrip filter="brightness(0) invert(1)" opacity={0.3} hoverOpacity={0.6} height={20} gap={44} />
       </section>
 
       {/* ═══ PROBLEM — with crystal accent ═══ */}
