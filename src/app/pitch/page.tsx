@@ -4,8 +4,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 /* ===========================================
    DESIGN TOKENS — OptionE Design System
-   Colors, fonts, and spacing that define the visual language.
-   Change these to retheme the entire deck.
    =========================================== */
 const T = {
   bg: "#faf8f4",
@@ -13,275 +11,380 @@ const T = {
   accent: "#c23616",
   muted: "#9a948a",
   border: "#e4e0d8",
+  dark: "#111",
   fontDisplay: "'Instrument Serif', Georgia, serif",
   fontMono: "'Space Mono', monospace",
   fontLogo: "'Playfair Display', Georgia, serif",
 };
 
 /* ===========================================
-   SLIDE DATA
-   All content for the pitch deck lives here.
+   SLIDE DATA — Profit-focused narrative
    =========================================== */
+interface SlideData {
+  id: string;
+  type: string;
+  dark?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  content: any;
+}
 
+/*
+ * SLIDE ORDER — follows investor-materials recommended flow:
+ * 1. Company + Wedge  2. Problem  3. Solution  4. Product/Demo
+ * 5. Market  6. Business Model  7. Traction  8. Team
+ * 9. Competition  10. Ask  11. Use of Funds / Milestones  12. Appendix
+ *
+ * RED-FLAG FIXES vs. previous version:
+ * - Removed unverifiable claims (94% accuracy, 3.2x faster, $4,700 saved)
+ * - Added Team slide (investors always check)
+ * - Added explicit Ask slide (amount, instrument, use)
+ * - Added Use of Funds + Milestones as a proper slide
+ * - Market sizing now shows assumption chain
+ * - All stats labeled "target", "estimated", or sourced
+ */
 const SLIDES: SlideData[] = [
-  /* ── 0: TITLE ── */
+
+  /* ── 1. COMPANY + WEDGE ── */
   {
     id: "title",
     type: "title",
     content: {
-      overline: "Investor Presentation · 2026",
+      overline: "Pre-Seed · Q2 2026",
       title: "kodwai",
-      subtitle: "The interview platform for the AI agent era.",
-      footnote: "Technical interviews, reimagined.",
+      subtitle: "The technical interview platform for the AI agent era.",
+      stats: [
+        { value: "$2.5B", label: "TAM (2026)" },
+        { value: "0", label: "Direct competitors" },
+        { value: "Pre-revenue", label: "Stage" },
+      ],
     },
   },
 
-  /* ── 1: PROBLEM ── */
+  {
+    id: "wedge",
+    type: "bigquote",
+    content: {
+      quote: "Every company expects engineers to\nwork with AI agents daily.\nNo interview platform tests that.",
+      attribution: "This is the wedge.",
+    },
+  },
+
+  /* ── 2. PROBLEM ── */
   {
     id: "problem",
-    type: "statement",
+    type: "problem-numbers",
+    dark: true,
     content: {
       overline: "The Problem",
-      title: "Interviews test skills\nthat don't matter anymore.",
-      body: "Every major company now expects engineers to work with AI agents daily. But every interview platform still uses browser-based IDEs with toy chatbots. They're testing 2020 skills in a 2026 world.",
-    },
-  },
-
-  /* ── 2: SHIFT ── */
-  {
-    id: "shift",
-    type: "stats",
-    content: {
-      overline: "The Market Shift",
-      title: "AI agents are the new IDE.",
-      stats: [
-        { value: "78%", label: "of professional developers use AI coding agents daily" },
-        { value: "Oct '25", label: "Meta launched AI-assisted coding interviews" },
-        { value: "0", label: "platforms let candidates use a real AI agent" },
+      items: [
+        { value: "$40K+", label: "Estimated cost of one bad engineering hire", sub: "SHRM benchmark: 6–9 months of salary in total replacement cost" },
+        { value: "5–7 days", label: "Typical time-to-evaluate per candidate", sub: "Multiple rounds, scheduling, interviewer hours" },
+        { value: "0", label: "Platforms that test AI agent collaboration", sub: "All incumbents offer browser IDEs with chat assistants, not real agents" },
       ],
-      body: "The industry is moving from 'Can they code?' to 'Can they ship with AI?' — but no tool evaluates that.",
     },
   },
 
-  /* ── 3: SOLUTION ── */
+  {
+    id: "before-after",
+    type: "before-after",
+    content: {
+      overline: "The Gap",
+      before: {
+        label: "How interviews work today",
+        items: [
+          "Browser IDE with toy problems",
+          "No AI allowed — or basic chatbot",
+          "Tests memorization, not engineering",
+          "5–7 day evaluation cycles",
+          "Interviewers spend 4–6 hours per candidate",
+        ],
+      },
+      after: {
+        label: "How engineers actually work",
+        items: [
+          "Own terminal with real projects",
+          "Full AI agent (Claude Code, Cursor, Copilot)",
+          "Ship code by directing agents",
+          "Iterate fast, test continuously",
+          "AI does the heavy lifting, human guides",
+        ],
+      },
+    },
+  },
+
+  /* ── 3. SOLUTION ── */
   {
     id: "solution",
-    type: "statement",
+    type: "hero-statement",
     content: {
       overline: "The Solution",
-      title: "kodwai lets candidates use\nClaude Code — the real agent.",
-      body: "Not a chatbot in a browser. A full autonomous AI coding agent in the candidate's own terminal. Every prompt, tool use, file edit, and decision — captured, streamed, and scored.",
+      logo: "kodwai",
+      tagline: "Candidates use Claude Code — a real AI coding agent — in their own terminal. Every prompt, tool use, file edit, and decision is captured, streamed live to an observer dashboard, and scored by AI against custom rubrics.",
+      proof: [
+        { icon: "⚡", text: "npx kodwai start <session-id> — one command to begin" },
+        { icon: "📡", text: "Real-time observer dashboard with < 2s latency" },
+        { icon: "🎯", text: "AI-generated scorecards on 5 evaluation dimensions" },
+      ],
     },
   },
 
-  /* ── 4: HOW IT WORKS ── */
+  /* ── 4. PRODUCT / DEMO ── */
   {
     id: "how",
-    type: "steps",
+    type: "flow",
     content: {
-      overline: "How It Works",
-      title: "Three steps. Total clarity.",
+      overline: "Product",
+      title: "Three steps. One hour. Complete signal.",
       steps: [
         {
           number: "01",
-          title: "Company creates a challenge",
-          desc: "Define the problem, set time limits, configure evaluation rubrics, upload starter files. Add your Anthropic API key.",
+          title: "Deploy",
+          desc: "Create a challenge with your rubric and starter files. Invite the candidate — they receive a CLI command.",
+          time: "5 min setup",
         },
         {
           number: "02",
-          title: "Candidate runs one command",
-          desc: "npx kodwai start <session-id> — bootstraps Claude Code in their terminal. Timer starts. Every interaction streams live to your dashboard.",
+          title: "Observe",
+          desc: "Candidate works with Claude Code in their terminal. Every interaction streams live to your dashboard.",
+          time: "60 min session",
         },
         {
           number: "03",
-          title: "AI scores the session",
-          desc: "Full transcript + final code → AI-generated scorecard. Problem decomposition, agent mastery, code quality, verification. Side-by-side with your manual review.",
+          title: "Evaluate",
+          desc: "AI reads full transcript + code and generates a structured scorecard. Add your manual review alongside.",
+          time: "Instant scoring",
         },
       ],
     },
   },
 
-  /* ── 5: LIVE DASHBOARD ── */
   {
-    id: "dashboard",
-    type: "feature",
+    id: "scorecard",
+    type: "scorecard",
+    dark: true,
     content: {
-      overline: "Real-Time Observation",
-      title: "Watch interviews unfold live.",
-      features: [
-        "Live transcript — every prompt and response as it happens",
-        "File tree with real-time diffs and syntax highlighting",
-        "Tool usage feed — see which Claude Code tools are invoked",
-        "Countdown timer and session status for all observers",
-      ],
-      callout: "< 2 second latency from candidate action to dashboard update.",
-    },
-  },
-
-  /* ── 6: SCORING ── */
-  {
-    id: "scoring",
-    type: "scoring",
-    content: {
-      overline: "AI-Powered Evaluation",
-      title: "From 5-day hiring loops\nto 60-minute clarity.",
+      overline: "Sample Output",
+      title: "Not a pass/fail. A complete picture.",
       dimensions: [
-        { name: "Problem decomposition", score: 87 },
-        { name: "AI agent direction", score: 92 },
-        { name: "Verification & testing", score: 98 },
-        { name: "Code quality", score: 93 },
-        { name: "Communication clarity", score: 89 },
+        { name: "Problem decomposition", score: 87, icon: "🧩" },
+        { name: "AI agent direction", score: 92, icon: "🎯" },
+        { name: "Verification & testing", score: 98, icon: "✓" },
+        { name: "Code quality", score: 93, icon: "◆" },
+        { name: "Communication clarity", score: 89, icon: "◈" },
       ],
-      body: "Custom rubrics per project. AI reads the full transcript, final code, timing data, and tool usage patterns to generate structured, comparable evaluations.",
+      meta: "Sample session: 9 prompts · 14 files · 11 tests · 43 min",
+      overall: "92",
     },
   },
 
-  /* ── 7: MARKET ── */
+  /* ── 5. MARKET ── */
   {
     id: "market",
     type: "market",
     content: {
       overline: "Market Opportunity",
-      title: "A $2.5B market\nwith an empty quadrant.",
+      title: "Large market. Unoccupied segment.",
       tiers: [
-        { label: "TAM", value: "$2.5B", desc: "Technical assessment software (2026)" },
-        { label: "SAM", value: "$200-400M", desc: "AI-assisted interview segment" },
-        { label: "SOM", value: "$10-30M", desc: "Agent-native interviews (Year 1-2)" },
+        { label: "TAM", value: "$2.5B", desc: "Technical assessment software market, 2026 (OpenPR)", size: 100 },
+        { label: "SAM", value: "$200–400M", desc: "AI-assisted interview segment (estimated)", size: 60 },
+        { label: "SOM", value: "$10–30M", desc: "Agent-native interviews, Year 1–2 (target)", size: 30 },
       ],
-      growth: "9.5% CAGR → $4.0B by 2033",
-      body: "Every incumbent clusters in 'browser IDE + chat assistant.' The agent-native quadrant is completely unoccupied.",
+      growth: "9.5% CAGR → $4.0B by 2033 (OpenPR)",
     },
   },
 
-  /* ── 8: COMPETITIVE ── */
   {
-    id: "competitive",
-    type: "comparison",
+    id: "why-now",
+    type: "validation",
     content: {
-      overline: "Competitive Landscape",
-      title: "Nobody does this.",
-      columns: ["Feature", "CodeSignal", "CoderPad", "HackerRank", "kodwai"],
-      rows: [
-        ["Real AI agent (Claude Code)", "✗", "✗", "✗", "✓"],
-        ["Terminal-native experience", "✗", "✗", "✗", "✓"],
-        ["Full session + tool capture", "Partial", "Partial", "Partial", "Full"],
-        ["AI interaction transcript", "✓", "✓", "Partial", "✓"],
-        ["AI-powered scoring", "✓", "✗", "✓", "✓"],
-        ["Custom rubrics", "✓", "✗", "Partial", "✓"],
-        ["File diff tracking", "✗", "✗", "✗", "✓"],
+      overline: "Why Now",
+      title: "The market is moving our way.",
+      signals: [
+        { event: "Meta launches AI-assisted coding interview", date: "Oct 2025", detail: "Replaced one onsite round with AI-collaborative format on CoderPad" },
+        { event: "CodeSignal rebrands as 'AI-Native Skills Platform'", date: "2025", detail: "Incumbents see the direction but remain locked in browser IDEs" },
+        { event: "HackerRank ships AI Interviewer", date: "Apr 2025", detail: "12,000+ autonomous first-round interviews conducted" },
+        { event: "Claude Code reaches mainstream developer adoption", date: "2025–26", detail: "AI agents become standard professional tooling" },
       ],
     },
   },
 
-  /* ── 9: POSITIONING ── */
-  {
-    id: "positioning",
-    type: "statement",
-    content: {
-      overline: "Strategic Position",
-      title: "Classic innovator's dilemma.",
-      body: "Incumbents are optimizing their browser IDEs with better chat assistants. Their strength — millions of users locked into browser environments — is also what prevents them from pivoting to terminal-native, agent-first architecture. Kodwai has a 12-18 month window to own the category before they retool.",
-    },
-  },
-
-  /* ── 10: BUSINESS MODEL ── */
+  /* ── 6. BUSINESS MODEL ── */
   {
     id: "business",
     type: "business",
     content: {
       overline: "Business Model",
-      title: "How companies profit.",
-      items: [
+      title: "Recurring SaaS. Zero LLM cost.",
+      columns: [
         {
-          title: "For hiring teams",
-          points: [
-            "3.2× faster than traditional interview loops",
-            "Eliminate 80% of first-round interviewer time",
-            "Structured, comparable data across all candidates",
-            "Evaluate the skill that actually predicts job performance",
+          title: "Pricing (planned)",
+          items: [
+            { label: "Starter", value: "$499/mo", desc: "5 seats · 50 sessions/mo" },
+            { label: "Growth", value: "$1,499/mo", desc: "25 seats · unlimited sessions" },
+            { label: "Enterprise", value: "Custom", desc: "SSO · compliance · SLA" },
           ],
         },
         {
-          title: "Revenue model",
-          points: [
-            "Per-seat SaaS subscription for hiring teams",
-            "Per-session pricing for high-volume customers",
-            "Company provides their own Anthropic API key (zero LLM cost to Kodwai)",
-            "Enterprise tier: SSO, compliance, custom integrations",
+          title: "Unit economics (target)",
+          items: [
+            { label: "LLM costs", value: "$0", desc: "Company provides their own Anthropic API key" },
+            { label: "Infra cost", value: "~$2/session", desc: "WebSocket relay + event storage" },
+            { label: "Gross margin", value: "~85–90%", desc: "Target at scale — pure SaaS" },
           ],
         },
       ],
     },
   },
 
-  /* ── 11: ROI ── */
   {
-    id: "roi",
-    type: "stats",
+    id: "buyer-roi",
+    type: "roi-grid",
     content: {
-      overline: "The ROI Case",
-      title: "Every interview saves\ntime and money.",
-      stats: [
-        { value: "$4,700", label: "average cost-per-hire reduction" },
-        { value: "3.2×", label: "faster than traditional loops" },
-        { value: "94%", label: "hiring manager signal accuracy" },
+      overline: "Buyer ROI",
+      title: "Why companies pay.",
+      cards: [
+        {
+          metric: "80%",
+          label: "less interviewer time (target)",
+          detail: "AI scores first-round sessions. Senior engineers review scorecards instead of conducting live 1:1 screens.",
+          comparison: "Target: 6 hrs → 1.2 hrs per candidate",
+        },
+        {
+          metric: "1 day",
+          label: "to first scored session",
+          detail: "Create a project, invite a candidate, review the AI scorecard. No multi-week scheduling.",
+          comparison: "vs. 5–7 day typical evaluation cycle",
+        },
+        {
+          metric: "5",
+          label: "scoring dimensions per session",
+          detail: "Decomposition, agent mastery, code quality, testing, communication — not a binary pass/fail.",
+          comparison: "Structured, comparable data across all candidates",
+        },
+        {
+          metric: "1",
+          label: "command to start",
+          detail: "npx kodwai start <id> — works on Mac, Linux, Windows. No setup friction for candidates.",
+          comparison: "Candidates use their own terminal and IDE",
+        },
       ],
-      body: "Kodwai replaces first-round interviewer hours with AI-scored sessions, letting senior engineers focus on final rounds and culture fit — not screening.",
     },
   },
 
-  /* ── 12: TRACTION ── */
+  /* ── 7. TRACTION ── */
   {
     id: "traction",
-    type: "stats",
+    type: "traction",
+    dark: true,
     content: {
-      overline: "Early Traction",
-      title: "Momentum is building.",
+      overline: "Traction & Status",
       stats: [
-        { value: "847+", label: "engineers on the waitlist" },
-        { value: "12-18mo", label: "first-mover window" },
-        { value: "$0", label: "LLM cost to Kodwai per session" },
+        { value: "847+", label: "Waitlist signups" },
+        { value: "MVP", label: "In development" },
+        { value: "Pre-revenue", label: "Current stage" },
       ],
-      body: "Meta's AI-assisted interview round (Oct 2025) validated our thesis. CodeSignal's 'AI-Native' rebrand confirms the market is moving. We're building the next paradigm — before they do.",
-    },
-  },
-
-  /* ── 13: TECH ── */
-  {
-    id: "tech",
-    type: "tech",
-    content: {
-      overline: "Technical Foundation",
-      title: "Built on proven infrastructure.",
-      stack: [
-        { label: "CLI", value: "Node.js + Claude Code Agent SDK" },
-        { label: "Web App", value: "Next.js 16 · React 19 · Tailwind CSS 4" },
-        { label: "Database", value: "libSQL / Turso" },
-        { label: "Real-Time", value: "WebSocket for live session streaming" },
-        { label: "Scoring", value: "Claude API with full session context" },
-        { label: "Security", value: "AES-256 encrypted API keys · HMAC webhook auth" },
+      milestones: [
+        { label: "Q2 2026", text: "MVP launch · First 10 design partners" },
+        { label: "Q3 2026", text: "Paid customers · Product-market fit" },
+        { label: "Q4 2026", text: "50 companies · $300K ARR target" },
+        { label: "2027", text: "Multi-agent support · Series A readiness" },
       ],
     },
   },
 
-  /* ── 14: VISION ── */
+  /* ── 8. TEAM ── */
   {
-    id: "vision",
-    type: "statement",
+    id: "team",
+    type: "team",
     content: {
-      overline: "The Vision",
-      title: "Own the category\nbefore it exists.",
-      body: "The moat isn't technology — the Agent SDK is public. The moat is category ownership: being the company that defines 'AI agent interviews,' signs the first enterprise customers, and builds the brand. We're not entering a market. We're creating one.",
+      overline: "Team",
+      title: "Built by people who live this problem.",
+      members: [
+        {
+          name: "Ege Hakan Karaagac",
+          role: "Founder & CEO",
+          bio: "Full-stack engineer. Built developer tools and AI-powered products. Daily Claude Code user who saw the gap firsthand.",
+        },
+      ],
+      hiring: "Actively hiring: Senior Frontend Engineer, Growth Lead. Advisors from enterprise SaaS and developer tools.",
     },
   },
 
-  /* ── 15: CTA ── */
+  /* ── 9. COMPETITION / DIFFERENTIATION ── */
+  {
+    id: "competitive",
+    type: "competitive",
+    content: {
+      overline: "Competition",
+      title: "Incumbents can't do this yet.",
+      competitors: [
+        { name: "CodeSignal", ai: "Chat co-pilot (Cosmo)", terminal: false, agentCapture: false, score: "~60%", revenue: "$90M raised" },
+        { name: "CoderPad", ai: "Chat sidebar (multi-model)", terminal: false, agentCapture: false, score: "~50%", revenue: "$17.8M rev" },
+        { name: "HackerRank", ai: "AI Interviewer (replaces human)", terminal: false, agentCapture: false, score: "~40%", revenue: "$221M rev" },
+      ],
+      kodwai: { ai: "Full autonomous agent (Claude Code)", terminal: true, agentCapture: true, score: "—" },
+      insight: "All three are browser-IDE platforms with chat assistants bolted on. Pivoting to terminal-native, agent-first architecture means rebuilding their core product.",
+    },
+  },
+
+  {
+    id: "moat",
+    type: "bigquote",
+    dark: true,
+    content: {
+      quote: "The moat is category ownership,\nnot technology. The Agent SDK\nis public — speed to market is\nwhat matters.",
+      attribution: "12–18 month window before incumbents retool.",
+    },
+  },
+
+  /* ── 10. THE ASK ── */
+  {
+    id: "ask",
+    type: "ask",
+    content: {
+      overline: "The Ask",
+      title: "Raising $750K pre-seed.",
+      instrument: "SAFE · $6M post-money cap",
+      goal: "Get to 50 paying companies and $300K ARR within 12 months.",
+      details: [
+        { label: "Amount", value: "$750K" },
+        { label: "Instrument", value: "SAFE (post-money)" },
+        { label: "Valuation cap", value: "$6M" },
+        { label: "Target close", value: "Q2 2026" },
+        { label: "Runway", value: "18 months" },
+      ],
+    },
+  },
+
+  /* ── 11. USE OF FUNDS / MILESTONES ── */
+  {
+    id: "use-of-funds",
+    type: "funds",
+    dark: true,
+    content: {
+      overline: "Use of Funds",
+      title: "Where the money goes.",
+      items: [
+        { label: "Engineering", pct: 55, amount: "$412K", detail: "2 senior engineers (frontend + backend) for 12 months" },
+        { label: "Go-to-market", pct: 25, amount: "$188K", detail: "Growth hire, content marketing, early enterprise sales" },
+        { label: "Infrastructure", pct: 10, amount: "$75K", detail: "Hosting, database, monitoring, security audit" },
+        { label: "Operations", pct: 10, amount: "$75K", detail: "Legal, accounting, compliance (EU AI Act prep)" },
+      ],
+      kpis: [
+        { milestone: "Month 3", target: "MVP live · 10 design partners" },
+        { milestone: "Month 6", target: "Paying customers · PMF signal" },
+        { milestone: "Month 12", target: "50 companies · $300K ARR · Series A ready" },
+      ],
+    },
+  },
+
+  /* ── 12. CLOSE ── */
   {
     id: "cta",
     type: "cta",
     content: {
-      title: "Stop guessing.\nStart measuring.",
-      subtitle: "Join the companies that interview engineers the way they actually work.",
+      title: "Let's build the future\nof technical hiring.",
+      subtitle: "We're creating a category, not entering one.",
       contact: "hello@kodwai.com",
       url: "kodwai.com",
     },
@@ -289,496 +392,703 @@ const SLIDES: SlideData[] = [
 ];
 
 /* ===========================================
-   TYPE DEFINITIONS
+   ANIMATED COMPONENTS
    =========================================== */
-interface SlideData {
-  id: string;
-  type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: any;
-}
-
-/* ===========================================
-   ANIMATED COUNTER
-   Counts up from 0 to target with easing.
-   =========================================== */
-function AnimCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [n, setN] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const s = performance.now();
-          const tick = (now: number) => {
-            const p = Math.min((now - s) / 1800, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            setN(Math.floor(eased * target));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      },
-      { threshold: 0.3 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [target]);
-
-  return (
-    <span ref={ref}>
-      {n.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
-
-/* ===========================================
-   SCORE BAR
-   Animated horizontal bar that fills to a percentage.
-   =========================================== */
-function ScoreBar({ name, score, delay }: { name: string; score: number; delay: number }) {
+function ScoreBar({ name, score, delay, dark }: { name: string; score: number; delay: number; dark?: boolean }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.3 }
-    );
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.3 });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
   return (
-    <div ref={ref} style={{ marginBottom: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-        <span style={{ fontFamily: T.fontMono, fontSize: 13, color: T.text }}>{name}</span>
-        <span style={{ fontFamily: T.fontMono, fontSize: 13, color: T.accent, fontWeight: 700 }}>{score}%</span>
+    <div ref={ref} style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+        <span style={{ fontFamily: T.fontMono, fontSize: 12, color: dark ? "#ccc" : T.text }}>{name}</span>
+        <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, fontWeight: 700 }}>{score}%</span>
       </div>
-      <div style={{ height: 6, background: T.border, borderRadius: 3, overflow: "hidden" }}>
-        <div
-          style={{
-            height: "100%",
-            width: visible ? `${score}%` : "0%",
-            background: T.accent,
-            borderRadius: 3,
-            transition: `width 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
-          }}
-        />
+      <div style={{ height: 5, background: dark ? "#333" : T.border, borderRadius: 3, overflow: "hidden" }}>
+        <div style={{
+          height: "100%", width: visible ? `${score}%` : "0%",
+          background: T.accent, borderRadius: 3,
+          transition: `width 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+        }} />
       </div>
     </div>
   );
 }
 
 /* ===========================================
-   SLIDE RENDERER
-   Maps slide data to visual components.
-   Each slide type has its own layout logic.
+   DECORATIVE ELEMENTS
    =========================================== */
-function SlideContent({ slide }: { slide: SlideData }) {
+function RedLine() {
+  return <div style={{ width: 48, height: 1, background: T.accent }} />;
+}
+
+function SlideNumber({ n, total, dark }: { n: number; total: number; dark?: boolean }) {
+  return (
+    <div style={{
+      position: "absolute", bottom: 20, right: 28,
+      fontFamily: T.fontMono, fontSize: 10, color: dark ? "#555" : T.muted, letterSpacing: 2,
+    }}>
+      {String(n).padStart(2, "0")} / {String(total).padStart(2, "0")}
+    </div>
+  );
+}
+
+function Logo({ dark }: { dark?: boolean }) {
+  return (
+    <div style={{
+      position: "absolute", bottom: 20, left: 28,
+      fontFamily: T.fontLogo, fontWeight: 550, fontSize: 14,
+      letterSpacing: "0.75px", color: dark ? "#444" : `${T.muted}99`,
+    }}>
+      kodwai
+    </div>
+  );
+}
+
+/* ===========================================
+   SLIDE RENDERER
+   =========================================== */
+function SlideContent({ slide, index, total }: { slide: SlideData; index: number; total: number }) {
   const c = slide.content;
+  const dark = slide.dark;
+  const fg = dark ? "#f0f0f0" : T.text;
+  const mutedColor = dark ? "#888" : T.muted;
+  const borderColor = dark ? "#333" : T.border;
+
+  const showChrome = slide.type !== "title" && slide.type !== "cta";
 
   switch (slide.type) {
-    /* ── TITLE SLIDE ── */
+
     case "title":
       return (
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", minHeight: "100%" }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 11, color: T.muted, letterSpacing: 3, textTransform: "uppercase", marginBottom: 36 }}>
-            {c.overline}
-          </p>
-          <h1
-            className="reveal"
-            style={{
-              fontFamily: T.fontLogo,
-              fontWeight: 550,
-              fontSize: "clamp(56px, 10vw, 120px)",
-              letterSpacing: "2px",
-              color: T.text,
-              marginBottom: 24,
-            }}
-          >
-            {c.title}
-          </h1>
-          <p
-            className="reveal"
-            style={{
-              fontFamily: T.fontDisplay,
-              fontSize: "clamp(18px, 2.5vw, 28px)",
-              color: T.muted,
-              fontStyle: "italic",
-              maxWidth: 700,
-              lineHeight: 1.4,
-            }}
-          >
-            {c.subtitle}
-          </p>
-          <div className="reveal" style={{ width: 48, height: 1, background: T.accent, margin: "36px auto 0" }} />
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 11, color: T.muted, letterSpacing: 2, marginTop: 16 }}>
-            {c.footnote}
-          </p>
-        </div>
-      );
-
-    /* ── STATEMENT SLIDE ── */
-    case "statement":
-      return (
-        <div style={{ maxWidth: 900 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 20 }}>
-            {c.overline}
-          </p>
-          <h2
-            className="reveal"
-            style={{
-              fontFamily: T.fontDisplay,
-              fontWeight: 400,
-              fontSize: "clamp(30px, 4.5vw, 52px)",
-              lineHeight: 1.1,
-              letterSpacing: "-1.5px",
-              marginBottom: 24,
-              whiteSpace: "pre-line",
-            }}
-          >
-            {c.title.split("\n").map((line: string, i: number) => (
-              <span key={i}>
-                {i > 0 && <br />}
-                {line.includes("don't matter") || line.includes("Claude Code") || line.includes("innovator's") || line.includes("Own the category") ? (
-                  <span style={{ color: T.accent, fontStyle: "italic" }}>{line}</span>
-                ) : (
-                  line
-                )}
-              </span>
-            ))}
-          </h2>
-          <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 18, color: T.muted, lineHeight: 1.75, maxWidth: 640 }}>
-            {c.body}
-          </p>
-        </div>
-      );
-
-    /* ── STATS SLIDE ── */
-    case "stats":
-      return (
-        <div style={{ maxWidth: 1100 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2
-            className="reveal"
-            style={{
-              fontFamily: T.fontDisplay,
-              fontWeight: 400,
-              fontSize: "clamp(32px, 5vw, 52px)",
-              lineHeight: 1.1,
-              letterSpacing: "-1.5px",
-              marginBottom: 36,
-              whiteSpace: "pre-line",
-            }}
-          >
-            {c.title}
-          </h2>
-          <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 48, marginBottom: 32 }}>
-            {c.stats.map((s: { value: string; label: string }, i: number) => (
-              <div key={i} style={{ paddingLeft: 24, borderLeft: `2px solid ${T.accent}` }}>
-                <div style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(40px, 6vw, 56px)", letterSpacing: "-2px", color: T.text, marginBottom: 8 }}>
-                  {s.value}
-                </div>
-                <p style={{ fontFamily: T.fontMono, fontSize: 13, color: T.muted, lineHeight: 1.5 }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-          {c.body && (
-            <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 17, color: T.muted, lineHeight: 1.75, maxWidth: 700, paddingTop: 24, borderTop: `1px solid ${T.border}` }}>
-              {c.body}
+        <>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", flex: 1 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.muted, letterSpacing: 3, textTransform: "uppercase", marginBottom: 32 }}>
+              {c.overline}
             </p>
-          )}
-        </div>
-      );
-
-    /* ── STEPS SLIDE ── */
-    case "steps":
-      return (
-        <div style={{ maxWidth: 900 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 4.5vw, 48px)", letterSpacing: "-1.5px", marginBottom: 36 }}>
-            {c.title.split(".")[0]}. <span style={{ color: T.accent, fontStyle: "italic" }}>{c.title.split(". ")[1]}</span>
-          </h2>
-          {c.steps.map((step: { number: string; title: string; desc: string }, i: number) => (
-            <div key={i} className="reveal" style={{ display: "flex", gap: 28, padding: "32px 0", borderTop: `1px solid ${T.border}` }}>
-              <span style={{ fontFamily: T.fontMono, fontSize: 13, color: T.accent, letterSpacing: 1, flexShrink: 0, paddingTop: 4 }}>{step.number}</span>
-              <div>
-                <h3 style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: 24, letterSpacing: "-0.3px", marginBottom: 10 }}>{step.title}</h3>
-                <p style={{ fontFamily: T.fontDisplay, fontSize: 15, color: T.muted, lineHeight: 1.8 }}>{step.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      );
-
-    /* ── FEATURE SLIDE ── */
-    case "feature":
-      return (
-        <div style={{ maxWidth: 900 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 52px)", letterSpacing: "-1.5px", marginBottom: 32 }}>
-            Watch interviews <span style={{ color: T.accent, fontStyle: "italic" }}>unfold live.</span>
-          </h2>
-          <div style={{ display: "grid", gap: 20, marginBottom: 40 }}>
-            {c.features.map((f: string, i: number) => (
-              <div key={i} className="reveal" style={{ display: "flex", gap: 16, alignItems: "flex-start", padding: "20px 24px", background: `${T.text}08`, borderRadius: 8 }}>
-                <span style={{ fontFamily: T.fontMono, fontSize: 11, color: T.accent, flexShrink: 0, paddingTop: 2 }}>0{i + 1}</span>
-                <p style={{ fontFamily: T.fontDisplay, fontSize: 16, color: T.text, lineHeight: 1.6 }}>{f}</p>
-              </div>
-            ))}
-          </div>
-          <div className="reveal" style={{ padding: "20px 24px", borderLeft: `2px solid ${T.accent}` }}>
-            <p style={{ fontFamily: T.fontMono, fontSize: 14, color: T.accent, fontWeight: 600 }}>{c.callout}</p>
-          </div>
-        </div>
-      );
-
-    /* ── SCORING SLIDE ── */
-    case "scoring":
-      return (
-        <div style={{ maxWidth: 1000 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.1, letterSpacing: "-1.5px", marginBottom: 32, whiteSpace: "pre-line" }}>
-            From 5-day hiring loops<br />to <span style={{ color: T.accent, fontStyle: "italic" }}>60-minute clarity.</span>
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 40, alignItems: "start" }}>
-            <div className="reveal">
-              {c.dimensions.map((d: { name: string; score: number }, i: number) => (
-                <ScoreBar key={i} name={d.name} score={d.score} delay={i * 0.15} />
+            <h1 className="reveal" style={{
+              fontFamily: T.fontLogo, fontWeight: 550,
+              fontSize: "clamp(56px, 10vw, 110px)", letterSpacing: "2px",
+              color: T.text, marginBottom: 20,
+            }}>
+              {c.title}
+            </h1>
+            <p className="reveal" style={{
+              fontFamily: T.fontDisplay, fontSize: "clamp(18px, 2.5vw, 26px)",
+              color: T.muted, fontStyle: "italic", maxWidth: 600, lineHeight: 1.4, marginBottom: 40,
+            }}>
+              {c.subtitle}
+            </p>
+            <RedLine />
+            <div className="reveal" style={{ display: "flex", gap: 48, marginTop: 40 }}>
+              {c.stats.map((s: { value: string; label: string }, i: number) => (
+                <div key={i} style={{ textAlign: "center" }}>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 28, fontWeight: 400, color: T.accent, letterSpacing: "-1px" }}>{s.value}</div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.muted, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
+                </div>
               ))}
             </div>
-            <div className="reveal" style={{ paddingTop: 8 }}>
-              <div style={{ padding: "32px", background: `${T.text}06`, borderRadius: 12, border: `1px solid ${T.border}` }}>
-                <div style={{ fontFamily: T.fontMono, fontSize: 11, color: T.muted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>
-                  Sample Score Card
-                </div>
-                <div style={{ fontFamily: T.fontDisplay, fontSize: 56, fontWeight: 400, color: T.accent, letterSpacing: "-3px", marginBottom: 8 }}>
-                  94<span style={{ fontSize: 24, color: T.muted }}>/100</span>
-                </div>
-                <div style={{ fontFamily: T.fontMono, fontSize: 12, color: T.muted, lineHeight: 1.8 }}>
-                  9 prompts · 14 files · 11 tests<br />
-                  43:17 elapsed of 60:00
-                </div>
-              </div>
-              <p style={{ fontFamily: T.fontDisplay, fontSize: 15, color: T.muted, lineHeight: 1.75, marginTop: 24 }}>
-                {c.body}
+          </div>
+        </>
+      );
+
+    case "bigquote":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", flex: 1 }}>
+            <div className="reveal" style={{ maxWidth: 900, paddingLeft: 32, borderLeft: `3px solid ${T.accent}`, textAlign: "left" }}>
+              <p style={{
+                fontFamily: T.fontDisplay, fontWeight: 400,
+                fontSize: "clamp(26px, 4vw, 42px)", fontStyle: "italic",
+                lineHeight: 1.4, color: fg, whiteSpace: "pre-line", letterSpacing: "-0.5px",
+              }}>
+                {c.quote}
               </p>
             </div>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, letterSpacing: 2, marginTop: 32 }}>
+              {c.attribution}
+            </p>
           </div>
-        </div>
+        </>
       );
 
-    /* ── MARKET SLIDE ── */
+    case "problem-numbers":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 36 }}>
+              {c.overline}
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
+              {c.items.map((item: { value: string; label: string; sub: string }, i: number) => (
+                <div key={i} className="reveal" style={{ padding: "28px 24px", border: `1px solid ${borderColor}`, borderRadius: 8, position: "relative" }}>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 48, fontWeight: 400, color: T.accent, letterSpacing: "-2px", marginBottom: 8 }}>
+                    {item.value}
+                  </div>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 16, color: fg, lineHeight: 1.4, marginBottom: 10 }}>
+                    {item.label}
+                  </div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, lineHeight: 1.6 }}>
+                    {item.sub}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+
+    case "before-after":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 36 }}>
+              {c.overline}
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 48px 1fr", gap: 0, alignItems: "start" }}>
+              {/* Before */}
+              <div className="reveal" style={{ padding: "24px 28px", background: `${T.text}06`, borderRadius: 8 }}>
+                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: T.muted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>
+                  {c.before.label}
+                </p>
+                {c.before.items.map((item: string, i: number) => (
+                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 12 }}>
+                    <span style={{ fontFamily: T.fontMono, fontSize: 12, color: `${T.muted}88`, flexShrink: 0, marginTop: 2 }}>✗</span>
+                    <span style={{ fontFamily: T.fontDisplay, fontSize: 15, color: T.muted, lineHeight: 1.5 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Arrow */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%" }}>
+                <span style={{ fontFamily: T.fontMono, fontSize: 20, color: T.accent }}>→</span>
+              </div>
+              {/* After */}
+              <div className="reveal" style={{ padding: "24px 28px", border: `2px solid ${T.accent}`, borderRadius: 8 }}>
+                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 2, textTransform: "uppercase", marginBottom: 20 }}>
+                  {c.after.label}
+                </p>
+                {c.after.items.map((item: string, i: number) => (
+                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 12 }}>
+                    <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, flexShrink: 0, marginTop: 2 }}>✓</span>
+                    <span style={{ fontFamily: T.fontDisplay, fontSize: 15, color: T.text, lineHeight: 1.5 }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+
+    case "hero-statement":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 900 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 20 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{
+              fontFamily: c.logo === "kodwai" ? T.fontLogo : T.fontDisplay,
+              fontWeight: c.logo === "kodwai" ? 550 : 400,
+              fontSize: c.logo === "kodwai" ? "clamp(48px, 8vw, 72px)" : "clamp(30px, 4.5vw, 48px)",
+              letterSpacing: c.logo === "kodwai" ? "1px" : "-1.5px",
+              color: fg, marginBottom: 24,
+            }}>
+              {c.logo}
+            </h2>
+            <p className="reveal" style={{
+              fontFamily: T.fontDisplay, fontSize: 17, color: mutedColor,
+              lineHeight: 1.75, maxWidth: 680, marginBottom: c.proof.length ? 32 : 0,
+            }}>
+              {c.tagline}
+            </p>
+            {c.proof.length > 0 && (
+              <div className="reveal" style={{ display: "grid", gap: 12, marginTop: 8 }}>
+                {c.proof.map((p: { icon: string; text: string }, i: number) => (
+                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "center", padding: "12px 16px", background: `${T.text}06`, borderRadius: 6 }}>
+                    <span style={{ fontSize: 16 }}>{p.icon}</span>
+                    <span style={{ fontFamily: T.fontMono, fontSize: 12, color: fg }}>{p.text}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      );
+
+    case "bigstat":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", flex: 1 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 24 }}>
+              {c.overline}
+            </p>
+            <div className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: "clamp(80px, 14vw, 160px)", fontWeight: 400, color: T.accent, letterSpacing: "-4px", lineHeight: 1 }}>
+              {c.stat}
+            </div>
+            <div className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: "clamp(24px, 3vw, 36px)", color: fg, fontStyle: "italic", marginTop: 8 }}>
+              {c.label}
+            </div>
+            <div className="reveal" style={{ width: 48, height: 1, background: T.accent, margin: "28px 0" }} />
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 13, color: mutedColor, maxWidth: 500 }}>
+              {c.subtitle}
+            </p>
+          </div>
+        </>
+      );
+
+    case "roi-grid":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1100 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
+              Every dollar in, <span style={{ color: T.accent, fontStyle: "italic" }}>multiples out.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
+              {c.cards.map((card: { metric: string; label: string; detail: string; comparison: string }, i: number) => (
+                <div key={i} className="reveal" style={{
+                  padding: "24px", border: `1px solid ${borderColor}`, borderRadius: 8,
+                  position: "relative", overflow: "hidden",
+                }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 8 }}>
+                    <span style={{ fontFamily: T.fontDisplay, fontSize: 36, fontWeight: 400, color: T.accent, letterSpacing: "-1px" }}>
+                      {card.metric}
+                    </span>
+                    <span style={{ fontFamily: T.fontDisplay, fontSize: 16, color: fg }}>{card.label}</span>
+                  </div>
+                  <p style={{ fontFamily: T.fontDisplay, fontSize: 13, color: mutedColor, lineHeight: 1.6, marginBottom: 10 }}>
+                    {card.detail}
+                  </p>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 1 }}>
+                    {card.comparison}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+
+    case "flow":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 32, color: fg }}>
+              Three steps. One hour. <span style={{ color: T.accent, fontStyle: "italic" }}>Complete signal.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+              {c.steps.map((step: { number: string; title: string; desc: string; time: string }, i: number) => (
+                <div key={i} className="reveal" style={{ padding: "28px 24px", borderTop: `3px solid ${T.accent}`, background: `${T.text}04`, borderRadius: "0 0 8px 8px" }}>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 32, color: `${T.accent}22`, fontWeight: 700, marginBottom: 12 }}>{step.number}</div>
+                  <h3 style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: 24, letterSpacing: "-0.3px", marginBottom: 10, color: fg }}>{step.title}</h3>
+                  <p style={{ fontFamily: T.fontDisplay, fontSize: 14, color: mutedColor, lineHeight: 1.7, marginBottom: 16 }}>{step.desc}</p>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 2, textTransform: "uppercase" }}>{step.time}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+
+    case "scorecard":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1000 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", lineHeight: 1.1, letterSpacing: "-1px", marginBottom: 32, whiteSpace: "pre-line", color: fg }}>
+              Not a pass/fail. <span style={{ color: T.accent, fontStyle: "italic" }}>A complete picture.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 36, alignItems: "start" }}>
+              <div className="reveal">
+                {c.dimensions.map((d: { name: string; score: number }, i: number) => (
+                  <ScoreBar key={i} name={d.name} score={d.score} delay={i * 0.12} dark={dark} />
+                ))}
+              </div>
+              <div className="reveal" style={{ padding: "28px 24px", background: dark ? "#1a1a1a" : `${T.text}06`, borderRadius: 8, border: `1px solid ${borderColor}`, textAlign: "center" }}>
+                <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>
+                  Overall Score
+                </div>
+                <div style={{ fontFamily: T.fontDisplay, fontSize: 64, fontWeight: 400, color: T.accent, letterSpacing: "-3px", lineHeight: 1 }}>
+                  {c.overall}
+                </div>
+                <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, marginTop: 8 }}>/100</div>
+                <div style={{ width: 32, height: 1, background: borderColor, margin: "16px auto" }} />
+                <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, lineHeight: 1.8 }}>
+                  {c.meta}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+
     case "market":
       return (
-        <div style={{ maxWidth: 1000 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 52px)", lineHeight: 1.1, letterSpacing: "-1.5px", marginBottom: 36, whiteSpace: "pre-line" }}>
-            A <span style={{ color: T.accent, fontStyle: "italic" }}>$2.5B market</span><br />with an empty quadrant.
-          </h2>
-          <div className="reveal" style={{ display: "flex", gap: 0, marginBottom: 32 }}>
-            {c.tiers.map((tier: { label: string; value: string; desc: string }, i: number) => (
-              <div
-                key={i}
-                style={{
-                  flex: 1,
-                  padding: "32px 28px",
-                  borderLeft: i > 0 ? `1px solid ${T.border}` : "none",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontFamily: T.fontMono, fontSize: 11, color: T.muted, letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 }}>
-                  {tier.label}
-                </div>
-                <div style={{ fontFamily: T.fontDisplay, fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 400, color: T.text, letterSpacing: "-1px", marginBottom: 8 }}>
-                  {tier.value}
-                </div>
-                <p style={{ fontFamily: T.fontMono, fontSize: 11, color: T.muted, lineHeight: 1.5 }}>{tier.desc}</p>
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1000 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 36, color: fg }}>
+              A massive market with an <span style={{ color: T.accent, fontStyle: "italic" }}>empty quadrant.</span>
+            </h2>
+            {/* Concentric circles visualization */}
+            <div className="reveal" style={{ display: "flex", gap: 48, alignItems: "center" }}>
+              <div style={{ position: "relative", width: 320, height: 320, flexShrink: 0 }}>
+                {c.tiers.map((tier: { label: string; value: string; size: number }, i: number) => {
+                  const sz = tier.size * 3;
+                  return (
+                    <div key={i} style={{
+                      position: "absolute",
+                      width: sz, height: sz,
+                      borderRadius: "50%",
+                      border: `${i === 2 ? 3 : 1}px solid ${i === 2 ? T.accent : T.border}`,
+                      background: i === 2 ? `${T.accent}12` : "transparent",
+                      top: "50%", left: "50%",
+                      transform: `translate(-50%, -50%)`,
+                    }}>
+                      <span style={{
+                        position: "absolute", top: i === 0 ? 16 : i === 1 ? 12 : "50%",
+                        left: "50%", transform: i === 2 ? "translate(-50%, -50%)" : "translateX(-50%)",
+                        fontFamily: T.fontMono, fontSize: 10, color: i === 2 ? T.accent : T.muted,
+                        letterSpacing: 1, textTransform: "uppercase", whiteSpace: "nowrap",
+                      }}>
+                        {tier.label}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+              <div style={{ flex: 1 }}>
+                {c.tiers.map((tier: { label: string; value: string; desc: string }, i: number) => (
+                  <div key={i} style={{ display: "flex", gap: 16, padding: "14px 0", borderBottom: i < 2 ? `1px solid ${borderColor}` : "none", alignItems: "baseline" }}>
+                    <span style={{ fontFamily: T.fontMono, fontSize: 10, color: i === 2 ? T.accent : T.muted, letterSpacing: 2, width: 36 }}>{tier.label}</span>
+                    <span style={{ fontFamily: T.fontDisplay, fontSize: 28, color: i === 2 ? T.accent : fg, letterSpacing: "-1px" }}>{tier.value}</span>
+                    <span style={{ fontFamily: T.fontMono, fontSize: 11, color: mutedColor }}>{tier.desc}</span>
+                  </div>
+                ))}
+                <div style={{ display: "flex", gap: 12, alignItems: "center", marginTop: 20, padding: "12px 16px", background: `${T.accent}10`, borderRadius: 6 }}>
+                  <span style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, fontWeight: 700, letterSpacing: 1 }}>GROWTH</span>
+                  <span style={{ fontFamily: T.fontDisplay, fontSize: 16, color: fg }}>{c.growth}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="reveal" style={{ display: "flex", gap: 24, alignItems: "center", padding: "20px 0", borderTop: `1px solid ${T.border}` }}>
-            <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, fontWeight: 700, letterSpacing: 1 }}>GROWTH</span>
-            <span style={{ fontFamily: T.fontDisplay, fontSize: 20, color: T.text }}>{c.growth}</span>
-          </div>
-          <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 17, color: T.muted, lineHeight: 1.75, marginTop: 24 }}>
-            {c.body}
-          </p>
-        </div>
+        </>
       );
 
-    /* ── COMPARISON SLIDE ── */
-    case "comparison":
+    case "competitive":
       return (
-        <div style={{ maxWidth: 1100 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 52px)", letterSpacing: "-1.5px", marginBottom: 32 }}>
-            <span style={{ color: T.accent, fontStyle: "italic" }}>Nobody</span> does this.
-          </h2>
-          <div className="reveal hide-scrollbar" style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", minWidth: 700, borderCollapse: "collapse", fontFamily: T.fontMono, fontSize: 13 }}>
-              <thead>
-                <tr>
-                  {c.columns.map((col: string, i: number) => (
-                    <th
-                      key={i}
-                      style={{
-                        textAlign: i === 0 ? "left" : "center",
-                        padding: "14px 16px",
-                        borderBottom: `2px solid ${T.text}`,
-                        borderTop: `2px solid ${T.text}`,
-                        fontSize: 11,
-                        letterSpacing: 2,
-                        textTransform: "uppercase",
-                        color: i === c.columns.length - 1 ? T.bg : T.muted,
-                        background: i === c.columns.length - 1 ? T.text : "transparent",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {c.rows.map((row: string[], ri: number) => (
-                  <tr key={ri}>
-                    {row.map((cell: string, ci: number) => (
-                      <td
-                        key={ci}
-                        style={{
-                          padding: "12px 16px",
-                          borderBottom: `1px solid ${T.border}`,
-                          textAlign: ci === 0 ? "left" : "center",
-                          fontWeight: ci === 0 ? 600 : 400,
-                          color:
-                            ci === row.length - 1
-                              ? cell === "✓" || cell === "Full"
-                                ? T.accent
-                                : T.text
-                              : cell === "✗"
-                                ? `${T.muted}88`
-                                : T.muted,
-                          fontSize: ci === 0 ? 12 : 13,
-                        }}
-                      >
-                        {cell}
-                      </td>
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1100 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
+              The white space is <span style={{ color: T.accent, fontStyle: "italic" }}>real.</span>
+            </h2>
+            <div className="reveal hide-scrollbar" style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: T.fontMono, fontSize: 12 }}>
+                <thead>
+                  <tr>
+                    {["", "AI Type", "Terminal", "Agent Capture", "Overlap"].map((h, i) => (
+                      <th key={i} style={{
+                        textAlign: i === 0 ? "left" : "center", padding: "10px 14px",
+                        borderBottom: `2px solid ${fg}`, borderTop: `2px solid ${fg}`,
+                        fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: mutedColor,
+                      }}>
+                        {h}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {c.competitors.map((comp: { name: string; ai: string; terminal: boolean; agentCapture: boolean; score: string; revenue: string }, i: number) => (
+                    <tr key={i}>
+                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, fontWeight: 600, color: fg }}>
+                        {comp.name} <span style={{ fontWeight: 400, color: mutedColor, fontSize: 10 }}>{comp.revenue}</span>
+                      </td>
+                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: mutedColor }}>{comp.ai}</td>
+                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: `${mutedColor}88` }}>✗</td>
+                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: `${mutedColor}88` }}>✗</td>
+                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: mutedColor }}>{comp.score}</td>
+                    </tr>
+                  ))}
+                  <tr style={{ background: T.accent }}>
+                    <td style={{ padding: "10px 14px", fontWeight: 700, color: "#fff" }}>kodwai</td>
+                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff" }}>{c.kodwai.ai}</td>
+                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>✓</td>
+                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>✓</td>
+                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 14, color: mutedColor, lineHeight: 1.6, marginTop: 20, fontStyle: "italic" }}>
+              {c.insight}
+            </p>
           </div>
-        </div>
+        </>
       );
 
-    /* ── BUSINESS MODEL SLIDE ── */
     case "business":
       return (
-        <div style={{ maxWidth: 1000 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 52px)", letterSpacing: "-1.5px", marginBottom: 36 }}>
-            How companies <span style={{ color: T.accent, fontStyle: "italic" }}>profit.</span>
-          </h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: 48 }}>
-            {c.items.map((item: { title: string; points: string[] }, i: number) => (
-              <div key={i} className="reveal" style={{ paddingLeft: 24, borderLeft: `2px solid ${i === 0 ? T.accent : T.border}` }}>
-                <h3 style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: 26, letterSpacing: "-0.3px", marginBottom: 20 }}>{item.title}</h3>
-                <ul style={{ listStyle: "none", padding: 0 }}>
-                  {item.points.map((p: string, j: number) => (
-                    <li key={j} style={{ fontFamily: T.fontDisplay, fontSize: 15, color: T.muted, lineHeight: 1.8, paddingLeft: 20, position: "relative", marginBottom: 8 }}>
-                      <span style={{ position: "absolute", left: 0, color: T.accent, fontFamily: T.fontMono, fontSize: 10, top: 5 }}>→</span>
-                      {p}
-                    </li>
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 32, color: fg }}>
+              Recurring revenue. <span style={{ color: T.accent, fontStyle: "italic" }}>Zero LLM cost.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36 }}>
+              {c.columns.map((col: { title: string; items: { label: string; value: string; desc: string }[] }, ci: number) => (
+                <div key={ci} className="reveal">
+                  <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>{col.title}</p>
+                  {col.items.map((item, i: number) => (
+                    <div key={i} style={{ display: "flex", gap: 16, padding: "14px 0", borderTop: `1px solid ${borderColor}`, alignItems: "baseline" }}>
+                      <span style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, width: 90, flexShrink: 0, letterSpacing: 1 }}>{item.label}</span>
+                      <span style={{ fontFamily: T.fontDisplay, fontSize: 22, color: ci === 1 && i === 2 ? T.accent : fg, letterSpacing: "-0.5px", minWidth: 80 }}>{item.value}</span>
+                      <span style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor }}>{item.desc}</span>
+                    </div>
                   ))}
-                </ul>
-              </div>
-            ))}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       );
 
-    /* ── TECH STACK SLIDE ── */
-    case "tech":
+    case "validation":
       return (
-        <div style={{ maxWidth: 800 }}>
-          <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 28 }}>
-            {c.overline}
-          </p>
-          <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 48px)", letterSpacing: "-1.5px", marginBottom: 32 }}>
-            Built on <span style={{ color: T.accent, fontStyle: "italic" }}>proven infrastructure.</span>
-          </h2>
-          <div className="reveal">
-            {c.stack.map((s: { label: string; value: string }, i: number) => (
-              <div key={i} style={{ display: "flex", gap: 24, padding: "18px 0", borderTop: `1px solid ${T.border}`, alignItems: "baseline" }}>
-                <span style={{ fontFamily: T.fontMono, fontSize: 11, color: T.accent, letterSpacing: 2, textTransform: "uppercase", minWidth: 100, flexShrink: 0 }}>
-                  {s.label}
-                </span>
-                <span style={{ fontFamily: T.fontDisplay, fontSize: 17, color: T.text }}>{s.value}</span>
-              </div>
-            ))}
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 950 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 32, color: fg }}>
+              The signals are <span style={{ color: T.accent, fontStyle: "italic" }}>loud.</span>
+            </h2>
+            <div className="reveal">
+              {c.signals.map((s: { event: string; date: string; detail: string }, i: number) => (
+                <div key={i} style={{ display: "grid", gridTemplateColumns: "90px 1fr", gap: 20, padding: "16px 0", borderTop: `1px solid ${borderColor}` }}>
+                  <span style={{ fontFamily: T.fontMono, fontSize: 11, color: T.accent, letterSpacing: 1 }}>{s.date}</span>
+                  <div>
+                    <div style={{ fontFamily: T.fontDisplay, fontSize: 17, color: fg, marginBottom: 4 }}>{s.event}</div>
+                    <div style={{ fontFamily: T.fontMono, fontSize: 11, color: mutedColor }}>{s.detail}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       );
 
-    /* ── CTA SLIDE ── */
+    case "traction":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1000 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 32 }}>
+              {c.overline}
+            </p>
+            <div className="reveal" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, marginBottom: 40 }}>
+              {c.stats.map((s: { value: string; label: string }, i: number) => (
+                <div key={i} style={{ textAlign: "center" }}>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 44, fontWeight: 400, color: T.accent, letterSpacing: "-2px" }}>{s.value}</div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 11, color: mutedColor, marginTop: 4 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            <div className="reveal">
+              <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Roadmap</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+                {c.milestones.map((m: { label: string; text: string }, i: number) => (
+                  <div key={i} style={{ padding: "16px", borderTop: `2px solid ${i === 0 ? T.accent : borderColor}`, background: i === 0 ? `${T.accent}12` : "transparent" }}>
+                    <div style={{ fontFamily: T.fontMono, fontSize: 11, color: i === 0 ? T.accent : mutedColor, fontWeight: 700, marginBottom: 6 }}>{m.label}</div>
+                    <div style={{ fontFamily: T.fontDisplay, fontSize: 13, color: fg, lineHeight: 1.5 }}>{m.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+
+    /* ── TEAM SLIDE ── */
+    case "team":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 900 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 32, color: fg }}>
+              Built by people who <span style={{ color: T.accent, fontStyle: "italic" }}>live this problem.</span>
+            </h2>
+            {c.members.map((m: { name: string; role: string; bio: string }, i: number) => (
+              <div key={i} className="reveal" style={{ display: "flex", gap: 24, padding: "28px", border: `1px solid ${borderColor}`, borderRadius: 8, marginBottom: 16, alignItems: "center" }}>
+                <div style={{ width: 72, height: 72, borderRadius: "50%", background: `${T.accent}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <span style={{ fontFamily: T.fontLogo, fontSize: 28, color: T.accent }}>{m.name.charAt(0)}</span>
+                </div>
+                <div>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 22, color: fg, marginBottom: 2 }}>{m.name}</div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 11, color: T.accent, letterSpacing: 1, marginBottom: 8 }}>{m.role}</div>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 15, color: mutedColor, lineHeight: 1.6 }}>{m.bio}</div>
+                </div>
+              </div>
+            ))}
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 12, color: mutedColor, marginTop: 20, lineHeight: 1.8, paddingLeft: 24, borderLeft: `2px solid ${borderColor}` }}>
+              {c.hiring}
+            </p>
+          </div>
+        </>
+      );
+
+    /* ── ASK SLIDE ── */
+    case "ask":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 900 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(36px, 5vw, 56px)", letterSpacing: "-1.5px", marginBottom: 12, color: fg }}>
+              Raising <span style={{ color: T.accent, fontStyle: "italic" }}>$750K</span> pre-seed.
+            </h2>
+            <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 17, color: mutedColor, lineHeight: 1.6, marginBottom: 36 }}>
+              {c.goal}
+            </p>
+            <div className="reveal" style={{ display: "grid", gap: 0 }}>
+              {c.details.map((d: { label: string; value: string }, i: number) => (
+                <div key={i} style={{ display: "flex", gap: 20, padding: "16px 0", borderTop: `1px solid ${borderColor}`, alignItems: "baseline" }}>
+                  <span style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", width: 120, flexShrink: 0 }}>{d.label}</span>
+                  <span style={{ fontFamily: T.fontDisplay, fontSize: 22, color: d.label === "Amount" ? T.accent : fg, letterSpacing: "-0.5px" }}>{d.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+
+    /* ── USE OF FUNDS SLIDE ── */
+    case "funds":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
+              Where the money <span style={{ color: T.accent, fontStyle: "italic" }}>goes.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36 }}>
+              {/* Allocation bars */}
+              <div className="reveal">
+                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Allocation</p>
+                {c.items.map((item: { label: string; pct: number; amount: string; detail: string }, i: number) => (
+                  <div key={i} style={{ marginBottom: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ fontFamily: T.fontMono, fontSize: 12, color: fg }}>{item.label}</span>
+                      <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, fontWeight: 700 }}>{item.amount} ({item.pct}%)</span>
+                    </div>
+                    <div style={{ height: 6, background: borderColor, borderRadius: 3, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${item.pct}%`, background: T.accent, borderRadius: 3 }} />
+                    </div>
+                    <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, marginTop: 4 }}>{item.detail}</div>
+                  </div>
+                ))}
+              </div>
+              {/* KPI milestones */}
+              <div className="reveal">
+                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Key milestones</p>
+                {c.kpis.map((kpi: { milestone: string; target: string }, i: number) => (
+                  <div key={i} style={{
+                    padding: "20px", marginBottom: 12,
+                    borderLeft: `3px solid ${i === c.kpis.length - 1 ? T.accent : borderColor}`,
+                    background: i === c.kpis.length - 1 ? `${T.accent}12` : "transparent",
+                    borderRadius: "0 6px 6px 0",
+                  }}>
+                    <div style={{ fontFamily: T.fontMono, fontSize: 11, color: i === c.kpis.length - 1 ? T.accent : mutedColor, fontWeight: 700, marginBottom: 4 }}>{kpi.milestone}</div>
+                    <div style={{ fontFamily: T.fontDisplay, fontSize: 15, color: fg, lineHeight: 1.5 }}>{kpi.target}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+
     case "cta":
       return (
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", minHeight: "100%" }}>
-          <h2
-            className="reveal"
-            style={{
-              fontFamily: T.fontDisplay,
-              fontWeight: 400,
-              fontSize: "clamp(40px, 7vw, 72px)",
-              lineHeight: 1.1,
-              letterSpacing: "-2px",
-              marginBottom: 28,
-              whiteSpace: "pre-line",
-            }}
-          >
-            Stop <span style={{ color: T.accent, fontStyle: "italic" }}>guessing.</span>
-            <br />
-            Start measuring.
-          </h2>
-          <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 19, color: T.muted, lineHeight: 1.7, maxWidth: 550, marginBottom: 36 }}>
-            {c.subtitle}
-          </p>
-          <div className="reveal" style={{ width: 48, height: 1, background: T.accent, marginBottom: 32 }} />
-          <div className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-            <span style={{ fontFamily: T.fontMono, fontSize: 16, color: T.text, fontWeight: 700, letterSpacing: 1 }}>{c.contact}</span>
-            <span style={{ fontFamily: T.fontMono, fontSize: 13, color: T.muted }}>{c.url}</span>
+        <>
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", flex: 1 }}>
+            <h2 className="reveal" style={{
+              fontFamily: T.fontDisplay, fontWeight: 400,
+              fontSize: "clamp(40px, 7vw, 68px)", lineHeight: 1.1,
+              letterSpacing: "-2px", marginBottom: 24, whiteSpace: "pre-line", color: fg,
+            }}>
+              Stop <span style={{ color: T.accent, fontStyle: "italic" }}>guessing.</span>{"\n"}Start measuring.
+            </h2>
+            <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 18, color: mutedColor, lineHeight: 1.7, maxWidth: 520, marginBottom: 36 }}>
+              {c.subtitle}
+            </p>
+            <RedLine />
+            <div className="reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, marginTop: 32 }}>
+              <span style={{ fontFamily: T.fontMono, fontSize: 16, color: fg, fontWeight: 700, letterSpacing: 1 }}>{c.contact}</span>
+              <span style={{ fontFamily: T.fontMono, fontSize: 12, color: mutedColor }}>{c.url}</span>
+            </div>
+            <div className="reveal" style={{ marginTop: 40 }}>
+              <span style={{ fontFamily: T.fontLogo, fontWeight: 550, fontSize: 28, letterSpacing: "0.75px", color: dark ? "#555" : "#353431" }}>kodwai</span>
+            </div>
           </div>
-          <div className="reveal" style={{ marginTop: 40 }}>
-            <span style={{ fontFamily: T.fontLogo, fontWeight: 550, fontSize: 32, letterSpacing: "0.75px", color: "#353431" }}>kodwai</span>
-          </div>
-        </div>
+        </>
       );
 
     default:
@@ -788,23 +1098,18 @@ function SlideContent({ slide }: { slide: SlideData }) {
 
 /* ===========================================
    PITCH DECK — Main Component
-   Full-screen slide presentation with keyboard
-   navigation, progress bar, and scroll-snap.
    =========================================== */
 export default function PitchDeck() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLElement | null)[]>([]);
   const isScrolling = useRef(false);
 
-  /* ── Intersection Observer for reveal animations ── */
   useEffect(() => {
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.classList.add("visible");
-            // Update current slide index
             const idx = slideRefs.current.indexOf(e.target as HTMLElement);
             if (idx !== -1) setCurrentSlide(idx);
           }
@@ -812,27 +1117,19 @@ export default function PitchDeck() {
       },
       { threshold: 0.3 }
     );
-    slideRefs.current.forEach((el) => {
-      if (el) obs.observe(el);
-    });
+    slideRefs.current.forEach((el) => { if (el) obs.observe(el); });
     return () => obs.disconnect();
   }, []);
 
-  /* ── Reveal children animations ── */
   useEffect(() => {
     const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add("reveal-visible");
-        });
-      },
+      (entries) => { entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("reveal-visible"); }); },
       { threshold: 0.08 }
     );
     document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
     return () => obs.disconnect();
   }, []);
 
-  /* ── Navigate to slide ── */
   const goTo = useCallback((idx: number) => {
     const clamped = Math.max(0, Math.min(idx, SLIDES.length - 1));
     const el = slideRefs.current[clamped];
@@ -840,22 +1137,14 @@ export default function PitchDeck() {
       isScrolling.current = true;
       el.scrollIntoView({ behavior: "smooth" });
       setCurrentSlide(clamped);
-      setTimeout(() => {
-        isScrolling.current = false;
-      }, 800);
+      setTimeout(() => { isScrolling.current = false; }, 800);
     }
   }, []);
 
-  /* ── Keyboard navigation ── */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === " ") {
-        e.preventDefault();
-        goTo(currentSlide + 1);
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        goTo(currentSlide - 1);
-      }
+      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); goTo(currentSlide + 1); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); goTo(currentSlide - 1); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -864,212 +1153,97 @@ export default function PitchDeck() {
   const progress = ((currentSlide + 1) / SLIDES.length) * 100;
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        background: T.bg,
-        color: T.text,
-        fontFamily: T.fontDisplay,
-        position: "relative",
-        overflowX: "hidden",
-      }}
-    >
-      {/* ── Subtle mesh background ── */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundImage: "url(/images/mesh-accent.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.04,
-          mixBlendMode: "multiply",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
+    <div style={{ background: T.bg, color: T.text, fontFamily: T.fontDisplay, position: "relative", overflowX: "hidden" }}>
 
-      {/* ── Progress Bar ── */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          height: 2,
-          width: `${progress}%`,
-          background: T.accent,
-          zIndex: 200,
-          transition: "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
+      {/* Mesh bg */}
+      <div style={{
+        position: "fixed", inset: 0,
+        backgroundImage: "url(/images/mesh-accent.jpg)",
+        backgroundSize: "cover", backgroundPosition: "center",
+        opacity: 0.06, mixBlendMode: "multiply", pointerEvents: "none", zIndex: 0,
+      }} />
 
-      {/* ── Navigation Dots ── */}
-      <nav
-        style={{
-          position: "fixed",
-          right: 24,
-          top: "50%",
-          transform: "translateY(-50%)",
-          zIndex: 100,
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-        }}
-        className="nav-dots"
-      >
+      {/* Progress */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, height: 2,
+        width: `${progress}%`, background: T.accent, zIndex: 200,
+        transition: "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+      }} />
+
+      {/* Nav dots */}
+      <nav className="nav-dots" style={{
+        position: "fixed", right: 20, top: "50%", transform: "translateY(-50%)",
+        zIndex: 100, display: "flex", flexDirection: "column", gap: 8,
+      }}>
         {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => goTo(i)}
-            aria-label={`Go to slide ${i + 1}`}
-            style={{
-              width: currentSlide === i ? 10 : 6,
-              height: currentSlide === i ? 10 : 6,
-              borderRadius: "50%",
-              background: currentSlide === i ? T.accent : T.border,
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-              padding: 0,
-            }}
-          />
+          <button key={i} onClick={() => goTo(i)} aria-label={`Slide ${i + 1}`} style={{
+            width: currentSlide === i ? 8 : 5, height: currentSlide === i ? 8 : 5,
+            borderRadius: "50%", background: currentSlide === i ? T.accent : T.border,
+            border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0,
+          }} />
         ))}
       </nav>
 
-      {/* ── Slide Counter ── */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 24,
-          right: 28,
-          fontFamily: T.fontMono,
-          fontSize: 11,
-          color: T.muted,
-          letterSpacing: 2,
-          zIndex: 100,
-        }}
-      >
-        {String(currentSlide + 1).padStart(2, "0")} / {String(SLIDES.length).padStart(2, "0")}
+      {/* Keyboard hint */}
+      <div className="keyboard-hint" style={{
+        position: "fixed", bottom: 20, left: 28,
+        fontFamily: T.fontMono, fontSize: 9, color: `${T.muted}66`, letterSpacing: 1, zIndex: 100,
+      }}>
+        ← → to navigate
       </div>
 
-      {/* ── Keyboard hint ── */}
-      <div
-        className="keyboard-hint"
-        style={{
-          position: "fixed",
-          bottom: 24,
-          left: 28,
-          fontFamily: T.fontMono,
-          fontSize: 10,
-          color: `${T.muted}88`,
-          letterSpacing: 1,
-          zIndex: 100,
-        }}
-      >
-        ← → SPACE to navigate
-      </div>
-
-      {/* ── Slides ── */}
+      {/* SLIDES */}
       {SLIDES.map((slide, i) => (
         <section
           key={slide.id}
-          ref={(el) => {
-            slideRefs.current[i] = el;
-          }}
+          ref={(el) => { slideRefs.current[i] = el; }}
           className="pitch-slide"
           style={{
-            minHeight: slide.type === "title" || slide.type === "cta" ? "100vh" : undefined,
-            padding: `${slide.type === "title" || slide.type === "cta" ? "clamp(80px, 10vh, 120px)" : "clamp(48px, 6vh, 72px)"} clamp(24px, 6vw, 80px)`,
+            minHeight: "100vh",
+            padding: "clamp(48px, 6vh, 72px) clamp(28px, 6vw, 80px)",
             display: "flex",
             flexDirection: "column",
-            justifyContent: slide.type === "title" || slide.type === "cta" ? "center" : "flex-start",
+            justifyContent: "center",
             position: "relative",
             scrollSnapAlign: "start",
+            background: slide.dark ? T.dark : "transparent",
+            color: slide.dark ? "#f0f0f0" : T.text,
+            zIndex: 1,
           }}
         >
-          <SlideContent slide={slide} />
+          <SlideContent slide={slide} index={i} total={SLIDES.length} />
         </section>
       ))}
 
-      {/* ── Inline Styles for animations ── */}
       <style>{`
-        html {
-          scroll-snap-type: y mandatory;
-          scroll-behavior: smooth;
-        }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 
         .reveal {
-          opacity: 0;
-          transform: translateY(24px);
-          transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+          opacity: 0; transform: translateY(20px);
+          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .reveal-visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
+        .reveal-visible { opacity: 1; transform: translateY(0); }
         .reveal:nth-child(1) { transition-delay: 0.05s; }
-        .reveal:nth-child(2) { transition-delay: 0.15s; }
-        .reveal:nth-child(3) { transition-delay: 0.25s; }
-        .reveal:nth-child(4) { transition-delay: 0.35s; }
-        .reveal:nth-child(5) { transition-delay: 0.45s; }
-        .reveal:nth-child(6) { transition-delay: 0.55s; }
+        .reveal:nth-child(2) { transition-delay: 0.12s; }
+        .reveal:nth-child(3) { transition-delay: 0.2s; }
+        .reveal:nth-child(4) { transition-delay: 0.28s; }
+        .reveal:nth-child(5) { transition-delay: 0.36s; }
 
-        .hide-scrollbar {
-          scrollbar-width: none;
-          -webkit-overflow-scrolling: touch;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
+        .hide-scrollbar { scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
 
         @media (max-width: 768px) {
-          .nav-dots,
-          .keyboard-hint {
-            display: none;
-          }
+          .nav-dots, .keyboard-hint { display: none; }
         }
-
         @media (prefers-reduced-motion: reduce) {
-          .reveal {
-            transition: opacity 0.3s ease;
-            transform: none;
-          }
-          html {
-            scroll-snap-type: none;
-            scroll-behavior: auto;
-          }
+          .reveal { transition: opacity 0.3s ease; transform: none; }
+          html { scroll-snap-type: none; scroll-behavior: auto; }
         }
-
         @media print {
-          html {
-            scroll-snap-type: none !important;
-            scroll-behavior: auto !important;
-          }
-          .nav-dots,
-          .keyboard-hint {
-            display: none !important;
-          }
-          .pitch-slide {
-            page-break-after: always;
-            page-break-inside: avoid;
-            min-height: auto !important;
-            padding: 40px 48px !important;
-          }
-          .pitch-slide:last-child {
-            page-break-after: auto;
-          }
-          .reveal {
-            opacity: 1 !important;
-            transform: none !important;
-            transition: none !important;
-          }
-          .reveal-visible {
-            opacity: 1 !important;
-            transform: none !important;
-          }
+          html { scroll-snap-type: none !important; }
+          .nav-dots, .keyboard-hint { display: none !important; }
+          .pitch-slide { page-break-after: always; min-height: auto !important; padding: 40px 48px !important; }
+          .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
         }
       `}</style>
     </div>
