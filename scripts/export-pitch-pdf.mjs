@@ -49,6 +49,14 @@ async function exportPDF() {
     document.documentElement.style.scrollSnapType = "none";
     document.documentElement.style.scrollBehavior = "auto";
 
+    // Force score bars to show filled (IntersectionObserver won't fire in PDF)
+    document.querySelectorAll(".score-bar-fill").forEach((el) => {
+      const bar = el.closest(".score-bar");
+      const score = bar?.getAttribute("data-score");
+      if (score) el.style.width = score + "%";
+      el.style.transition = "none";
+    });
+
     // Remove ALL fixed/sticky UI chrome
     document.querySelectorAll("*").forEach((el) => {
       const style = getComputedStyle(el);

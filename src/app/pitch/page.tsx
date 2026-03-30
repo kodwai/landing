@@ -55,7 +55,7 @@ const SLIDES: SlideData[] = [
       stats: [
         { value: "$2.5B", label: "TAM (2026)" },
         { value: "0", label: "Direct competitors" },
-        { value: "Pre-revenue", label: "Stage" },
+        { value: "MVP built", label: "CLI + Web + API" },
       ],
     },
   },
@@ -117,13 +117,14 @@ const SLIDES: SlideData[] = [
     id: "solution",
     type: "hero-statement",
     content: {
-      overline: "The Solution",
+      overline: "The Solution — Built & Working",
       logo: "kodwai",
       tagline: "Candidates use Claude Code — a real AI coding agent — in their own terminal. Every prompt, tool use, file edit, and decision is captured, streamed live to an observer dashboard, and scored by AI against custom rubrics.",
       proof: [
-        { icon: "⚡", text: "npx kodwai start <session-id> — one command to begin" },
-        { icon: "📡", text: "Real-time observer dashboard with < 2s latency" },
-        { icon: "🎯", text: "AI-generated scorecards on 5 evaluation dimensions" },
+        { icon: "⚡", text: "npx kodwai start <session-id> — one CLI command to begin" },
+        { icon: "📡", text: "Live dashboard: transcript, file diffs, tool feed, timer" },
+        { icon: "🎯", text: "Dual scoring: AI-generated + manual reviewer side-by-side" },
+        { icon: "🔒", text: "HMAC-signed webhooks · AES-256 encrypted API keys" },
       ],
     },
   },
@@ -133,25 +134,25 @@ const SLIDES: SlideData[] = [
     id: "how",
     type: "flow",
     content: {
-      overline: "Product",
+      overline: "Product — Live Today",
       title: "Three steps. One hour. Complete signal.",
       steps: [
         {
           number: "01",
           title: "Deploy",
-          desc: "Create a challenge with your rubric and starter files. Invite the candidate — they receive a CLI command.",
+          desc: "Create a project with problem statement, rubric dimensions, time limit, and tool constraints. Invite the candidate — they receive an email with one CLI command.",
           time: "5 min setup",
         },
         {
           number: "02",
           title: "Observe",
-          desc: "Candidate works with Claude Code in their terminal. Every interaction streams live to your dashboard.",
+          desc: "Candidate runs npx kodwai start in their terminal. Claude Code launches with session context. Every prompt, tool use, and file edit streams to your live dashboard via HMAC-signed webhooks.",
           time: "60 min session",
         },
         {
           number: "03",
           title: "Evaluate",
-          desc: "AI reads full transcript + code and generates a structured scorecard. Add your manual review alongside.",
+          desc: "Session ends → Claude reads full transcript + final code → generates structured scorecard across your rubric dimensions. Interviewers add manual scores alongside. Compare candidates side-by-side.",
           time: "Instant scoring",
         },
       ],
@@ -163,8 +164,8 @@ const SLIDES: SlideData[] = [
     type: "scorecard",
     dark: true,
     content: {
-      overline: "Sample Output",
-      title: "Not a pass/fail. A complete picture.",
+      overline: "Actual Platform Output",
+      title: "Dual scoring. Full context. Comparable data.",
       dimensions: [
         { name: "Problem decomposition", score: 87, icon: "🧩" },
         { name: "AI agent direction", score: 92, icon: "🎯" },
@@ -172,7 +173,7 @@ const SLIDES: SlideData[] = [
         { name: "Code quality", score: 93, icon: "◆" },
         { name: "Communication clarity", score: 89, icon: "◈" },
       ],
-      meta: "Sample session: 9 prompts · 14 files · 11 tests · 43 min",
+      meta: "AI score + manual reviewer score · Strengths & weaknesses · Exportable report",
       overall: "92",
     },
   },
@@ -219,8 +220,8 @@ const SLIDES: SlideData[] = [
         {
           title: "Pricing (planned)",
           items: [
-            { label: "Starter", value: "$499/mo", desc: "5 seats · 50 sessions/mo" },
-            { label: "Growth", value: "$1,499/mo", desc: "25 seats · unlimited sessions" },
+            { label: "Starter", value: "$60/mo", desc: "5 seats · 50 sessions/mo" },
+            { label: "Growth", value: "$200/mo", desc: "25 seats · unlimited sessions" },
             { label: "Enterprise", value: "Custom", desc: "SSO · compliance · SLA" },
           ],
         },
@@ -246,26 +247,72 @@ const SLIDES: SlideData[] = [
         {
           metric: "80%",
           label: "less interviewer time (target)",
-          detail: "AI scores first-round sessions. Senior engineers review scorecards instead of conducting live 1:1 screens.",
+          detail: "AI scores first-round sessions automatically. Interviewers review scorecards and add manual scores — no more live 1:1 screening.",
           comparison: "Target: 6 hrs → 1.2 hrs per candidate",
         },
         {
           metric: "1 day",
           label: "to first scored session",
-          detail: "Create a project, invite a candidate, review the AI scorecard. No multi-week scheduling.",
+          detail: "Create project → invite candidate via email → they run one CLI command → AI scores on completion. Built and working today.",
           comparison: "vs. 5–7 day typical evaluation cycle",
         },
         {
-          metric: "5",
-          label: "scoring dimensions per session",
-          detail: "Decomposition, agent mastery, code quality, testing, communication — not a binary pass/fail.",
-          comparison: "Structured, comparable data across all candidates",
+          metric: "2",
+          label: "scoring layers (AI + manual)",
+          detail: "AI generates per-dimension scores with strengths/weaknesses. Interviewers add weighted manual scores alongside. Both visible in comparison view.",
+          comparison: "Dual scoring built into the platform",
         },
         {
-          metric: "1",
-          label: "command to start",
-          detail: "npx kodwai start <id> — works on Mac, Linux, Windows. No setup friction for candidates.",
-          comparison: "Candidates use their own terminal and IDE",
+          metric: "N vs N",
+          label: "candidate comparison",
+          detail: "Side-by-side comparison across all completed sessions. Per-dimension breakdown, color-coded ranking. Built into the dashboard.",
+          comparison: "Structured, comparable data across all candidates",
+        },
+      ],
+    },
+  },
+
+  /* ── 6b. WHAT'S BUILT ── */
+  {
+    id: "built",
+    type: "built",
+    dark: true,
+    content: {
+      overline: "What's Built",
+      title: "Full platform. Shipping today.",
+      components: [
+        {
+          name: "CLI",
+          tech: "Node.js · Claude Code Agent SDK",
+          features: [
+            "npx kodwai start — single-command session launch",
+            "Claude Code hooks capture every prompt, tool use, and response",
+            "Real-time file watcher streams all code changes",
+            "HMAC-SHA256 signed event streaming",
+            "Countdown timer with auto-session-end",
+          ],
+        },
+        {
+          name: "Web Dashboard",
+          tech: "Next.js 16 · React 19 · Tailwind CSS 4",
+          features: [
+            "Project management with custom rubrics and tool constraints",
+            "Live session view: transcript, file diffs, tool feed, timer",
+            "Dual scoring: AI-generated + manual reviewer",
+            "Candidate comparison across sessions",
+            "Team management with role-based access (admin/interviewer/viewer)",
+          ],
+        },
+        {
+          name: "API",
+          tech: "FastAPI · Turso (libSQL) · Claude API",
+          features: [
+            "Full session lifecycle management with HMAC webhooks",
+            "AI scoring pipeline: transcript + code → structured scorecard",
+            "AES-256-GCM encrypted API key storage",
+            "JWT auth with email verification",
+            "Automated candidate invitation emails via Resend",
+          ],
         },
       ],
     },
@@ -280,14 +327,14 @@ const SLIDES: SlideData[] = [
       overline: "Traction & Status",
       stats: [
         { value: "847+", label: "Waitlist signups" },
-        { value: "MVP", label: "In development" },
-        { value: "Pre-revenue", label: "Current stage" },
+        { value: "3/3", label: "Components built (CLI + Web + API)" },
+        { value: "Pre-revenue", label: "Launching Q2 2026" },
       ],
       milestones: [
-        { label: "Q2 2026", text: "MVP launch · First 10 design partners" },
+        { label: "Done", text: "Full MVP: CLI, dashboard, API, AI scoring, team management" },
+        { label: "Q2 2026", text: "Launch · First 10 design partners" },
         { label: "Q3 2026", text: "Paid customers · Product-market fit" },
         { label: "Q4 2026", text: "50 companies · $300K ARR target" },
-        { label: "2027", text: "Multi-agent support · Series A readiness" },
       ],
     },
   },
@@ -302,11 +349,27 @@ const SLIDES: SlideData[] = [
       members: [
         {
           name: "Ege Hakan Karaagac",
-          role: "Founder & CEO",
-          bio: "Full-stack engineer. Built developer tools and AI-powered products. Daily Claude Code user who saw the gap firsthand.",
+          role: "Co-Founder & CEO",
+          bio: "6 years building scalable backend systems and AI products. Leads product development across the full stack — CLI, web dashboard, API, and AI scoring pipeline.",
+          logos: [
+            { src: "/logos/team/accenture.svg", alt: "Accenture", h: 18 },
+            { src: "/logos/team/amazon.svg", alt: "Amazon", h: 18 },
+            { src: "/logos/team/icon-with-name-original.webp", alt: "BrandVox AI", h: 22 },
+            { src: "/logos/team/bilkent.png", alt: "Bilkent University", h: 28 },
+          ],
+        },
+        {
+          name: "Dogukan Ertunga Kurnaz",
+          role: "Co-Founder & CTO",
+          bio: "4 years in DevSecOps, infrastructure security, and automation. Leads Kodwai's cloud infrastructure, CI/CD, and security hardening across all services.",
+          logos: [
+            { src: "/logos/team/jotform.svg", alt: "Jotform", h: 22 },
+            { src: "/logos/team/trendyol.png", alt: "Trendyol", h: 18 },
+            { src: "/logos/team/bilkent.png", alt: "Bilkent University", h: 28 },
+          ],
         },
       ],
-      hiring: "Actively hiring: Senior Frontend Engineer, Growth Lead. Advisors from enterprise SaaS and developer tools.",
+      hiring: "Hiring with this raise: 2 senior engineers + 1 growth lead.",
     },
   },
 
@@ -401,20 +464,20 @@ function ScoreBar({ name, score, delay, dark }: { name: string; score: number; d
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.3 });
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.1 });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
   return (
-    <div ref={ref} style={{ marginBottom: 16 }}>
+    <div ref={ref} className="score-bar" data-score={score} style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
         <span style={{ fontFamily: T.fontMono, fontSize: 12, color: dark ? "#ccc" : T.text }}>{name}</span>
         <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, fontWeight: 700 }}>{score}%</span>
       </div>
       <div style={{ height: 5, background: dark ? "#333" : T.border, borderRadius: 3, overflow: "hidden" }}>
-        <div style={{
-          height: "100%", width: visible ? `${score}%` : "0%",
+        <div className="score-bar-fill" style={{
+          height: "100%", width: visible ? `${score}%` : `${score}%`,
           background: T.accent, borderRadius: 3,
           transition: `width 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
         }} />
@@ -767,30 +830,34 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
             </h2>
             {/* Concentric circles visualization */}
             <div className="reveal" style={{ display: "flex", gap: 48, alignItems: "center" }}>
-              <div style={{ position: "relative", width: 320, height: 320, flexShrink: 0 }}>
-                {c.tiers.map((tier: { label: string; value: string; size: number }, i: number) => {
-                  const sz = tier.size * 3;
-                  return (
-                    <div key={i} style={{
+              <div style={{ position: "relative", width: 280, height: 280, flexShrink: 0 }}>
+                {[
+                  { label: "TAM", sz: 270, border: 1, color: T.border, bg: "transparent", labelPos: "top" },
+                  { label: "SAM", sz: 180, border: 1, color: T.border, bg: "transparent", labelPos: "top" },
+                  { label: "SOM", sz: 90, border: 3, color: T.accent, bg: `${T.accent}12`, labelPos: "center" },
+                ].map((ring, i) => (
+                  <div key={i} style={{
+                    position: "absolute",
+                    width: ring.sz, height: ring.sz,
+                    borderRadius: "50%",
+                    border: `${ring.border}px solid ${ring.color}`,
+                    background: ring.bg,
+                    top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}>
+                    <span style={{
                       position: "absolute",
-                      width: sz, height: sz,
-                      borderRadius: "50%",
-                      border: `${i === 2 ? 3 : 1}px solid ${i === 2 ? T.accent : T.border}`,
-                      background: i === 2 ? `${T.accent}12` : "transparent",
-                      top: "50%", left: "50%",
-                      transform: `translate(-50%, -50%)`,
+                      top: ring.labelPos === "center" ? "50%" : 10,
+                      left: "50%",
+                      transform: ring.labelPos === "center" ? "translate(-50%, -50%)" : "translateX(-50%)",
+                      fontFamily: T.fontMono, fontSize: 10,
+                      color: i === 2 ? T.accent : T.muted,
+                      letterSpacing: 1, textTransform: "uppercase", whiteSpace: "nowrap",
                     }}>
-                      <span style={{
-                        position: "absolute", top: i === 0 ? 16 : i === 1 ? 12 : "50%",
-                        left: "50%", transform: i === 2 ? "translate(-50%, -50%)" : "translateX(-50%)",
-                        fontFamily: T.fontMono, fontSize: 10, color: i === 2 ? T.accent : T.muted,
-                        letterSpacing: 1, textTransform: "uppercase", whiteSpace: "nowrap",
-                      }}>
-                        {tier.label}
-                      </span>
-                    </div>
-                  );
-                })}
+                      {ring.label}
+                    </span>
+                  </div>
+                ))}
               </div>
               <div style={{ flex: 1 }}>
                 {c.tiers.map((tier: { label: string; value: string; desc: string }, i: number) => (
@@ -955,32 +1022,75 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
         </>
       );
 
+    /* ── WHAT'S BUILT SLIDE ── */
+    case "built":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1100 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 24, color: fg }}>
+              Full platform. <span style={{ color: T.accent, fontStyle: "italic" }}>Shipping today.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+              {c.components.map((comp: { name: string; tech: string; features: string[] }, i: number) => (
+                <div key={i} className="reveal" style={{
+                  padding: "20px", borderTop: `3px solid ${T.accent}`,
+                  background: dark ? "#1a1a1a" : `${T.text}04`, borderRadius: "0 0 6px 6px",
+                }}>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 22, color: fg, marginBottom: 4 }}>{comp.name}</div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 1, marginBottom: 16 }}>{comp.tech}</div>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    {comp.features.map((f: string, j: number) => (
+                      <li key={j} style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, lineHeight: 1.6, paddingLeft: 14, position: "relative", marginBottom: 6 }}>
+                        <span style={{ position: "absolute", left: 0, color: T.accent, fontSize: 8, top: 3 }}>&#9654;</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+
     /* ── TEAM SLIDE ── */
     case "team":
       return (
         <>
           {showChrome && <Logo dark={dark} />}
           {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
-          <div style={{ maxWidth: 900 }}>
-            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
-              {c.overline}
-            </p>
-            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 32, color: fg }}>
-              Built by people who <span style={{ color: T.accent, fontStyle: "italic" }}>live this problem.</span>
-            </h2>
-            {c.members.map((m: { name: string; role: string; bio: string }, i: number) => (
-              <div key={i} className="reveal" style={{ display: "flex", gap: 24, padding: "28px", border: `1px solid ${borderColor}`, borderRadius: 8, marginBottom: 16, alignItems: "center" }}>
-                <div style={{ width: 72, height: 72, borderRadius: "50%", background: `${T.accent}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ fontFamily: T.fontLogo, fontSize: 28, color: T.accent }}>{m.name.charAt(0)}</span>
+          <div style={{ maxWidth: 1000, margin: "0 auto", width: "100%" }}>
+            <div style={{ textAlign: "center", marginBottom: 32 }}>
+              <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+                {c.overline}
+              </p>
+              <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", color: fg }}>
+                Built by people who <span style={{ color: T.accent, fontStyle: "italic" }}>live this problem.</span>
+              </h2>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 28 }}>
+              {c.members.map((m: { name: string; role: string; bio: string; logos: { src: string; alt: string; h: number }[] }, i: number) => (
+                <div key={i} className="reveal" style={{ padding: "28px", border: `1px solid ${borderColor}`, borderRadius: 8, textAlign: "center" }}>
+                  <div style={{ width: 100, height: 100, borderRadius: "50%", overflow: "hidden", margin: "0 auto 14px", border: `2px solid ${borderColor}` }}>
+                    <img src={i === 0 ? "/logos/team/hakan.png" : "/logos/team/dogukan.png"} alt={m.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  </div>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 20, color: fg, marginBottom: 2 }}>{m.name}</div>
+                  <div style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 1, marginBottom: 14 }}>{m.role}</div>
+                  <div style={{ fontFamily: T.fontDisplay, fontSize: 13, color: mutedColor, lineHeight: 1.6, marginBottom: 20 }}>{m.bio}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 24, justifyContent: "center", alignItems: "center", paddingTop: 16, borderTop: `1px solid ${borderColor}` }}>
+                    {m.logos.map((logo: { src: string; alt: string; h: number }, j: number) => (
+                      <img key={j} src={logo.src} alt={logo.alt} style={{ height: logo.h, width: "auto", opacity: 0.55, filter: "grayscale(100%)" }} />
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontFamily: T.fontDisplay, fontSize: 22, color: fg, marginBottom: 2 }}>{m.name}</div>
-                  <div style={{ fontFamily: T.fontMono, fontSize: 11, color: T.accent, letterSpacing: 1, marginBottom: 8 }}>{m.role}</div>
-                  <div style={{ fontFamily: T.fontDisplay, fontSize: 15, color: mutedColor, lineHeight: 1.6 }}>{m.bio}</div>
-                </div>
-              </div>
-            ))}
-            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 12, color: mutedColor, marginTop: 20, lineHeight: 1.8, paddingLeft: 24, borderLeft: `2px solid ${borderColor}` }}>
+              ))}
+            </div>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 11, color: mutedColor, marginTop: 20, textAlign: "center" }}>
               {c.hiring}
             </p>
           </div>
