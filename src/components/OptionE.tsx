@@ -200,9 +200,22 @@ function Counter() {
 function WaitlistForm({ id, large }: { id: string; large?: boolean }) {
   const [email, setEmail] = useState("");
   const [ok, setOk] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   if (ok) return <div style={{ fontFamily: E.fontMono, fontSize: 13, color: "#2d6a4f", padding: "16px 0" }}>✓ You&apos;re on the list. Check your inbox.</div>;
   return (
-    <form onSubmit={e => { e.preventDefault(); if (email) setOk(true); }} style={{
+    <form onSubmit={async e => {
+      e.preventDefault();
+      if (!email) return;
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch("/api/waitlist", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email }) });
+        if (res.ok) setOk(true);
+        else { const data = await res.json(); setError(data.error || "Something went wrong"); }
+      } catch { setError("Something went wrong"); }
+      finally { setLoading(false); }
+    }} style={{
       display: "flex", gap: 0, width: "100%", maxWidth: large ? 520 : 460,
       borderBottom: `2px solid ${E.text}`, transition: "border-color 0.3s",
     }}
@@ -212,15 +225,16 @@ function WaitlistForm({ id, large }: { id: string; large?: boolean }) {
       <input id={id} type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com"
         style={{ flex: 1, background: "transparent", border: "none", color: E.text, fontFamily: E.fontMono, fontSize: 14, padding: large ? "18px 0" : "16px 0", outline: "none" }}
       />
-      <button type="submit" style={{
+      <button type="submit" disabled={loading} style={{
         background: "transparent", color: E.accent, fontFamily: E.fontMono, fontWeight: 700,
         fontSize: 12, padding: large ? "18px 0 18px 28px" : "16px 0 16px 24px",
-        border: "none", cursor: "pointer", transition: "color 0.3s",
-        textTransform: "uppercase", letterSpacing: 2, whiteSpace: "nowrap",
+        border: "none", cursor: loading ? "wait" : "pointer", transition: "color 0.3s",
+        textTransform: "uppercase", letterSpacing: 2, whiteSpace: "nowrap", opacity: loading ? 0.5 : 1,
       }}
         onMouseEnter={e => { e.currentTarget.style.color = E.text; }}
         onMouseLeave={e => { e.currentTarget.style.color = E.accent; }}
-      >Join Waitlist</button>
+      >{loading ? "Joining..." : "Join Waitlist"}</button>
+      {error && <p style={{ fontFamily: E.fontMono, fontSize: 11, color: E.accent, marginTop: 4 }}>{error}</p>}
     </form>
   );
 }
@@ -323,7 +337,7 @@ export default function OptionE() {
           <p style={{ fontFamily: E.fontMono, fontSize: 12, color: E.muted, letterSpacing: 3, textTransform: "uppercase", marginBottom: 40 }}>
             Built for teams at
           </p>
-          <LogoStrip filter="brightness(0)" opacity={0.3} hoverOpacity={0.6} height={32} gap={56} />
+          <LogoStrip filter="brightness(0)" opacity={0.3} hoverOpacity={0.6} height={32} gap={56} mobileHeight={18} mobileGap={32} />
         </div>
       </section>
 
@@ -401,8 +415,8 @@ export default function OptionE() {
             The <span style={{ color: E.accent, fontStyle: "italic" }}>data sheet.</span>
           </h2>
         </div>
-        <div className="animate-in" style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: E.fontMono, fontSize: 14 }}>
+        <div className="animate-in hide-scrollbar" style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", minWidth: 500, borderCollapse: "collapse", fontFamily: E.fontMono, fontSize: 14 }}>
             <thead>
               <tr>
                 <th style={{ textAlign: "left", padding: "16px 20px", borderBottom: `2px solid ${E.text}`, borderTop: `2px solid ${E.text}`, fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: E.muted }}>Feature</th>
@@ -448,16 +462,16 @@ export default function OptionE() {
       <RedLine />
 
       {/* ═══ STATS ═══ */}
-      <section style={{ padding: "120px clamp(16px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto" }}>
-        <div className="animate-in" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 48, textAlign: "center" }}>
+      <section style={{ padding: "80px clamp(16px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto" }}>
+        <div className="animate-in stats-grid" style={{ display: "grid", gap: 48, textAlign: "center" }}>
           {[
             { stat: "94%", label: "Hiring signal accuracy" },
             { stat: "3.2×", label: "Faster than traditional loops" },
             { stat: "847+", label: "Engineers on the waitlist" },
           ].map((x, i) => (
             <div key={i}>
-              <div style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(40px, 6vw, 72px)", letterSpacing: "-3px", color: E.text, marginBottom: 12 }}>{x.stat}</div>
-              <p style={{ fontFamily: E.fontMono, fontSize: 12, color: E.muted, lineHeight: 1.5 }}>{x.label}</p>
+              <div style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(52px, 8vw, 72px)", letterSpacing: "-3px", color: E.text, marginBottom: 12 }}>{x.stat}</div>
+              <p style={{ fontFamily: E.fontMono, fontSize: 14, color: E.muted, lineHeight: 1.5 }}>{x.label}</p>
             </div>
           ))}
         </div>

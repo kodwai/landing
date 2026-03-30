@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 /* ═══════════════════════════════════════════════════════
    Real company logos from /public/logos/*.svg
@@ -19,16 +20,13 @@ const logos = [
 ];
 
 interface LogoStripProps {
-  /** CSS filter to apply (e.g. "brightness(0) invert(1)" for white on dark) */
   filter?: string;
-  /** Base opacity */
   opacity?: number;
-  /** Hover opacity */
   hoverOpacity?: number;
-  /** Gap between logos */
   gap?: number;
-  /** Logo height */
   height?: number;
+  mobileHeight?: number;
+  mobileGap?: number;
 }
 
 export default function LogoStrip({
@@ -37,11 +35,24 @@ export default function LogoStrip({
   hoverOpacity = 0.7,
   gap = 44,
   height = 22,
+  mobileHeight,
+  mobileGap,
 }: LogoStripProps) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const h = isMobile && mobileHeight ? mobileHeight : height;
+  const g = isMobile && mobileGap ? mobileGap : gap;
+
   return (
     <div style={{
       display: "flex", justifyContent: "center", alignItems: "center",
-      flexWrap: "wrap", gap: `20px ${gap}px`,
+      flexWrap: "wrap", gap: `${isMobile ? 14 : 20}px ${g}px`,
     }}>
       {logos.map(logo => (
         <div
@@ -59,8 +70,8 @@ export default function LogoStrip({
             src={logo.file}
             alt={logo.name}
             width={logo.w}
-            height={height}
-            style={{ height, width: "auto", maxWidth: 120 }}
+            height={h}
+            style={{ height: h, width: "auto", maxWidth: isMobile ? 70 : 120 }}
           />
         </div>
       ))}

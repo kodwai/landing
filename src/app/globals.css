@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #050505;
+  --bg-primary: #faf8f4;
   --bg-secondary: #0a0a0a;
   --bg-elevated: #111111;
   --bg-card: #0d0d0d;
@@ -391,4 +391,23 @@ body {
 
 .marquee-track:hover {
   animation-play-state: paused;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.stats-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 40px !important;
+  }
 }
