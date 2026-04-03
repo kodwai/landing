@@ -4,16 +4,16 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
-  title: "kodwai — Technical Interviews for the AI Era",
+  title: "kodwai — AI-Agent Coding Challenges for Developers",
   description:
-    "The first interview platform where candidates use a real AI coding agent, not a chatbot. Full session capture. AI-powered scoring. See how engineers actually work with AI.",
+    "Solve real-world coding challenges on your own machine with your preferred AI agent — Claude Code, Cursor, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.",
   keywords: [
-    "AI interview",
-    "technical interview",
+    "AI coding challenge",
+    "developer platform",
     "Claude Code",
     "AI coding agent",
-    "interview platform",
-    "engineering hiring",
+    "coding leaderboard",
+    "developer challenges",
   ],
   icons: {
     icon: [
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "kodwai — Technical Interviews for the AI Era",
+    title: "kodwai — AI-Agent Coding Challenges for Developers",
     description:
-      "The first interview platform where candidates use a real AI coding agent. Full session capture. AI-powered scoring.",
+      "Solve coding challenges with your preferred AI agent — Claude Code, Cursor, and more. Compete on leaderboards and build your profile.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "kodwai — Technical Interviews for the AI Era",
+    title: "kodwai — AI-Agent Coding Challenges for Developers",
     description:
-      "The first interview platform where candidates use a real AI coding agent. Full session capture. AI-powered scoring.",
+      "Solve coding challenges with your preferred AI agent — Claude Code, Cursor, and more. Compete on leaderboards and build your profile.",
   },
 };
 

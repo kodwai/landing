@@ -15,10 +15,10 @@ const E = {
 
 /* ─── Terminal ─── */
 const lines = [
-  { t: "p", s: "$ kodwai start --challenge rate-limiter --time 60m" },
-  { t: "s", s: "⚡ Interview session initialized" },
+  { t: "p", s: "$ kodwai challenge rate-limiter" },
+  { t: "s", s: "⚡ Challenge session initialized" },
   { t: "s", s: "🔗 Claude Code agent connected (claude-opus-4-6)" },
-  { t: "s", s: "👤 Candidate: sarah.chen@email.com" },
+  { t: "s", s: "👤 Developer: sarah.chen" },
   { t: "s", s: "📋 Build a distributed rate limiter handling 10M req/s" },
   { t: "s", s: "⏱  60:00 remaining" },
   { t: "b", s: "" },
@@ -149,7 +149,7 @@ function Terminal() {
         <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ffbd2e" }} />
         <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#28ca42" }} />
         <span style={{ fontSize: 11, color: "#555", marginLeft: 8, fontFamily: E.fontMono }}>
-          kodwai — live interview session
+          kodwai — live challenge session
         </span>
       </div>
       <div ref={ref} style={{ padding: 24, fontSize: 13.5, lineHeight: 1.85, height: 480, overflowY: "auto", textAlign: "left" }}>
@@ -222,7 +222,7 @@ function WaitlistForm({ id, large }: { id: string; large?: boolean }) {
       onFocus={(e) => { (e.currentTarget as HTMLFormElement).style.borderBottomColor = E.accent; }}
       onBlur={(e) => { (e.currentTarget as HTMLFormElement).style.borderBottomColor = E.text; }}
     >
-      <input id={id} type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@company.com"
+      <input id={id} type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="you@email.com"
         style={{ flex: 1, background: "transparent", border: "none", color: E.text, fontFamily: E.fontMono, fontSize: 14, padding: large ? "18px 0" : "16px 0", outline: "none" }}
       />
       <button type="submit" disabled={loading} style={{
@@ -298,11 +298,11 @@ export default function OptionE() {
             letterSpacing: "-2px", marginBottom: 32,
             animation: "fade-in-up 0.8s ease 0.1s forwards", opacity: 0,
           }}>
-            The interview platform
+            The coding platform
             <br />
-            that sees how engineers
+            that measures how you
             <br />
-            <span style={{ color: E.accent, fontStyle: "italic", letterSpacing: "-3px" }}>actually work.</span>
+            <span style={{ color: E.accent, fontStyle: "italic", letterSpacing: "-3px" }}>wield AI agents.</span>
           </h1>
 
           <p style={{
@@ -310,9 +310,9 @@ export default function OptionE() {
             lineHeight: 1.7, color: E.muted, maxWidth: 900, margin: "0 auto 44px",
             animation: "fade-in-up 0.8s ease 0.2s forwards", opacity: 0,
           }}>
-            The first platform where candidates use{" "}
-            <span style={{ color: E.accent, fontWeight: 600 }}>Claude Code</span> — a real AI coding agent, not a chatbot.
-            Full session capture. AI-powered scoring.
+            Solve real-world coding challenges on your own machine with your preferred AI agent —{" "}
+            <span style={{ color: E.accent, fontWeight: 600 }}>Claude Code</span>, <span style={{ color: E.accent, fontWeight: 600 }}>Cursor</span>, and more.
+            Compete on leaderboards. Build your developer profile.
           </p>
 
           <div id="waitlist-e" style={{ display: "flex", justifyContent: "center", animation: "fade-in-up 0.8s ease 0.3s forwards", opacity: 0 }}>
@@ -335,7 +335,7 @@ export default function OptionE() {
       <section style={{ padding: "72px clamp(16px, 4vw, 48px)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", textAlign: "center" }}>
           <p style={{ fontFamily: E.fontMono, fontSize: 12, color: E.muted, letterSpacing: 3, textTransform: "uppercase", marginBottom: 40 }}>
-            Built for teams at
+            Engineers from
           </p>
           <LogoStrip filter="brightness(0)" opacity={0.3} hoverOpacity={0.6} height={32} gap={56} mobileHeight={18} mobileGap={32} />
         </div>
@@ -350,12 +350,12 @@ export default function OptionE() {
             The Problem
           </p>
           <h2 style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(32px, 5vw, 60px)", lineHeight: 1.1, letterSpacing: "-1.5px", marginBottom: 28 }}>
-            You&apos;re testing skills
+            LeetCode measures skills
             <br /><span style={{ color: E.accent, fontStyle: "italic" }}>that don&apos;t matter anymore.</span>
           </h2>
           <p style={{ fontFamily: E.fontDisplay, fontSize: 19, color: E.muted, lineHeight: 1.75, maxWidth: 640 }}>
-            Whiteboard algorithms. Toy problems. No AI allowed. These interviews measure memorization, not engineering.
-            The best engineers ship with agents — your interview should test that.
+            Whiteboard algorithms. Toy problems. No AI allowed. Traditional challenges measure memorization, not engineering.
+            The best engineers ship with agents — prove you can too.
           </p>
         </div>
       </section>
@@ -366,9 +366,9 @@ export default function OptionE() {
       <section style={{ padding: "120px clamp(16px, 4vw, 48px)", maxWidth: 1300, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 56 }}>
           {[
-            { title: "Real agents, not chatbots", desc: "Candidates use Claude Code — a full autonomous agent with file system, terminal, and multi-file project access. Not a prompt box." },
-            { title: "Signal, not noise", desc: "Every keystroke, architectural decision, and agent interaction is captured and scored. You see exactly how engineers think." },
-            { title: "Built for the AI era", desc: "The old whiteboard is dead. kodwai tests the skill that actually matters: wielding AI agents to ship production code." },
+            { title: "Your machine, your agent", desc: "Use Claude Code, Cursor, or any AI agent you prefer. Solve challenges in your real environment — your tools, your workflow, your terminal." },
+            { title: "Real signal, not noise", desc: "Every architectural decision, agent interaction, and iteration is captured and scored. Build a profile that shows how you actually engineer." },
+            { title: "Built for the AI era", desc: "LeetCode is dead. kodwai measures the skill that actually matters: wielding AI agents to ship production code." },
           ].map((card, i) => (
             <div key={i} className={`animate-in animate-in-delay-${i + 1}`} style={{ paddingLeft: 28, borderLeft: `2px solid ${E.accent}` }}>
               <h3 style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: 30, letterSpacing: "-0.5px", marginBottom: 16 }}>{card.title}</h3>
@@ -390,9 +390,9 @@ export default function OptionE() {
             </h2>
           </div>
           {[
-            { n: "01", title: "Deploy a challenge", desc: "Pick from our library or create custom system-design and coding challenges calibrated to your stack." },
-            { n: "02", title: "Candidate solves with AI", desc: "They get a full Claude Code environment. Real agent, real tools, real constraints. 60 minutes." },
-            { n: "03", title: "Review the signal", desc: "AI-generated scorecard with granular breakdowns: decomposition, agent mastery, code quality, verification." },
+            { n: "01", title: "Pick a challenge", desc: "Browse real-world system design and coding challenges across backend, frontend, DevOps, and more." },
+            { n: "02", title: "Solve with your AI agent", desc: "Work on your own machine with Claude Code, Cursor, or any AI agent. Real tools, real constraints, timed." },
+            { n: "03", title: "Get scored & ranked", desc: "AI-generated scorecard with granular breakdowns: decomposition, agent mastery, code quality, verification. Climb the leaderboard." },
           ].map((step, i) => (
             <div key={i} className={`animate-in animate-in-delay-${i + 1}`} style={{ display: "flex", gap: 28, padding: "36px 0", borderTop: `1px solid ${E.border}` }}>
               <span style={{ fontFamily: E.fontMono, fontSize: 13, color: E.accent, letterSpacing: 1, flexShrink: 0, paddingTop: 4 }}>{step.n}</span>
@@ -426,12 +426,12 @@ export default function OptionE() {
             </thead>
             <tbody>
               {[
-                ["AI agents in interview", "✗", "✓"],
-                ["Real-world environment", "✗", "✓"],
-                ["Automated scoring", "Partial", "Full"],
-                ["Agent interaction analysis", "✗", "✓"],
-                ["Time to evaluate", "5–7 days", "60 min"],
-                ["Candidate experience", "Stressful", "Authentic"],
+                ["AI agents allowed", "✗", "✓"],
+                ["Your own dev environment", "✗", "✓"],
+                ["AI-powered scoring", "✗", "Full"],
+                ["Agent collaboration analysis", "✗", "✓"],
+                ["Real-world problems", "Toy problems", "Production-grade"],
+                ["Developer experience", "Browser sandbox", "Your machine"],
                 ["Signal-to-noise ratio", "Low", "Very High"],
               ].map(([feature, trad, kodwai], i) => (
                 <tr key={i}>
@@ -452,9 +452,9 @@ export default function OptionE() {
         <div className="animate-in" style={{ maxWidth: 900, margin: "0 auto" }}>
           <div style={{ paddingLeft: 28, borderLeft: `2px solid ${E.accent}` }}>
             <p style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(22px, 3.5vw, 36px)", fontStyle: "italic", lineHeight: 1.55, marginBottom: 24, letterSpacing: "-0.5px" }}>
-              &ldquo;We stopped asking candidates to reverse linked lists. Now we see how they <span style={{ color: E.accent }}>actually build</span>{" "}with AI.&rdquo;
+              &ldquo;I stopped grinding LeetCode. Now I solve real problems with Claude Code and my leaderboard rank <span style={{ color: E.accent }}>actually means something</span>.&rdquo;
             </p>
-            <p style={{ fontFamily: E.fontMono, fontSize: 12, color: E.muted, letterSpacing: 1 }}>— VP Engineering, Series B startup</p>
+            <p style={{ fontFamily: E.fontMono, fontSize: 12, color: E.muted, letterSpacing: 1 }}>— Senior Engineer, early access user</p>
           </div>
         </div>
       </section>
@@ -465,9 +465,9 @@ export default function OptionE() {
       <section style={{ padding: "80px clamp(16px, 4vw, 48px)", maxWidth: 1200, margin: "0 auto" }}>
         <div className="animate-in stats-grid" style={{ display: "grid", gap: 48, textAlign: "center" }}>
           {[
-            { stat: "94%", label: "Hiring signal accuracy" },
-            { stat: "3.2×", label: "Faster than traditional loops" },
-            { stat: "847+", label: "Engineers on the waitlist" },
+            { stat: "50+", label: "Challenges at launch" },
+            { stat: "70/30", label: "Objective + AI scoring" },
+            { stat: "847+", label: "Developers on the waitlist" },
           ].map((x, i) => (
             <div key={i}>
               <div style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(52px, 8vw, 72px)", letterSpacing: "-3px", color: E.text, marginBottom: 12 }}>{x.stat}</div>
@@ -483,10 +483,10 @@ export default function OptionE() {
       <section style={{ padding: "140px clamp(16px, 4vw, 48px)", textAlign: "center", position: "relative" }}>
         <div className="animate-in" style={{ maxWidth: 700, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <h2 style={{ fontFamily: E.fontDisplay, fontWeight: 400, fontSize: "clamp(36px, 6vw, 64px)", lineHeight: 1.1, letterSpacing: "-2px", marginBottom: 28 }}>
-            Stop <span style={{ color: E.accent, fontStyle: "italic" }}>guessing.</span>
+            Stop <span style={{ color: E.accent, fontStyle: "italic" }}>grinding.</span>
           </h2>
           <p style={{ fontFamily: E.fontDisplay, fontSize: 18, color: E.muted, lineHeight: 1.7, maxWidth: 480, margin: "0 auto 44px" }}>
-            Join the waitlist. Be first to interview engineers the way they actually work.
+            Join the waitlist. Be first to prove your skills with real AI agents on real problems.
           </p>
           <div style={{ display: "flex", justifyContent: "center" }}><WaitlistForm id="bottom-e" large /></div>
         </div>
@@ -499,7 +499,7 @@ export default function OptionE() {
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontWeight: 550, fontSize: 20, letterSpacing: "0.75px", color: "#353431" }}>kodwai</span>
-            <span style={{ fontFamily: E.fontMono, fontSize: 10, color: E.muted, letterSpacing: 1 }}>For teams that take AI seriously.</span>
+            <span style={{ fontFamily: E.fontMono, fontSize: 10, color: E.muted, letterSpacing: 1 }}>For developers who build with AI.</span>
           </div>
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             <a href="https://x.com/kodwai" target="_blank" rel="noopener noreferrer" style={{ fontFamily: E.fontMono, fontSize: 11, color: E.muted, textDecoration: "none" }}>X</a>
