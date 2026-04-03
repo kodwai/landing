@@ -500,6 +500,7 @@ export default function OptionE() {
           </div>
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             <a href="https://x.com/kodwai" target="_blank" rel="noopener noreferrer" style={{ fontFamily: E.fontMono, fontSize: 11, color: E.muted, textDecoration: "none" }}>X</a>
+            <a href="https://discord.gg/d663XRC7" target="_blank" rel="noopener noreferrer" style={{ fontFamily: E.fontMono, fontSize: 11, color: E.muted, textDecoration: "none" }}>Discord</a>
             <a href="mailto:hello@kodwai.com" style={{ fontFamily: E.fontMono, fontSize: 11, color: E.muted, textDecoration: "none" }}>Email</a>
             <span style={{ fontFamily: E.fontMono, fontSize: 10, color: E.muted, opacity: 0.4 }}>&copy; {new Date().getFullYear()}</span>
           </div>
