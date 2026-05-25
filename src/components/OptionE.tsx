@@ -546,7 +546,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
           <div className="k-hero-el k-hero-term">
             <Terminal />
             <p style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5, marginTop: 14, textAlign: "right" }}>
-              recorded run · jamie.b · 41:07 · final <span style={{ color: C.amber }}>94/100</span>
+              jamie.b · final <span style={{ color: C.amber }}>94/100</span>
             </p>
           </div>
         </div>
