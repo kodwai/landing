@@ -14,20 +14,8 @@ export const metadata: Metadata = {
 export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ minHeight: "100vh", background: "#faf8f4", position: "relative" }}>
-      {/* Subtle mesh background — same as landing page */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundImage: "url(/images/mesh-accent.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.06,
-          mixBlendMode: "multiply",
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
+      {/* Faint code-grid field, matching the landing page */}
+      <div className="k-field" aria-hidden />
 
       {/* Nav */}
       <nav
@@ -61,36 +49,36 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           <Link
             href="/blog"
             style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 10,
+              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+              fontSize: 11,
               color: "#c23616",
-              letterSpacing: 3,
+              letterSpacing: 1,
               textTransform: "uppercase",
               textDecoration: "none",
             }}
           >
-            Blog
+            blog
           </Link>
         </div>
         <a
           href="https://app.kodwai.com"
           style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 10,
-            color: "#faf8f4",
-            background: "#1a1a1a",
-            letterSpacing: 3,
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            fontSize: 11,
+            color: "#1a1a1a",
+            background: "transparent",
+            letterSpacing: 1.4,
             textTransform: "uppercase",
             textDecoration: "none",
-            padding: "9px 20px",
-            border: "1px solid #1a1a1a",
+            padding: "9px 18px",
+            border: "1px solid #d6cfc1",
             display: "inline-flex",
             alignItems: "center",
             gap: 8,
-            transition: "background 0.3s, border-color 0.3s",
+            transition: "color 0.3s, border-color 0.3s",
           }}
         >
-          Launch app <span aria-hidden>→</span>
+          open app <span aria-hidden>→</span>
         </a>
       </nav>
 
@@ -126,7 +114,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             </span>
             <span
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 10,
                 color: "#9a948a",
                 letterSpacing: 1,
@@ -136,10 +124,10 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             </span>
           </div>
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            <a href="https://x.com/kodwai_com" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>X</a>
-            <a href="https://discord.gg/d663XRC7" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Discord</a>
-            <a href="mailto:hello@kodwai.com" style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Email</a>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a", opacity: 0.4 }}>&copy; {new Date().getFullYear()}</span>
+            <a href="https://x.com/kodwai_com" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>X</a>
+            <a href="https://discord.gg/d663XRC7" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Discord</a>
+            <a href="mailto:hello@kodwai.com" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Email</a>
+            <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a", opacity: 0.4 }}>&copy; {new Date().getFullYear()}</span>
           </div>
         </div>
       </footer>

@@ -46,15 +46,15 @@ export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
     >
       <p
         style={{
-          fontFamily: "'Space Mono', monospace",
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
           fontSize: 10,
           color: "#c23616",
-          letterSpacing: 3,
+          letterSpacing: 1.5,
           textTransform: "uppercase",
           marginBottom: 16,
         }}
       >
-        Table of Contents
+        On this page
       </p>
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
         {headings.map((heading) => (
@@ -70,7 +70,7 @@ export default function TableOfContents({ headings }: { headings: TOCItem[] }) {
                 }
               }}
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 11,
                 color: activeId === heading.id ? "#c23616" : "#9a948a",
                 textDecoration: "none",

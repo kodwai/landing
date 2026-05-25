@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -12,6 +12,22 @@
 
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-mono: 'Space Mono', monospace;
+
+  /* ─── Landing theme: warm light, matching the app ("developer's technical paper") ─── */
+  --k-bg: #faf8f4;          /* cream paper, app background */
+  --k-paper-2: #f3efe8;     /* subtle section tint */
+  --k-panel: #fffdf9;       /* near-white warm card lift */
+  --k-line: #e4e0d8;        /* hairline border / beige */
+  --k-line-bright: #d6cfc1; /* stronger rule */
+  --k-text: #1a1a1a;        /* ink */
+  --k-muted: #6f695f;       /* readable secondary text */
+  --k-faint: #9a948a;       /* labels, captions (app muted) */
+  --k-accent: #c23616;      /* rust (app brand) */
+  --k-accent-deep: #a82d12; /* rust hover (app) */
+  --k-green: #1f9d55;       /* score pass, on light */
+  --k-amber: #cf8a1a;       /* score mid, on light */
+  --font-mono-jb: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-grotesk: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
 }
 
 @theme inline {
@@ -37,10 +53,10 @@ body {
   color: var(--warm-paper);
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--warm-paper); }
-::-webkit-scrollbar-thumb { background: var(--border-beige); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted-stone); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cfc8ba; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #b3ab9b; }
 
 /* ─── Animations ─── */
 
@@ -209,6 +225,89 @@ button:focus-visible {
   border-radius: 1px;
 }
 
+/* ─── Landing: engineering-instrument utilities ─── */
+
+/* Graph-paper grid + vignette, drawn in code (no stock atmospheric media) */
+.k-field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--k-bg);
+  background-image:
+    linear-gradient(to right, rgba(26, 26, 26, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 26, 26, 0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+.k-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% -8%, rgba(194, 54, 22, 0.05), transparent 55%),
+    radial-gradient(100% 100% at 50% 40%, transparent 62%, rgba(26, 26, 18, 0.05) 100%);
+}
+
+/* Sliding logo marquee (trust strip) */
+.k-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.k-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: k-marquee var(--k-marquee-dur, 40s) linear infinite;
+}
+.k-marquee:hover .k-marquee-track { animation-play-state: paused; }
+@keyframes k-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── Landing: responsive grids (static, kept out of the component to avoid
+   any SSR/CSR <style> hydration mismatch) ─── */
+.k-chal-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+
+@media (max-width: 940px) {
+  .k-hero { grid-template-columns: minmax(0, 1fr) !important; gap: 40px !important; }
+  .k-hero-term { order: 2; min-width: 0; }
+  .k-2col { grid-template-columns: 1fr !important; gap: 20px !important; align-items: start !important; }
+  .k-score { grid-template-columns: 1fr !important; gap: 40px !important; justify-items: start !important; }
+  .k-dims { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .k-begin { grid-template-columns: 1fr !important; gap: 26px !important; }
+  .k-begin > span[aria-hidden] { width: 100% !important; height: 1px !important; }
+  .k-begin a { text-align: left !important; align-items: flex-start !important; }
+  .k-hiring { grid-template-columns: 1fr !important; gap: 24px !important; }
+  .k-lb-row { grid-template-columns: 34px 1fr auto !important; }
+  .k-lb-row > .k-lb-agent { display: none !important; }
+  .k-badge-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  .k-chal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 560px) {
+  .k-nav-blog { display: none !important; }
+  .k-badge-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  .k-chal-grid { grid-template-columns: 1fr !important; }
+  .k-how-row { grid-template-columns: 1fr !important; gap: 6px !important; }
+  .k-how-row > .k-how-index { margin-bottom: 2px; }
+}
+
+/* Reveal targets default to visible; JS hides + animates them as progressive
+   enhancement, so no-JS and reduced-motion users still see all content. */
+.k-reveal, .k-item { will-change: transform, opacity; }
+
+@keyframes k-caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.k-caret {
+  display: inline-block;
+  width: 0.62em;
+  height: 1.05em;
+  background: var(--k-accent);
+  margin-left: 0.12em;
+  vertical-align: -0.16em;
+  animation: k-caret 1.05s steps(1) infinite;
+}
+
 /* ─── Reduced motion ─── */
 
 @media (prefers-reduced-motion: reduce) {
@@ -223,4 +322,8 @@ button:focus-visible {
     opacity: 1 !important;
     transform: none !important;
   }
+
+  .k-reveal, .k-item { opacity: 1 !important; transform: none !important; }
+  .k-caret { animation: none !important; }
+  .k-marquee-track { animation: none !important; transform: none !important; flex-wrap: wrap; justify-content: center; }
 }

@@ -70,9 +70,10 @@ export default function CookieConsent() {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — visual only; clicking it must NOT dismiss the banner.
+         The banner closes only via Accept or Decline. */}
       <div
-        onClick={handleAccept}
+        aria-hidden
         style={{
           position: "fixed",
           inset: 0,

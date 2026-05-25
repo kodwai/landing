@@ -46,3 +46,4 @@ DESIGN.md
 
 # Local scripts (contain rotated API keys, do not publish)
 /scripts
+/.agents

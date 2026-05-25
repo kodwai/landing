@@ -127,7 +127,7 @@ export default async function BlogPostPage({
         <Link
           href="/blog"
           style={{
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: 12,
             color: "#c23616",
             textDecoration: "none",
@@ -146,7 +146,7 @@ export default async function BlogPostPage({
       {/* Breadcrumb */}
       <nav
         style={{
-          fontFamily: "'Space Mono', monospace",
+          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
           fontSize: 11,
           color: "#9a948a",
           marginBottom: 32,
@@ -167,7 +167,7 @@ export default async function BlogPostPage({
         style={{
           position: "relative",
           marginBottom: 48,
-          borderRadius: 12,
+          borderRadius: 0,
           overflow: "hidden",
           minHeight: post.cover_image_url ? 520 : "auto",
           background: post.cover_image_url ? "#111" : "transparent",
@@ -219,12 +219,12 @@ export default async function BlogPostPage({
               style={{
                 display: "inline-block",
                 width: "fit-content",
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 9,
                 color: "#fff",
                 background: "#c23616",
                 padding: "5px 16px",
-                borderRadius: 12,
+                borderRadius: 0,
                 letterSpacing: 2,
                 textTransform: "uppercase",
                 textDecoration: "none",
@@ -278,21 +278,21 @@ export default async function BlogPostPage({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontFamily: "'Space Mono', monospace",
+                  fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                   fontSize: 12,
                   color: post.cover_image_url ? "#fff" : "#9a948a",
                 }}
               >
                 {post.author_name.charAt(0).toUpperCase()}
               </div>
-              <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: post.cover_image_url ? "#fff" : "#1a1a1a" }}>
+              <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: post.cover_image_url ? "#fff" : "#1a1a1a" }}>
                 {post.author_name}
               </span>
             </div>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: post.cover_image_url ? "rgba(255,255,255,0.7)" : "#9a948a" }}>
+            <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: post.cover_image_url ? "rgba(255,255,255,0.7)" : "#9a948a" }}>
               {formatDate(post.published_at)}
             </span>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: post.cover_image_url ? "rgba(255,255,255,0.7)" : "#9a948a" }}>
+            <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: post.cover_image_url ? "rgba(255,255,255,0.7)" : "#9a948a" }}>
               {estimateReadTime(post.content_md)}
             </span>
           </div>
@@ -350,12 +350,12 @@ export default async function BlogPostPage({
                   key={tag.id}
                   href={`/blog?tag=${tag.slug}`}
                   style={{
-                    fontFamily: "'Space Mono', monospace",
+                    fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                     fontSize: 10,
                     color: "#9a948a",
                     border: "1px solid #e4e0d8",
                     padding: "6px 16px",
-                    borderRadius: 20,
+                    borderRadius: 0,
                     letterSpacing: 0.5,
                     textDecoration: "none",
                   }}
@@ -397,7 +397,7 @@ export default async function BlogPostPage({
         </p>
         <p
           style={{
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: 12,
             color: "#9a948a",
             marginBottom: 24,
@@ -408,7 +408,7 @@ export default async function BlogPostPage({
         <Link
           href="/blog"
           style={{
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
             fontSize: 11,
             color: "#9a948a",
             textDecoration: "none",
@@ -416,7 +416,7 @@ export default async function BlogPostPage({
             textTransform: "uppercase",
             padding: "12px 28px",
             border: "1px solid #e4e0d8",
-            borderRadius: 24,
+            borderRadius: 0,
           }}
         >
           All Posts

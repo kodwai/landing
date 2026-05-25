@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 
 /* ═══════════════════════════════════════════════════════
    Real company logos from /public/logos/*.svg
-   Accepts a `tint` class for CSS filter-based coloring.
+   Accepts a `filter` for CSS-based coloring, and an optional
+   `marquee` mode that scrolls the strip in a seamless loop.
    ═══════════════════════════════════════════════════════ */
 
 const logos = [
@@ -27,6 +29,10 @@ interface LogoStripProps {
   height?: number;
   mobileHeight?: number;
   mobileGap?: number;
+  /** Scroll the strip in a seamless loop (pauses on hover, static under reduced-motion). */
+  marquee?: boolean;
+  /** Seconds for one full marquee cycle. */
+  speed?: number;
 }
 
 export default function LogoStrip({
@@ -37,6 +43,8 @@ export default function LogoStrip({
   height = 22,
   mobileHeight,
   mobileGap,
+  marquee = false,
+  speed = 42,
 }: LogoStripProps) {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -49,32 +57,41 @@ export default function LogoStrip({
   const h = isMobile && mobileHeight ? mobileHeight : height;
   const g = isMobile && mobileGap ? mobileGap : gap;
 
-  return (
-    <div style={{
-      display: "flex", justifyContent: "center", alignItems: "center",
-      flexWrap: "wrap", gap: `${isMobile ? 14 : 20}px ${g}px`,
-    }}>
-      {logos.map(logo => (
-        <div
-          key={logo.name}
-          style={{
-            opacity,
-            transition: "opacity 0.3s",
-            display: "flex", alignItems: "center",
-            filter,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = String(hoverOpacity); }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = String(opacity); }}
-        >
-          <Image
-            src={logo.file}
-            alt={logo.name}
-            width={logo.w}
-            height={h}
-            style={{ height: h, width: "auto", maxWidth: isMobile ? 70 : 120 }}
-          />
+  const logo = (l: (typeof logos)[number], key: string) => (
+    <div
+      key={key}
+      style={{ opacity, transition: "opacity 0.3s", display: "flex", alignItems: "center", filter, flexShrink: 0 }}
+      onMouseEnter={e => { e.currentTarget.style.opacity = String(hoverOpacity); }}
+      onMouseLeave={e => { e.currentTarget.style.opacity = String(opacity); }}
+    >
+      <Image src={l.file} alt={l.name} width={l.w} height={h} style={{ height: h, width: "auto", maxWidth: isMobile ? 70 : 120 }} />
+    </div>
+  );
+
+  if (marquee) {
+    // Two identical groups; each group carries its own trailing gap (marginRight),
+    // so translateX(-50%) lands exactly one group forward = seamless loop.
+    const trackStyle = { "--k-marquee-dur": `${speed}s` } as CSSProperties;
+    return (
+      <div className="k-marquee" style={{ width: "100%" }}>
+        <div className="k-marquee-track" style={trackStyle}>
+          {[0, 1].map(copy => (
+            <div
+              key={copy}
+              aria-hidden={copy === 1}
+              style={{ display: "flex", alignItems: "center", gap: `${g}px`, marginRight: `${g}px`, flexShrink: 0 }}
+            >
+              {logos.map(l => logo(l, `${copy}-${l.name}`))}
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: `${isMobile ? 14 : 20}px ${g}px` }}>
+      {logos.map(l => logo(l, l.name))}
     </div>
   );
 }

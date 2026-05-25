@@ -89,34 +89,34 @@ export default async function BlogListPage({
       <div style={{ textAlign: "center", marginBottom: 48 }}>
         <p
           style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 10,
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            fontSize: 11,
             color: "#c23616",
-            letterSpacing: 4,
+            letterSpacing: 2,
             textTransform: "uppercase",
-            marginBottom: 16,
+            marginBottom: 18,
           }}
         >
-          Insights & Updates
+          // insights &amp; updates
         </p>
         <h1
           style={{
-            fontFamily: "'Instrument Serif', Georgia, serif",
-            fontWeight: 400,
-            fontSize: "clamp(40px, 6vw, 64px)",
-            letterSpacing: "-2px",
+            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+            fontWeight: 700,
+            fontSize: "clamp(34px, 5.5vw, 56px)",
+            letterSpacing: "-0.045em",
             color: "#1a1a1a",
-            lineHeight: 1.1,
-            marginBottom: 16,
+            lineHeight: 1.05,
+            marginBottom: 18,
           }}
         >
-          kodwai Blog
+          The kodwai blog
         </h1>
         <p
           style={{
-            fontFamily: "'Instrument Serif', Georgia, serif",
-            fontSize: "clamp(16px, 2vw, 20px)",
-            color: "#9a948a",
+            fontFamily: "'Hanken Grotesk', system-ui, sans-serif",
+            fontSize: "clamp(16px, 2vw, 19px)",
+            color: "#6f695f",
             lineHeight: 1.6,
             maxWidth: 600,
             margin: "0 auto",
@@ -142,10 +142,10 @@ export default async function BlogListPage({
           <Link
             href="/blog"
             style={{
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: 11,
               padding: "8px 20px",
-              borderRadius: 24,
+              borderRadius: 0,
               border: !params.category && !params.tag ? "1px solid #c23616" : "1px solid #e4e0d8",
               background: !params.category && !params.tag ? "#c23616" : "transparent",
               color: !params.category && !params.tag ? "#fff" : "#9a948a",
@@ -162,10 +162,10 @@ export default async function BlogListPage({
               key={cat.id}
               href={`/blog?category=${cat.slug}`}
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 11,
                 padding: "8px 20px",
-                borderRadius: 24,
+                borderRadius: 0,
                 border: params.category === cat.slug ? "1px solid #c23616" : "1px solid #e4e0d8",
                 background: params.category === cat.slug ? "#c23616" : "transparent",
                 color: params.category === cat.slug ? "#fff" : "#9a948a",
@@ -183,10 +183,10 @@ export default async function BlogListPage({
               key={tag.id}
               href={`/blog?tag=${tag.slug}`}
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 11,
                 padding: "8px 20px",
-                borderRadius: 24,
+                borderRadius: 0,
                 border: params.tag === tag.slug ? "1px solid #c23616" : "1px solid #e4e0d8",
                 background: params.tag === tag.slug ? "#c23616" : "transparent",
                 color: params.tag === tag.slug ? "#fff" : "#9a948a",
@@ -214,7 +214,7 @@ export default async function BlogListPage({
           >
             No posts yet
           </p>
-          <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, color: "#9a948a" }}>
+          <p style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 12, color: "#9a948a" }}>
             Check back soon for insights on AI-agent coding.
           </p>
         </div>
@@ -257,12 +257,12 @@ export default async function BlogListPage({
                     {featuredPost.category && (
                       <span
                         style={{
-                          fontFamily: "'Space Mono', monospace",
+                          fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                           fontSize: 9,
                           color: "#fff",
                           background: "#c23616",
                           padding: "4px 12px",
-                          borderRadius: 12,
+                          borderRadius: 0,
                           letterSpacing: 2,
                           textTransform: "uppercase",
                         }}
@@ -270,7 +270,7 @@ export default async function BlogListPage({
                         {featuredPost.category.name}
                       </span>
                     )}
-                    <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a" }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a" }}>
                       {formatDate(featuredPost.published_at)}
                     </span>
                   </div>
@@ -299,11 +299,11 @@ export default async function BlogListPage({
                     {featuredPost.excerpt}
                   </p>
                   <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                    <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a", letterSpacing: 0.5 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a", letterSpacing: 0.5 }}>
                       {featuredPost.author_name}
                     </span>
-                    <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#e4e0d8" }}>|</span>
-                    <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a", letterSpacing: 0.5 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#e4e0d8" }}>|</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a", letterSpacing: 0.5 }}>
                       {estimateReadTime(featuredPost.excerpt)}
                     </span>
                   </div>
@@ -313,12 +313,12 @@ export default async function BlogListPage({
                         <span
                           key={tag.id}
                           style={{
-                            fontFamily: "'Space Mono', monospace",
+                            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                             fontSize: 9,
                             color: "#9a948a",
                             border: "1px solid #e4e0d8",
                             padding: "3px 10px",
-                            borderRadius: 12,
+                            borderRadius: 0,
                             letterSpacing: 0.5,
                           }}
                         >
@@ -371,12 +371,12 @@ export default async function BlogListPage({
                         {post.category && (
                           <span
                             style={{
-                              fontFamily: "'Space Mono', monospace",
+                              fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                               fontSize: 9,
                               color: "#fff",
                               background: "#c23616",
                               padding: "3px 10px",
-                              borderRadius: 12,
+                              borderRadius: 0,
                               letterSpacing: 2,
                               textTransform: "uppercase",
                             }}
@@ -384,7 +384,7 @@ export default async function BlogListPage({
                             {post.category.name}
                           </span>
                         )}
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, color: "#9a948a" }}>
+                        <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 9, color: "#9a948a" }}>
                           {formatDate(post.published_at)}
                         </span>
                       </div>
@@ -422,10 +422,10 @@ export default async function BlogListPage({
                           borderTop: "1px solid #e4e0d8",
                         }}
                       >
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a" }}>
+                        <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a" }}>
                           {post.author_name}
                         </span>
-                        <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "#9a948a" }}>
+                        <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a" }}>
                           {estimateReadTime(post.excerpt)}
                         </span>
                       </div>
@@ -445,7 +445,7 @@ export default async function BlogListPage({
             <Link
               href={`/blog?page=${page - 1}${params.category ? `&category=${params.category}` : ""}${params.tag ? `&tag=${params.tag}` : ""}`}
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 11,
                 color: "#9a948a",
                 textDecoration: "none",
@@ -453,20 +453,20 @@ export default async function BlogListPage({
                 textTransform: "uppercase",
                 padding: "10px 24px",
                 border: "1px solid #e4e0d8",
-                borderRadius: 24,
+                borderRadius: 0,
               }}
             >
               Previous
             </Link>
           )}
-          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "#9a948a" }}>
+          <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a" }}>
             {page} / {totalPages}
           </span>
           {page < totalPages && (
             <Link
               href={`/blog?page=${page + 1}${params.category ? `&category=${params.category}` : ""}${params.tag ? `&tag=${params.tag}` : ""}`}
               style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
                 fontSize: 11,
                 color: "#9a948a",
                 textDecoration: "none",
@@ -474,7 +474,7 @@ export default async function BlogListPage({
                 textTransform: "uppercase",
                 padding: "10px 24px",
                 border: "1px solid #e4e0d8",
-                borderRadius: 24,
+                borderRadius: 0,
               }}
             >
               Next
