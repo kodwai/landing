@@ -50,7 +50,7 @@ This project is licensed under the **PolyForm Noncommercial License 1.0.0**.
 
 You may use, modify, and distribute it for personal, educational, research, and noncommercial purposes. **Commercial use, including using this code to operate or promote your own product, is not permitted** without a separate commercial license from kodwai.
 
-See [LICENSE](LICENSE) for the full text. For commercial licensing inquiries, contact **hakan@ksenda.com**.
+See [LICENSE](LICENSE) for the full text. For commerciall licensing inquiries, contact **hakan@ksenda.com**.
 
 ## Contributing
 
