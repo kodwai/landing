@@ -524,6 +524,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
         >open app <span aria-hidden>→</span></a>
       </nav>
 
+      <main>
       {/* ═══ HERO ═══ */}
       <section style={{ padding: `126px ${PAD} 88px` }}>
         {/* title block, centered */}
@@ -869,6 +870,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
           </div>
         </div>
       </section>
+      </main>
 
       {/* ═══ FOOTER ═══ */}
       <footer style={{ padding: `34px ${PAD}`, borderTop: `1px solid ${C.line}` }}>

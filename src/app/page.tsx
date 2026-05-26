@@ -22,7 +22,53 @@ async function getChallenges(): Promise<Challenge[]> {
   }
 }
 
+const SITE = "https://kodwai.com";
+const DESCRIPTION =
+  "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.";
+
+// Structured data so search engines and AI answer engines can classify kodwai
+// from schema rather than guessing the category from prose.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE}/#organization`,
+      name: "kodwai",
+      url: SITE,
+      description: DESCRIPTION,
+      logo: `${SITE}/icon`,
+      sameAs: ["https://x.com/kodwai_com", "https://discord.gg/d663XRC7"],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE}/#website`,
+      url: SITE,
+      name: "kodwai",
+      description: DESCRIPTION,
+      publisher: { "@id": `${SITE}/#organization` },
+    },
+    {
+      "@type": "WebApplication",
+      name: "kodwai",
+      url: SITE,
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Web",
+      description: DESCRIPTION,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  ],
+};
+
 export default async function Home() {
   const challenges = await getChallenges();
-  return <OptionE challenges={challenges} />;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      <OptionE challenges={challenges} />
+    </>
+  );
 }
