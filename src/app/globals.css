@@ -287,6 +287,7 @@ button:focus-visible {
 }
 @media (max-width: 560px) {
   .k-nav-blog { display: none !important; }
+  .k-byoa { display: none !important; }
   .k-badge-grid { grid-template-columns: repeat(3, 1fr) !important; }
   .k-chal-grid { grid-template-columns: 1fr !important; }
   .k-how-row { grid-template-columns: 1fr !important; gap: 6px !important; }

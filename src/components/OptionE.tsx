@@ -34,7 +34,7 @@ const C = {
   serif: "'Playfair Display', Georgia, serif",
 };
 
-/* Terminal keeps a dark palette on the light page, like a real terminal. */
+/* Dark palette for the inline code chips, kept dark on the light page. */
 const T = {
   bg: "#0c0c0d",
   header: "#161617",
@@ -58,132 +58,6 @@ const diffStyle: Record<string, { bg: string; fg: string }> = {
   medium: { bg: "rgba(207,138,26,0.16)", fg: "#9a6206" },
   hard: { bg: "rgba(194,54,22,0.12)", fg: "#c23616" },
 };
-
-/* ─── Terminal data ─── */
-// Mirrors the real CLI flow (challenge -> pick agent -> workspace + git +
-// timer -> solve -> submit -> score), with the dial turned slightly toward fun.
-const lines = [
-  { t: "p", s: "$ npx @kodwai/cli challenge algorithm-rate-limiter" },
-  { t: "b", s: "" },
-  { t: "d", s: "  kodwai · real problems, your own agent" },
-  { t: "a", s: "? which agent will you use? › Claude Code" },
-  { t: "g", s: "✓ workspace   kodwai-algorithm-rate-limiter/" },
-  { t: "d", s: "  wrote PROBLEM.md, starter files, tests" },
-  { t: "d", s: '  git init · commit "Initial: starter files"' },
-  { t: "d", s: "⏱  45:00 on the clock. no pressure." },
-  { t: "b", s: "" },
-  { t: "p", s: '$ claude "read PROBLEM.md, then build it"' },
-  { t: "a", s: "→ reading problem… a sliding-window limiter. cute." },
-  { t: "a", s: "→ plan: counter, limiter, tests. wiring it up." },
-  { t: "d", s: "  created  rate-limiter.ts        71 lines" },
-  { t: "d", s: "  created  rate-limiter.test.ts    6 tests" },
-  { t: "d", s: "  $ node .kodwai/test-runner.js" },
-  { t: "g", s: "  ✓ allows requests under the limit" },
-  { t: "g", s: "  ✓ blocks the 6th request in the window" },
-  { t: "g", s: "  ✓ resets after the window expires" },
-  { t: "g", s: "  ✓ tracks each client independently" },
-  { t: "g", s: "  ✓ cleans up expired entries (no leaks)" },
-  { t: "g", s: "✓ 6/6 passing. attempt #3, but who's counting" },
-  { t: "b", s: "" },
-  { t: "p", s: "$ npx @kodwai/cli submit" },
-  { t: "d", s: "  packing code · git log · tests · transcript" },
-  { t: "a", s: "→ uploading 41 minutes of you correcting me…" },
-  { t: "d", s: "✓ submission received · scoring" },
-  { t: "b", s: "" },
-  { t: "x", s: "  ai collaboration score      94 / 100" },
-  { t: "h", s: "  ───────────────────────────────────" },
-  { t: "x", s: "  objective (70%)             95" },
-  { t: "x", s: "  ai analysis (30%)           91" },
-  { t: "d", s: "  → kodwai.com/dev/submissions/8f2a" },
-];
-
-const scoreOnly = lines.slice(-5);
-
-function lineColor(t: string) {
-  return t === "p" ? T.prompt
-    : t === "a" ? T.agent
-    : t === "x" ? T.amber
-    : t === "g" ? T.green
-    : t === "h" ? T.faint
-    : T.text;
-}
-
-function Terminal() {
-  const [playing, setPlaying] = useState(false);
-  const [vl, setVl] = useState(0);
-  const [ci, setCi] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => { setVl(0); setCi(0); setPlaying(true); }, 650);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    if (!playing) return;
-    if (vl >= lines.length) {
-      const t = setTimeout(() => { setPlaying(false); }, 3600);
-      return () => clearTimeout(t);
-    }
-    const l = lines[vl];
-    if (l.t === "b") {
-      const t = setTimeout(() => { setVl(v => v + 1); setCi(0); }, 150);
-      return () => clearTimeout(t);
-    }
-    if (ci < l.s.length) {
-      const t = setTimeout(() => setCi(c => c + 1), l.t === "p" ? 20 : l.t === "a" ? 13 : 5);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => { setVl(v => v + 1); setCi(0); }, l.t === "p" ? 300 : l.t === "x" ? 150 : 70);
-    return () => clearTimeout(t);
-  }, [vl, ci, playing]);
-
-  useEffect(() => { if (ref.current) ref.current.scrollTop = ref.current.scrollHeight; }, [vl, ci, playing]);
-
-  const visible = playing || vl >= lines.length ? lines.slice(0, Math.min(vl + 1, lines.length)) : scoreOnly;
-
-  return (
-    <div style={{
-      background: T.bg, border: `1px solid ${T.line}`, overflow: "hidden", position: "relative", maxWidth: "100%",
-      fontFamily: C.mono, boxShadow: "0 26px 60px -26px rgba(40,22,10,0.45), 0 2px 10px -4px rgba(40,22,10,0.18)",
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 16px", background: T.header, borderBottom: `1px solid ${T.line}` }}>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#3a3833" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#3a3833" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#3a3833" }} />
-        <span style={{ fontSize: 11.5, color: T.faint, marginLeft: 10, letterSpacing: 0.3 }}>~/kodwai/rate-limiter · zsh</span>
-        <button
-          type="button"
-          onClick={() => { setVl(0); setCi(0); setPlaying(true); }}
-          aria-label="Replay the recorded session"
-          style={{
-            marginLeft: "auto", background: "transparent", color: playing ? T.faint : T.prompt,
-            border: `1px solid ${playing ? T.line : "#7a3320"}`, fontFamily: C.mono, fontSize: 10, letterSpacing: 1.4,
-            textTransform: "uppercase", padding: "5px 11px", cursor: "pointer",
-            transition: `color 0.3s ${CSS_EASE}, border-color 0.3s ${CSS_EASE}`,
-          }}
-        >
-          {playing && vl < lines.length ? "running" : "↻ replay"}
-        </button>
-      </div>
-      <div ref={ref} className="hide-scrollbar" style={{ padding: "20px 22px", fontSize: 12.5, lineHeight: 1.85, height: 432, overflowX: "auto", overflowY: "auto", textAlign: "left" }}>
-        {visible.map((l, i) => {
-          if (l.t === "b") return <div key={i} style={{ height: 11 }} />;
-          const cur = playing && i === vl;
-          return (
-            <div key={i} style={{ color: lineColor(l.t), whiteSpace: "pre", textAlign: "left", fontWeight: l.t === "x" ? 500 : 400 }}>
-              {cur ? l.s.slice(0, ci) : l.s}
-              {cur && ci < l.s.length && (
-                <span style={{ display: "inline-block", width: 7, height: 13, background: T.prompt, marginLeft: 1, verticalAlign: "text-bottom", animation: "blink 1s step-end infinite" }} />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
 
 /* ─── Motion: load sequence + scroll-triggered staggers ─── */
 function useChoreography() {
@@ -472,6 +346,145 @@ const badges = [
 
 function scoreColor(s: number) { return s >= 70 ? C.green : s >= 50 ? C.amber : C.accent; }
 
+/* True once the visitor has resolved the cookie banner (accept or decline),
+   which is the moment it closes. Read from the `cookie_consent` cookie that
+   CookieConsent writes, so a revisit (consent already stored) reads true. */
+function consentResolved() {
+  if (typeof document === "undefined") return false;
+  return /(?:^|;\s*)cookie_consent=(?:accepted|declined)/.test(document.cookie);
+}
+
+/* ─── Hero product demo (~40s, loops, has background music). Playback is
+   JS-gated on cookie consent: it does NOT use the native autoplay attribute,
+   so it only starts once the cookie banner is closed — and immediately on a
+   revisit when consent is already stored (via the `kodwai:consent-resolved`
+   event CookieConsent dispatches). A branded loading overlay (the end-of-intro
+   frame) covers loading / pre-consent so there's never an empty box; it is
+   removed on the first `playing`, so a later pause shows the real current
+   frame. Starts muted with an unmute control; honors prefers-reduced-motion
+   (manual play only) and exposes mute, full-screen, and pause controls. ─── */
+function HeroVideo() {
+  const ref = useRef<HTMLVideoElement>(null);
+  const [started, setStarted] = useState(false); // a frame has actually played
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true; // React's `muted` prop is unreliable — enforce it imperatively
+    // Don't autoplay for reduced-motion visitors; they can press play.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const tryPlay = () => { v.muted = true; v.play().catch(() => {}); };
+    if (consentResolved()) {
+      tryPlay(); // revisit / consent already given → play now
+      return;
+    }
+    // Fresh visitor with the banner open → wait until it's closed.
+    window.addEventListener("kodwai:consent-resolved", tryPlay, { once: true });
+    return () => window.removeEventListener("kodwai:consent-resolved", tryPlay);
+  }, []);
+
+  const togglePlay = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (v.paused) v.play().catch(() => {});
+    else v.pause();
+  };
+
+  const toggleMute = () => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    if (!v.muted) v.play().catch(() => {}); // unmuting is a gesture → also resume if paused
+  };
+
+  const goFullscreen = () => {
+    const v = ref.current as
+      | (HTMLVideoElement & { webkitEnterFullscreen?: () => void; webkitRequestFullscreen?: () => void })
+      | null;
+    if (!v) return;
+    if (v.requestFullscreen) v.requestFullscreen().catch(() => {});
+    else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iOS Safari
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+  };
+
+  const ctrl: CSSProperties = {
+    display: "inline-flex", alignItems: "center", gap: 7,
+    background: "rgba(12,12,13,0.66)", color: "#f0ece4", border: "1px solid rgba(255,255,255,0.18)",
+    backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+    fontFamily: C.mono, fontSize: 10, letterSpacing: 1.4, textTransform: "uppercase",
+    padding: "7px 11px", cursor: "pointer", lineHeight: 1,
+  };
+
+  return (
+    <div style={{ position: "relative" }}>
+      {/* warm glow behind the frame */}
+      <div aria-hidden style={{ position: "absolute", inset: "-6% -3% -9%", background: "radial-gradient(58% 62% at 50% 30%, rgba(194,54,22,0.10), transparent 72%)", zIndex: 0, pointerEvents: "none" }} />
+      <div style={{ position: "relative", zIndex: 1, border: `1px solid ${C.lineBright}`, background: C.panel, overflow: "hidden", boxShadow: "0 34px 80px -34px rgba(40,22,10,0.45), 0 2px 12px -5px rgba(40,22,10,0.18)" }}>
+        <video
+          ref={ref}
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/kodwai-demo-intro.jpg"
+          disablePictureInPicture
+          onPlaying={() => setStarted(true)}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          aria-label="A walkthrough of kodwai: browse a challenge, solve it with Claude Code in the terminal, submit, then see the score and the leaderboard."
+          style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", background: C.bg }}
+        >
+          <source src="/kodwai-demo.webm" type="video/webm" />
+          <source src="/kodwai-demo.mp4" type="video/mp4" />
+        </video>
+
+        {/* loading / pre-consent overlay — the end-of-intro frame. Removed on
+            the first `playing`, so a later pause shows the real current frame. */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
+            backgroundImage: "url(/kodwai-demo-intro.jpg)", backgroundSize: "cover", backgroundPosition: "center",
+            opacity: started ? 0 : 1, transition: `opacity .5s ${CSS_EASE}`,
+          }}
+        />
+
+        {/* controls — always visible so they work on touch / mobile */}
+        <div style={{ position: "absolute", right: 12, bottom: 12, zIndex: 2, display: "flex", gap: 8 }}>
+          <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute the demo" : "Mute the demo"} style={ctrl}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+              {muted ? (
+                <>
+                  <line x1="23" y1="9" x2="17" y2="15" />
+                  <line x1="17" y1="9" x2="23" y2="15" />
+                </>
+              ) : (
+                <>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </>
+              )}
+            </svg>
+            <span>{muted ? "unmute" : "mute"}</span>
+          </button>
+          <button type="button" onClick={goFullscreen} aria-label="Watch full screen" style={ctrl}>
+            <span aria-hidden style={{ fontSize: 12 }}>⛶</span>
+            <span>full screen</span>
+          </button>
+          <button type="button" onClick={togglePlay} aria-label={playing ? "Pause the demo" : "Play the demo"} style={ctrl}>
+            <span aria-hidden style={{ fontSize: 9 }}>{playing ? "❚❚" : "▶"}</span>
+            <span>{playing ? "pause" : "play"}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ══════════════════════════ PAGE ══════════════════════════ */
 export default function OptionE({ challenges = [] }: { challenges?: Challenge[] }) {
   useChoreography();
@@ -512,54 +525,54 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
       </nav>
 
       {/* ═══ HERO ═══ */}
-      <section style={{ padding: `132px ${PAD} 76px` }}>
-        <div className="k-hero" style={{ maxWidth: MAXW, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0,0.92fr) minmax(0,1.08fr)", gap: 60, alignItems: "center" }}>
-          <div>
-            <div className="k-hero-el" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 26, border: `1px solid ${C.line}`, background: C.panel, padding: "6px 12px" }}>
-              <span style={{ position: "relative", display: "inline-flex", width: 7, height: 7 }}>
-                <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: C.accent, animation: "live-pulse 2.4s cubic-bezier(0.16,1,0.3,1) infinite" }} />
-                <span style={{ position: "relative", width: 7, height: 7, borderRadius: "50%", background: C.accent }} />
-              </span>
-              <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 1, textTransform: "uppercase" }}>vibe code scoring</span>
-            </div>
-
-            <h1 className="k-hero-el" style={{ fontFamily: C.mono, fontWeight: 700, fontSize: "clamp(40px, 8.2vw, 55px)", lineHeight: 1.06, letterSpacing: "-0.045em", margin: 0, marginBottom: 24, color: C.text, whiteSpace: "nowrap" }}>
-              Measure how you<br /><span style={{ color: C.accent }}>actually ship.</span>
-            </h1>
-
-            <p className="k-hero-el" style={{ fontFamily: C.sans, fontSize: "clamp(16px, 1.9vw, 19px)", lineHeight: 1.6, color: C.muted, maxWidth: "46ch", margin: 0, marginBottom: 34 }}>
-              Real challenges, solved on your own machine with your own AI agent. We score how you actually drive the work, not what you memorized.
-            </p>
-
-            <div className="k-hero-el" style={{ display: "flex", alignItems: "center", gap: 22, flexWrap: "wrap", marginBottom: 26 }}>
-              <PrimaryButton label="Start a challenge" large />
-              <GhostLink kicker="hiring?" label="set up interviews" />
-            </div>
-
-            <div className="k-hero-el" style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5 }}>
-              <span>fully free</span><span style={{ color: C.line }}>/</span>
-              <span>bring your own agent</span><span style={{ color: C.line }}>/</span>
-              <span>claude code or cursor</span>
-            </div>
+      <section style={{ padding: `126px ${PAD} 88px` }}>
+        {/* title block, centered */}
+        <div style={{ maxWidth: 920, margin: "0 auto", textAlign: "center" }}>
+          <div className="k-hero-el" style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 26, border: `1px solid ${C.line}`, background: C.panel, padding: "6px 12px" }}>
+            <span style={{ position: "relative", display: "inline-flex", width: 7, height: 7 }}>
+              <span style={{ position: "absolute", inset: 0, borderRadius: "50%", background: C.accent, animation: "live-pulse 2.4s cubic-bezier(0.16,1,0.3,1) infinite" }} />
+              <span style={{ position: "relative", width: 7, height: 7, borderRadius: "50%", background: C.accent }} />
+            </span>
+            <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 1, textTransform: "uppercase" }}>vibe code scoring</span>
           </div>
 
-          <div className="k-hero-el k-hero-term">
-            <Terminal />
-            <p style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5, marginTop: 14, textAlign: "right" }}>
-              jamie.b · final <span style={{ color: C.amber }}>94/100</span>
-            </p>
+          <h1 className="k-hero-el" style={{ fontFamily: C.mono, fontWeight: 700, fontSize: "clamp(33px, 8vw, 68px)", lineHeight: 1.05, letterSpacing: "-0.045em", margin: "0 auto 22px", color: C.text, textWrap: "balance" }}>
+            Measure How You Actually <span style={{ color: C.accent, whiteSpace: "nowrap" }}>Vibe Code</span>
+          </h1>
+
+          <p className="k-hero-el" style={{ fontFamily: C.sans, fontSize: "clamp(15px, 1.9vw, 20px)", lineHeight: 1.6, color: C.muted, maxWidth: "54ch", margin: "0 auto 32px", textWrap: "pretty" }}>
+            Real challenges, solved on your own machine with your own AI agent. We score how you actually drive the work, not what you memorized.
+          </p>
+
+          <div className="k-hero-el k-hero-actions" style={{ marginBottom: 22 }}>
+            <PrimaryButton label="Start a challenge" large />
+            <GhostLink kicker="hiring?" label="set up interviews" />
           </div>
+
+          <div className="k-hero-el" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap", fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5 }}>
+            <span>fully free</span><span style={{ color: C.line }}>/</span>
+            <span className="k-byoa">bring your own agent</span><span className="k-byoa" style={{ color: C.line }}>/</span>
+            <span>claude code or cursor</span>
+          </div>
+        </div>
+
+        {/* looping product demo, below the fold-line */}
+        <div className="k-hero-el" style={{ maxWidth: MAXW, margin: "62px auto 0" }}>
+          <HeroVideo />
+          <p style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5, margin: "14px 0 0", textAlign: "center" }}>
+            browse → solve with your agent → submit → score
+          </p>
         </div>
       </section>
 
       {/* ═══ TRUST STRIP ═══ */}
       <section style={{ padding: `36px ${PAD}`, borderTop: `1px solid ${C.line}`, borderBottom: `1px solid ${C.line}` }}>
-        <div style={{ maxWidth: MAXW, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-          <div style={{ fontFamily: C.mono, fontSize: 13, fontWeight: 600, color: C.text, letterSpacing: 1.5, textTransform: "uppercase", textAlign: "center", lineHeight: 1.4 }}>
+        <div style={{ maxWidth: MAXW, margin: "0 auto", display: "flex", flexDirection: "column", alignItems: "center", gap: 32 }}>
+          <div style={{ fontFamily: C.mono, fontSize: 12, fontWeight: 500, color: C.text, letterSpacing: 1.5, textTransform: "uppercase", textAlign: "center", lineHeight: 2 }}>
             Made for developers who want to work at
           </div>
           <div style={{ width: "100%" }}>
-            <LogoStrip marquee filter="brightness(0)" opacity={0.45} hoverOpacity={0.8} height={26} gap={88} speed={50} />
+            <LogoStrip marquee filter="brightness(0)" opacity={0.45} hoverOpacity={0.8} height={26} gap={88} mobileGap={38} speed={50} />
           </div>
         </div>
       </section>

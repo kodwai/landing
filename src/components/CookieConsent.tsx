@@ -58,12 +58,15 @@ export default function CookieConsent() {
     setCookie("cookie_consent", "accepted", 365);
     updateConsent(true);
     setVisible(false);
+    // Let other components (e.g. the hero video) know the banner is closed.
+    window.dispatchEvent(new Event("kodwai:consent-resolved"));
   };
 
   const handleDecline = () => {
     setCookie("cookie_consent", "declined", 180);
     updateConsent(false);
     setVisible(false);
+    window.dispatchEvent(new Event("kodwai:consent-resolved"));
   };
 
   if (!visible) return null;
