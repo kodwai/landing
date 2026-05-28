@@ -449,8 +449,8 @@ function HeroVideo() {
           aria-label="A walkthrough of kodwai: browse a challenge, solve it with Claude Code in the terminal, submit, then see the score and the leaderboard."
           style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", background: C.bg }}
         >
-          <source src="/kodwai-demo.webm" type="video/webm" />
-          <source src="/kodwai-demo.mp4" type="video/mp4" />
+          <source src="/kodwai-demo.webm?v=2026-05-28" type="video/webm" />
+          <source src="/kodwai-demo.mp4?v=2026-05-28" type="video/mp4" />
         </video>
 
         {/* loading / pre-consent overlay — the end-of-intro frame. Removed on
