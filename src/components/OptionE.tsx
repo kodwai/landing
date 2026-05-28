@@ -245,7 +245,7 @@ const flow = [
   { n: "02", title: "Run the CLI", body: "Start it from your terminal and choose your agent. We download PROBLEM.md, starter files and tests, init a git repo, and start the timer.", chip: "npx @kodwai/cli challenge <slug>", tags: ["Claude Code", "Cursor"] },
   { n: "03", title: "Solve on your machine", body: "Work the problem with your own agent in your own editor. No sandbox to fight, no artificial constraints, just how you really build.", chip: null, tags: null },
   { n: "04", title: "Submit", body: "One command packages your code, git history, test runs, agent transcript and the time you took, then ships it for scoring.", chip: "npx @kodwai/cli submit", tags: null },
-  { n: "05", title: "Get your score", body: "An objective score lands first. AI analysis adds a deeper read of how you worked. Then you are on the leaderboard.", chip: null, tags: null },
+  { n: "05", title: "Get your score", body: "Direction, Outcome, and Lift land with per-signal evidence, so you can see why each axis scored the way it did. Then you are on the leaderboard.", chip: null, tags: null },
 ];
 
 function CatPill({ label, count, active, onClick }: { label: string; count: number; active: boolean; onClick: () => void }) {
@@ -310,14 +310,26 @@ const FALLBACK_CHALLENGES: Challenge[] = [
   { slug: "collaborative-cursor-sync", title: "Collaborative cursor sync", description: "CRDT-backed presence, conflict-free merges, and sub-50ms perceived latency.", difficulty: "hard", category: "frontend", minutes: 75 },
 ];
 
-const objectiveDims = [
-  { name: "Test pass rate", pct: 98 },
+/* Scoring v2 — Lift. The score is the weighted sum of three axes:
+   Direction (50), Outcome (35), Lift (15). Direction is dominant by design:
+   a one-shot prompt can still pass tests, but it will lose Direction points,
+   so a high score only comes from steering the agent well. */
+const directionDims = [
+  { name: "Intent fidelity", pct: 96 },
+  { name: "Verification rigor", pct: 92 },
+  { name: "Spec precision", pct: 89 },
+  { name: "Decomposition", pct: 86 },
+  { name: "Recovery", pct: 84 },
+  { name: "Engagement", pct: 90 },
+];
+const outcomeDims = [
+  { name: "Tests passed", pct: 100 },
   { name: "Code quality", pct: 93 },
   { name: "Complexity", pct: 88 },
-  { name: "Time efficiency", pct: 90 },
-  { name: "Iteration", pct: 86 },
 ];
-const aiDims = ["Problem solving", "Code quality", "Agent collaboration"];
+const liftDims = [
+  { name: "Edge-case coverage", pct: 82 },
+];
 
 const leaderboard = [
   { rank: 1, name: "Jamie Brooks", handle: "@jamie", agent: "claude-code", score: 96 },
@@ -703,22 +715,35 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
       <section style={{ padding: `100px ${PAD}`, borderTop: `1px solid ${C.line}` }}>
         <div style={{ maxWidth: MAXW, margin: "0 auto" }}>
           <Marker index="04" label="the score" />
-          <h2 className="k-reveal" style={{ fontFamily: C.mono, fontWeight: 700, fontSize: "clamp(26px, 3.8vw, 44px)", letterSpacing: "-0.04em", lineHeight: 1.05, margin: "0 0 56px", color: C.text, maxWidth: "18ch" }}>
-            What the <span style={{ color: C.accent }}>score</span> actually measures.
-          </h2>
+          <div className="k-2col k-reveal" style={{ display: "grid", gridTemplateColumns: "1.45fr 1fr", gap: 56, alignItems: "end", marginBottom: 56 }}>
+            <h2 style={{ fontFamily: C.mono, fontWeight: 700, fontSize: "clamp(26px, 3.8vw, 44px)", letterSpacing: "-0.04em", lineHeight: 1.05, margin: 0, color: C.text, maxWidth: "22ch" }}>
+              What the <span style={{ color: C.accent }}>score</span> actually measures.
+            </h2>
+            <p style={{ fontFamily: C.sans, fontSize: 16.5, lineHeight: 1.62, color: C.muted, margin: 0, maxWidth: "44ch" }}>
+              A one-shot &ldquo;solve this&rdquo; prompt clears tests, so passing tests is not enough. The score is dominated by how you direct the agent, the part a careless prompt can&apos;t fake.
+            </p>
+          </div>
 
-          <div className="k-score" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 72, alignItems: "center" }}>
+          <div className="k-score" style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 64, alignItems: "start" }}>
             <div className="k-reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
-              <ScoreRing score={94} />
+              <ScoreRing score={91} />
               <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.8, textAlign: "center", textTransform: "uppercase" }}>sample run · rate limiter</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4, fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 0.4 }}>
+                <span><span style={{ color: C.accent }}>direction</span> 45 / 50</span>
+                <span><span style={{ color: C.accent }}>outcome</span> 31 / 35</span>
+                <span><span style={{ color: C.accent }}>lift</span> 12 / 15</span>
+              </div>
             </div>
 
-            <div className="k-dims" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 44 }}>
+            <div className="k-dims" style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr", gap: 44 }}>
               <div className="k-reveal">
-                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.text, letterSpacing: 0.6, textTransform: "uppercase", margin: "0 0 4px" }}>Objective</p>
-                <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.4, margin: "0 0 22px" }}>70% · every submission</p>
-                {objectiveDims.map((d) => (
-                  <div key={d.name} style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
+                  <p style={{ fontFamily: C.mono, fontSize: 11, color: C.text, letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>Direction</p>
+                  <span style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 0.4 }}>50 pts</span>
+                </div>
+                <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.4, margin: "0 0 22px" }}>how you drive the agent</p>
+                {directionDims.map((d) => (
+                  <div key={d.name} style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
                       <span style={{ fontFamily: C.sans, fontSize: 14, color: C.muted }}>{d.name}</span>
                       <span style={{ fontFamily: C.mono, fontSize: 12, color: C.text }}>{d.pct}</span>
@@ -728,24 +753,46 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
                 ))}
               </div>
 
-              <div className="k-reveal">
-                <p style={{ fontFamily: C.mono, fontSize: 11, color: C.text, letterSpacing: 0.6, textTransform: "uppercase", margin: "0 0 4px" }}>AI analysis</p>
-                <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.4, margin: "0 0 22px" }}>30% · a deeper read</p>
-                {aiDims.map((d) => (
-                  <div key={d} style={{ display: "flex", alignItems: "center", gap: 12, padding: "13px 0", borderBottom: `1px solid ${C.line}` }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: C.green, flexShrink: 0 }} />
-                    <span style={{ fontFamily: C.sans, fontSize: 15, color: C.text }}>{d}</span>
+              <div className="k-reveal" style={{ display: "flex", flexDirection: "column", gap: 36 }}>
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
+                    <p style={{ fontFamily: C.mono, fontSize: 11, color: C.text, letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>Outcome</p>
+                    <span style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 0.4 }}>35 pts</span>
                   </div>
-                ))}
-                <p style={{ fontFamily: C.sans, fontSize: 13.5, lineHeight: 1.6, color: C.muted, margin: "18px 0 0" }}>
-                  Reads your prompts, commits, and the diff to judge how you steered the agent and held the line on quality.
-                </p>
+                  <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.4, margin: "0 0 18px" }}>what you actually shipped</p>
+                  {outcomeDims.map((d) => (
+                    <div key={d.name} style={{ marginBottom: 14 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
+                        <span style={{ fontFamily: C.sans, fontSize: 14, color: C.muted }}>{d.name}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 12, color: C.text }}>{d.pct}</span>
+                      </div>
+                      <Bar pct={d.pct} color={C.accent} />
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
+                    <p style={{ fontFamily: C.mono, fontSize: 11, color: C.text, letterSpacing: 0.6, textTransform: "uppercase", margin: 0 }}>Lift</p>
+                    <span style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 0.4 }}>15 pts</span>
+                  </div>
+                  <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.4, margin: "0 0 18px" }}>edges a one-shot misses</p>
+                  {liftDims.map((d) => (
+                    <div key={d.name} style={{ marginBottom: 12 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 7 }}>
+                        <span style={{ fontFamily: C.sans, fontSize: 14, color: C.muted }}>{d.name}</span>
+                        <span style={{ fontFamily: C.mono, fontSize: 12, color: C.text }}>{d.pct}</span>
+                      </div>
+                      <Bar pct={d.pct} color={C.accent} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
           <p className="k-reveal" style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.6, marginTop: 36, textAlign: "right" }}>
-            scored 0 to 100 · 70% objective · 30% ai analysis
+            scored 0 to 100 · direction 50 · outcome 35 · lift 15 · every signal cites its evidence
           </p>
         </div>
       </section>
