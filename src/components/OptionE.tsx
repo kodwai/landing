@@ -730,7 +730,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
               <p style={{ fontFamily: C.mono, fontSize: 10.5, color: C.faint, letterSpacing: 0.8, textAlign: "center", textTransform: "uppercase" }}>sample run · rate limiter</p>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 4, fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 0.4 }}>
                 <span><span style={{ color: C.accent }}>direction</span> 45 / 50</span>
-                <span><span style={{ color: C.accent }}>outcome</span> 31 / 35</span>
+                <span><span style={{ color: C.accent }}>outcome</span> 34 / 35</span>
                 <span><span style={{ color: C.accent }}>lift</span> 12 / 15</span>
               </div>
             </div>
