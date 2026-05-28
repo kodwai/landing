@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import anime from "animejs";
+import posthog from "posthog-js";
 import LogoStrip from "./LogoStrip";
 
 /* ══════════════════════════════════════════════════════════════
@@ -211,7 +212,7 @@ function CodeChip({ children }: { children: React.ReactNode }) {
 function PrimaryButton({ label, large }: { label: string; large?: boolean }) {
   const [h, setH] = useState(false);
   return (
-    <a href={APP_URL} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
+    <a href={APP_URL} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onClick={() => posthog.capture("cta_clicked", { label })} style={{
       display: "inline-flex", alignItems: "center", gap: 12, background: h ? C.accentDeep : C.accent, color: "#faf8f4",
       fontFamily: C.mono, fontWeight: 700, fontSize: large ? 13 : 12, padding: large ? "16px 28px" : "12px 22px",
       textDecoration: "none", textTransform: "uppercase", letterSpacing: 2, whiteSpace: "nowrap", border: `1px solid ${C.accent}`,
@@ -228,7 +229,7 @@ function PrimaryButton({ label, large }: { label: string; large?: boolean }) {
 function GhostLink({ label, kicker, href = APP_URL }: { label: string; kicker?: string; href?: string }) {
   const [h, setH] = useState(false);
   return (
-    <a href={href} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} style={{
+    <a href={href} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} onClick={() => posthog.capture("cta_clicked", { label, kicker })} style={{
       display: "inline-flex", alignItems: "center", gap: 10, fontFamily: C.mono, fontSize: 12, letterSpacing: 1,
       textTransform: "uppercase", color: h ? C.accent : C.muted, textDecoration: "none", transition: `color .3s ${CSS_EASE}`,
     }}>
@@ -252,7 +253,7 @@ function CatPill({ label, count, active, onClick }: { label: string; count: numb
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={() => { onClick(); posthog.capture("challenge_category_filtered", { category: label, count }); }}
       aria-pressed={active}
       style={{
         fontFamily: C.mono, fontSize: 11.5, letterSpacing: 0.4, textTransform: "lowercase",
@@ -400,8 +401,8 @@ function HeroVideo() {
   const togglePlay = () => {
     const v = ref.current;
     if (!v) return;
-    if (v.paused) v.play().catch(() => {});
-    else v.pause();
+    if (v.paused) { v.play().catch(() => {}); posthog.capture("demo_video_interacted", { action: "play" }); }
+    else { v.pause(); posthog.capture("demo_video_interacted", { action: "pause" }); }
   };
 
   const toggleMute = () => {
@@ -409,6 +410,7 @@ function HeroVideo() {
     if (!v) return;
     v.muted = !v.muted;
     setMuted(v.muted);
+    posthog.capture("demo_video_interacted", { action: v.muted ? "mute" : "unmute" });
     if (!v.muted) v.play().catch(() => {}); // unmuting is a gesture → also resume if paused
   };
 
@@ -417,6 +419,7 @@ function HeroVideo() {
       | (HTMLVideoElement & { webkitEnterFullscreen?: () => void; webkitRequestFullscreen?: () => void })
       | null;
     if (!v) return;
+    posthog.capture("demo_video_interacted", { action: "fullscreen" });
     if (v.requestFullscreen) v.requestFullscreen().catch(() => {});
     else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iOS Safari
     else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
@@ -533,6 +536,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
         }}
           onMouseEnter={e => { e.currentTarget.style.color = C.accent; e.currentTarget.style.borderColor = C.accent; }}
           onMouseLeave={e => { e.currentTarget.style.color = C.text; e.currentTarget.style.borderColor = C.lineBright; }}
+          onClick={() => posthog.capture("open_app_clicked", { location: "nav" })}
         >open app <span aria-hidden>→</span></a>
       </nav>
 
@@ -676,7 +680,8 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
               return (
                 <a key={c.slug} href={APP_URL} style={{ display: "flex", flexDirection: "column", textDecoration: "none", border: `1px solid #d9cfba`, background: "#fffefb", padding: 22, boxShadow: "0 2px 6px rgba(26,16,8,0.07), 0 16px 30px -10px rgba(26,16,8,0.17)", transition: `border-color .3s ${CSS_EASE}, transform .3s ${CSS_EASE}, box-shadow .3s ${CSS_EASE}` }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = C.accent; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 18px 34px -12px rgba(194,54,22,0.30)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#d9cfba"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(26,16,8,0.07), 0 16px 30px -10px rgba(26,16,8,0.17)"; }}>
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = "#d9cfba"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 6px rgba(26,16,8,0.07), 0 16px 30px -10px rgba(26,16,8,0.17)"; }}
+                  onClick={() => posthog.capture("challenge_clicked", { slug: c.slug, difficulty: c.difficulty, category: c.category, minutes: c.minutes })}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                     <span style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: 0.6, textTransform: "uppercase", color: ds.fg, background: ds.bg, padding: "3px 8px" }}>{c.difficulty}</span>
                     <span style={{ fontFamily: C.mono, fontSize: 10, letterSpacing: 0.6, textTransform: "uppercase", color: C.faint }}>{c.category}</span>
@@ -693,7 +698,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
             <div style={{ display: "flex", justifyContent: "center", marginTop: 30 }}>
               <button
                 type="button"
-                onClick={() => setShowAllChal(v => !v)}
+                onClick={() => { const next = !showAllChal; setShowAllChal(next); posthog.capture("challenges_expanded", { expanded: next, category: effectiveCat }); }}
                 aria-expanded={showAllChal}
                 style={{
                   fontFamily: C.mono, fontSize: 12, fontWeight: 500, letterSpacing: 1, textTransform: "uppercase", cursor: "pointer",

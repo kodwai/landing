@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import posthog from "posthog-js";
 
 /* ===========================================
    DESIGN TOKENS — OptionE Design System
@@ -1221,7 +1222,10 @@ export default function PitchDeck() {
           if (e.isIntersecting) {
             e.target.classList.add("visible");
             const idx = slideRefs.current.indexOf(e.target as HTMLElement);
-            if (idx !== -1) setCurrentSlide(idx);
+            if (idx !== -1) {
+              setCurrentSlide(idx);
+              posthog.capture("pitch_deck_slide_viewed", { slide_id: SLIDES[idx]?.id, slide_index: idx });
+            }
           }
         });
       },
