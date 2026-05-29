@@ -274,7 +274,7 @@ button:focus-visible {
   .k-hero { grid-template-columns: minmax(0, 1fr) !important; gap: 40px !important; }
   .k-hero-term { order: 2; min-width: 0; }
   .k-2col { grid-template-columns: 1fr !important; gap: 20px !important; align-items: start !important; }
-  .k-score { grid-template-columns: 1fr !important; gap: 40px !important; justify-items: start !important; }
+  .k-score { grid-template-columns: 1fr !important; gap: 40px !important; }
   .k-dims { grid-template-columns: 1fr !important; gap: 32px !important; }
   .k-begin { grid-template-columns: 1fr !important; gap: 26px !important; }
   .k-begin > span[aria-hidden] { width: 100% !important; height: 1px !important; }
