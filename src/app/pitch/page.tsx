@@ -19,7 +19,7 @@ const T = {
 };
 
 /* ===========================================
-   SLIDE DATA — Profit-focused narrative
+   SLIDE DATA — Dual-track product & vision deck
    =========================================== */
 interface SlideData {
   id: string;
@@ -30,156 +30,222 @@ interface SlideData {
 }
 
 /*
- * SLIDE ORDER — follows investor-materials recommended flow:
- * 1. Company + Wedge  2. Problem  3. Solution  4. Product/Demo
- * 5. Market  6. Business Model  7. Traction  8. Team
- * 9. Competition  10. Ask  11. Use of Funds / Milestones  12. Appendix
+ * NARRATIVE: a product + vision deck (not a fundraise) in two acts.
+ * ACT I, the DEVELOPER platform (free): wedge, two-platform overview,
+ *   the developer problem (AI broke the interview), the gap, the free
+ *   arena, the flow, the AI Collaboration Score.
+ * ACT II, the BUSINESS platform (paid): the bridge, the hiring product,
+ *   free-audience-to-revenue, business model, market, why-now, what is
+ *   built, the path, team, competition, moat, close.
  *
- * RED-FLAG FIXES vs. previous version:
- * - Removed unverifiable claims (94% accuracy, 3.2x faster, $4,700 saved)
- * - Added Team slide (investors always check)
- * - Added explicit Ask slide (amount, instrument, use)
- * - Added Use of Funds + Milestones as a proper slide
- * - Market sizing now shows assumption chain
- * - All stats labeled "target", "estimated", or sourced
+ * GROUND RULES (honest + defensible):
+ * - No fundraise: ask / use-of-funds slides removed.
+ * - No vanity traction: developers are "live and challenging now", no counts.
+ * - Product facts match the shipped product: 3-axis score (Direction /
+ *   Outcome / Lift, 11 signals), npx @kodwai/cli challenge <slug>.
+ * - Leaderboard framed as a built mechanism awaiting audience (seeded today).
+ * - Tighter, sourced market sizing with a visible assumption chain.
+ * - Competitive moat led by community + dataset; capture claim hedged.
+ * - Forward metrics labeled target / modeled; billing is a future milestone.
  */
 const SLIDES: SlideData[] = [
 
-  /* ── 1. COMPANY + WEDGE ── */
+  /* ════════ ACT I: THE DEVELOPER PLATFORM (free, the audience) ════════ */
+
+  /* ── 1. TITLE ── */
   {
     id: "title",
     type: "title",
     content: {
-      overline: "Pre-Seed · Q2 2026",
+      overline: "Product & Vision · 2026",
       title: "kodwai",
-      subtitle: "The technical interview platform for the AI agent era.",
+      subtitle: "Where developers prove how they work with AI agents, and companies hire for it.",
       stats: [
-        { value: "$2.5B", label: "TAM (2026)" },
-        { value: "0", label: "Direct competitors" },
-        { value: "MVP built", label: "CLI + Web + API" },
+        { value: "Live", label: "In production" },
+        { value: "Free", label: "For developers" },
+        { value: "Built", label: "CLI, Web, API" },
       ],
     },
   },
 
+  /* ── 2. WEDGE ── */
   {
     id: "wedge",
     type: "bigquote",
     content: {
-      quote: "Every company expects engineers to\nwork with AI agents daily.\nNo interview platform tests that.",
+      quote: "Every company now expects engineers\nto ship with AI agents.\nNo platform measures that skill,\nlet alone teaches it.",
       attribution: "This is the wedge.",
     },
   },
 
-  /* ── 2. PROBLEM ── */
+  /* ── 3. TWO PLATFORMS, ONE SKILL ── */
+  {
+    id: "platforms",
+    type: "platforms",
+    content: {
+      overline: "Two platforms. One skill.",
+      left: {
+        tag: "Developer Platform · Free",
+        desc: "Solve real, ticket-sized challenges with Claude Code or Cursor, on your own machine. Get scored on how well you direct it. Climb a public leaderboard.",
+        points: [
+          "Free for every developer, forever",
+          "The audience and the data moat",
+          "The top of the funnel",
+        ],
+      },
+      right: {
+        tag: "Business Platform · Paid",
+        desc: "Interview on deeper, role-specific challenges, or author your own. Watch the real process, not just the answer, then score and compare candidates.",
+        points: [
+          "Sold to hiring teams and companies",
+          "Where the revenue comes from",
+          "Funded by the audience above",
+        ],
+      },
+      note: "Free developers build the audience and the dataset. That becomes the moat behind the paid hiring product.",
+    },
+  },
+
+  /* ── 4. THE DEVELOPER PROBLEM ── */
   {
     id: "problem",
     type: "problem-numbers",
     dark: true,
     content: {
-      overline: "The Problem",
+      overline: "The Developer Problem",
       items: [
-        { value: "$40K+", label: "Estimated cost of one bad engineering hire", sub: "SHRM benchmark: 6–9 months of salary in total replacement cost" },
-        { value: "5–7 days", label: "Typical time-to-evaluate per candidate", sub: "Multiple rounds, scheduling, interviewer hours" },
-        { value: "0", label: "Platforms that test AI agent collaboration", sub: "All incumbents offer browser IDEs with chat assistants, not real agents" },
+        { value: "81%", label: "of Big Tech interviewers suspect AI cheating", sub: "31% have caught a candidate. The legacy LeetCode interview no longer signals skill. (interviewing.io, 2025)" },
+        { value: "84%", label: "of developers use or plan to use AI tools", sub: "51% use them every day. Directing an agent has become the job. (Stack Overflow survey, 2025)" },
+        { value: "29%", label: "of developers trust AI output accuracy", sub: "The scarce, hireable skill is the human judgment to verify and steer agents. (Stack Overflow, 2025)" },
       ],
     },
   },
 
+  /* ── 5. THE GAP ── */
   {
     id: "before-after",
     type: "before-after",
     content: {
       overline: "The Gap",
       before: {
-        label: "How interviews work today",
+        label: "How skill is tested today",
         items: [
-          "Browser IDE with toy problems",
-          "No AI allowed — or basic chatbot",
-          "Tests memorization, not engineering",
-          "5–7 day evaluation cycles",
-          "Interviewers spend 4–6 hours per candidate",
+          "Browser IDE, algorithm puzzles",
+          "AI banned, or treated as cheating",
+          "Memorization under a webcam",
+          "A pass or fail with no context",
+          "Detached from real engineering",
         ],
       },
       after: {
         label: "How engineers actually work",
         items: [
-          "Own terminal with real projects",
-          "Full AI agent (Claude Code, Cursor, Copilot)",
-          "Ship code by directing agents",
-          "Iterate fast, test continuously",
-          "AI does the heavy lifting, human guides",
+          "Own terminal, real projects",
+          "A real agent: Claude Code, Cursor",
+          "Ship by directing the agent well",
+          "Decompose, verify, recover, judge",
+          "The exact skill Kodwai measures",
         ],
       },
     },
   },
 
-  /* ── 3. SOLUTION ── */
+  /* ── 6. THE DEVELOPER PLATFORM (solution) ── */
   {
     id: "solution",
     type: "hero-statement",
     content: {
-      overline: "The Solution — Built & Working",
+      overline: "The Developer Platform, Free and Live",
       logo: "kodwai",
-      tagline: "Candidates use Claude Code — a real AI coding agent — in their own terminal. Every prompt, tool use, file edit, and decision is captured, streamed live to an observer dashboard, and scored by AI against custom rubrics.",
+      tagline: "Pick a challenge, solve it on your own machine with Claude Code or Cursor, and submit the session. Kodwai captures every prompt, tool call, and decision, then scores how well you directed the agent. Climb a public leaderboard and build a profile that shows how you engineer, not what you memorized. Fully free.",
       proof: [
-        { icon: "⚡", text: "npx kodwai start <session-id> — one CLI command to begin" },
-        { icon: "📡", text: "Live dashboard: transcript, file diffs, tool feed, timer" },
-        { icon: "🎯", text: "Dual scoring: AI-generated + manual reviewer side-by-side" },
-        { icon: "🔒", text: "HMAC-signed webhooks · AES-256 encrypted API keys" },
+        { icon: "⚡", text: "npx @kodwai/cli challenge <slug> : one command, in your terminal" },
+        { icon: "🎯", text: "AI Collaboration Score: Direction, Outcome, Lift across 11 signals" },
+        { icon: "🏆", text: "Public leaderboard and a shareable developer profile" },
+        { icon: "∞", text: "Free for every developer. Bring Claude Code or Cursor and your own machine." },
       ],
     },
   },
 
-  /* ── 4. PRODUCT / DEMO ── */
+  /* ── 7. THE DEVELOPER FLOW ── */
   {
     id: "how",
     type: "flow",
     content: {
-      overline: "Product — Live Today",
+      overline: "How It Works, Live Today",
       title: "Three steps. One hour. Complete signal.",
       steps: [
         {
           number: "01",
-          title: "Deploy",
-          desc: "Create a project with problem statement, rubric dimensions, time limit, and tool constraints. Invite the candidate — they receive an email with one CLI command.",
-          time: "5 min setup",
+          title: "Pick a challenge",
+          desc: "Browse real, ticket-sized problems across nine categories. Filter by difficulty and pick one that looks like the work you actually do.",
+          time: "Curated catalog",
         },
         {
           number: "02",
-          title: "Observe",
-          desc: "Candidate runs npx kodwai start in their terminal. Claude Code launches with session context. Every prompt, tool use, and file edit streams to your live dashboard via HMAC-signed webhooks.",
-          time: "60 min session",
+          title: "Run the CLI",
+          desc: "Start it in your terminal and choose Claude Code or Cursor. Kodwai pulls the problem, starter files, and tests, initializes git, and starts the timer. You solve it for real.",
+          time: "Your machine",
         },
         {
           number: "03",
-          title: "Evaluate",
-          desc: "Session ends → Claude reads full transcript + final code → generates structured scorecard across your rubric dimensions. Interviewers add manual scores alongside. Compare candidates side-by-side.",
+          title: "Get your score",
+          desc: "On submit, Kodwai reads your transcript, code, tests, and git history, then returns Direction, Outcome, and Lift with per-signal evidence. Then you are on the leaderboard.",
           time: "Instant scoring",
         },
       ],
     },
   },
 
+  /* ── 8. THE AI COLLABORATION SCORE ── */
   {
     id: "scorecard",
     type: "scorecard",
     dark: true,
     content: {
-      overline: "Actual Platform Output",
+      overline: "The AI Collaboration Score",
       title: "Dual scoring. Full context. Comparable data.",
       dimensions: [
-        { name: "Problem decomposition", score: 87, icon: "🧩" },
-        { name: "AI agent direction", score: 92, icon: "🎯" },
-        { name: "Verification & testing", score: 98, icon: "✓" },
-        { name: "Code quality", score: 93, icon: "◆" },
-        { name: "Communication clarity", score: 89, icon: "◈" },
+        { name: "Direction · 6 signals · 50 pts", score: 88 },
+        { name: "Outcome · 3 signals · 35 pts", score: 92 },
+        { name: "Lift · 2 signals · 15 pts", score: 74 },
       ],
-      meta: "AI score + manual reviewer score · Strengths & weaknesses · Exportable report",
-      overall: "92",
+      meta: "11 signals across three axes. Algorithmic where it can be (tests, code quality, complexity), LLM-judged where it must be (spec precision, verification, decomposition, recovery). Per-signal evidence, exportable.",
+      overall: "86",
     },
   },
 
-  /* ── 5. MARKET ── */
+  /* ════════ ACT II: THE BUSINESS PLATFORM (paid, the revenue) ════════ */
+
+  /* ── 9. THE BRIDGE ── */
+  {
+    id: "bridge",
+    type: "bigquote",
+    dark: true,
+    content: {
+      quote: "The skill the free platform measures\nis the skill companies are desperate\nto hire for.\nSo we sell it to them.",
+      attribution: "Act II: the business.",
+    },
+  },
+
+  /* ── 10. THE HIRING PRODUCT ── */
+  {
+    id: "hiring",
+    type: "hero-statement",
+    content: {
+      overline: "The Business Platform, Built Today",
+      logo: "Hiring, measured.",
+      tagline: "Interview on deeper, role-specific challenges, or author your own with a custom rubric and time limit. Invite a candidate, they solve on their own machine with Claude Code or Cursor, and you watch the real process live: the prompts, the commits, the tests, the score. Not just the final answer.",
+      proof: [
+        { icon: "🧩", text: "Deeper, role-specific challenges, or author your own with a custom rubric" },
+        { icon: "🖥️", text: "Live observer dashboard: transcript, file diffs, tool feed, timer, cost" },
+        { icon: "⚖️", text: "Dual scoring: AI scorecard plus manual reviewer, side by side" },
+        { icon: "🔐", text: "Candidate comparison, team roles, AES-256 keys, HMAC-signed events" },
+      ],
+    },
+  },
+
+  /* ── 13. MARKET OPPORTUNITY ── */
   {
     id: "market",
     type: "market",
@@ -187,14 +253,15 @@ const SLIDES: SlideData[] = [
       overline: "Market Opportunity",
       title: "Large market. Unoccupied segment.",
       tiers: [
-        { label: "TAM", value: "$2.5B", desc: "Technical assessment software market, 2026 (OpenPR)", size: 100 },
-        { label: "SAM", value: "$200–400M", desc: "AI-assisted interview segment (estimated)", size: 60 },
-        { label: "SOM", value: "$10–30M", desc: "Agent-native interviews, Year 1–2 (target)", size: 30 },
+        { label: "TAM", value: "~$1.4B", desc: "Coding and technical assessment software, 2024 (DataIntelo, Verified Market Reports)", size: 100 },
+        { label: "SAM", value: "$280-420M", desc: "AI-native assessment: the 20-30% of teams measuring agent skill (Kodwai estimate)", size: 60 },
+        { label: "SOM", value: "$3-8M", desc: "Year 2-3 ARR: 150-400 paying teams at $15-25K ACV (target)", size: 30 },
       ],
-      growth: "9.5% CAGR → $4.0B by 2033 (OpenPR)",
+      growth: "~12-15% CAGR toward ~$3-4.5B by 2030. Funnel: 36.5M professional developers (SlashData, 2025).",
     },
   },
 
+  /* ── 15. WHY NOW ── */
   {
     id: "why-now",
     type: "validation",
@@ -202,78 +269,79 @@ const SLIDES: SlideData[] = [
       overline: "Why Now",
       title: "The market is moving our way.",
       signals: [
-        { event: "Meta launches AI-assisted coding interview", date: "Oct 2025", detail: "Replaced one onsite round with AI-collaborative format on CoderPad" },
-        { event: "CodeSignal rebrands as 'AI-Native Skills Platform'", date: "2025", detail: "Incumbents see the direction but remain locked in browser IDEs" },
-        { event: "HackerRank ships AI Interviewer", date: "Apr 2025", detail: "12,000+ autonomous first-round interviews conducted" },
-        { event: "Claude Code reaches mainstream developer adoption", date: "2025–26", detail: "AI agents become standard professional tooling" },
+        { event: "Meta ships an AI-enabled coding interview", date: "Oct 2025", detail: "Framed as more representative of the environment its future employees will work in. The biggest employer concedes the premise. (Hello Interview)" },
+        { event: "AI broke the legacy interview", date: "2025", detail: "Cluely raised on 'cheat on everything'; verbatim LeetCode is trivial for AI. Fresh, reasoning-forcing work is the only durable signal. (interviewing.io)" },
+        { event: "Autonomous coding agents went mainstream", date: "2025-26", detail: "Claude Code at a ~$2.5B run rate, authoring ~4% of public GitHub commits; Cursor past $2B ARR. Directing agents is the job. (SemiAnalysis)" },
+        { event: "Incumbents validated the category, stayed in the browser", date: "2025-26", detail: "CodeSignal and HackerRank shipped agentic assessments, but none paired it with a free, terminal-native developer community." },
       ],
     },
   },
 
-  /* ── 6. BUSINESS MODEL ── */
+  /* ── 14. BUSINESS MODEL ── */
   {
     id: "business",
     type: "business",
     content: {
       overline: "Business Model",
-      title: "Recurring SaaS. Zero LLM cost.",
+      title: "Free for developers. Recurring for companies.",
       columns: [
         {
-          title: "Pricing (planned)",
+          title: "Developer · the funnel",
           items: [
-            { label: "Starter", value: "$60/mo", desc: "5 seats · 50 sessions/mo" },
-            { label: "Growth", value: "$200/mo", desc: "25 seats · unlimited sessions" },
-            { label: "Enterprise", value: "Custom", desc: "SSO · compliance · SLA" },
+            { label: "Developer", value: "Free", desc: "Challenges, score, leaderboard, profile. Forever." },
+            { label: "Developer Pro", value: "Future", desc: "Company-tagged question banks (asked at Amazon, Google, Meta), prep, analytics. The LeetCode Premium model." },
           ],
         },
         {
-          title: "Unit economics (target)",
+          title: "Business · the revenue",
           items: [
-            { label: "LLM costs", value: "$0", desc: "Company provides their own Anthropic API key" },
-            { label: "Infra cost", value: "~$2/session", desc: "WebSocket relay + event storage" },
-            { label: "Gross margin", value: "~85–90%", desc: "Target at scale — pure SaaS" },
+            { label: "Starter", value: "$60/mo", desc: "5 seats, 50 sessions. Planned." },
+            { label: "Growth", value: "$200/mo", desc: "25 seats, unlimited. The expansion tier. Planned." },
+            { label: "Enterprise", value: "Custom", desc: "SSO, compliance, SLA. Planned." },
+            { label: "Economics", value: "~85-90%", desc: "Target gross margin. Companies bring their own API key, so LLM cost to Kodwai is $0. Modeled." },
           ],
         },
       ],
     },
   },
 
+  /* ── 11. FROM FREE AUDIENCE TO REVENUE ── */
   {
     id: "buyer-roi",
     type: "roi-grid",
     content: {
-      overline: "Buyer ROI",
-      title: "Why companies pay.",
+      overline: "From Free Audience to Revenue",
+      title: "Free developers. Paid companies.",
       cards: [
         {
-          metric: "80%",
-          label: "less interviewer time (target)",
-          detail: "AI scores first-round sessions automatically. Interviewers review scorecards and add manual scores — no more live 1:1 screening.",
-          comparison: "Target: 6 hrs → 1.2 hrs per candidate",
+          metric: "Brand",
+          label: "and outbound",
+          detail: "A trusted, free developer audience gives us reach and credibility. We sell the hiring product to the companies those developers already work at.",
+          comparison: "Audience first, then enterprise sales",
         },
         {
-          metric: "1 day",
-          label: "to first scored session",
-          detail: "Create project → invite candidate via email → they run one CLI command → AI scores on completion. Built and working today.",
-          comparison: "vs. 5–7 day typical evaluation cycle",
+          metric: "Talent",
+          label: "and sourcing",
+          detail: "The leaderboard surfaces developers who provably direct agents well. That becomes a vetted talent signal companies pay to access.",
+          comparison: "Proof of skill becomes a sourcing funnel",
         },
         {
-          metric: "2",
-          label: "scoring layers (AI + manual)",
-          detail: "AI generates per-dimension scores with strengths/weaknesses. Interviewers add weighted manual scores alongside. Both visible in comparison view.",
-          comparison: "Dual scoring built into the platform",
+          metric: "Hand-off",
+          label: "to assessments",
+          detail: "Developers who practice for free get funneled into employer-run interviews on the same engine. The proven LeetCode and HackerRank playbook.",
+          comparison: "Practice today, get hired tomorrow",
         },
         {
-          metric: "N vs N",
-          label: "candidate comparison",
-          detail: "Side-by-side comparison across all completed sessions. Per-dimension breakdown, color-coded ranking. Built into the dashboard.",
-          comparison: "Structured, comparable data across all candidates",
+          metric: "Bottom-up",
+          label: "adoption",
+          detail: "Individual engineers and teams adopt Kodwai, then expand into org-wide paid hiring. The buyer, the company, differs from the free user.",
+          comparison: "Land with a developer, expand to the org",
         },
       ],
     },
   },
 
-  /* ── 6b. WHAT'S BUILT ── */
+  /* ── 17. WHAT'S BUILT ── */
   {
     id: "built",
     type: "built",
@@ -284,58 +352,58 @@ const SLIDES: SlideData[] = [
       components: [
         {
           name: "CLI",
-          tech: "Node.js · Claude Code Agent SDK",
+          tech: "@kodwai/cli on npm · Claude Code Agent SDK",
           features: [
-            "npx kodwai start — single-command session launch",
-            "Claude Code hooks capture every prompt, tool use, and response",
-            "Real-time file watcher streams all code changes",
+            "npx @kodwai/cli challenge <slug>: one-command launch",
+            "Captures every prompt, tool call, and file edit via hooks",
+            "Real-time file and transcript watchers",
             "HMAC-SHA256 signed event streaming",
-            "Countdown timer with auto-session-end",
+            "Auto-installs Claude Code, timer, auto-submit",
           ],
         },
         {
-          name: "Web Dashboard",
-          tech: "Next.js 16 · React 19 · Tailwind CSS 4",
+          name: "Web",
+          tech: "Next.js 16 · React 19 · Tailwind 4",
           features: [
-            "Project management with custom rubrics and tool constraints",
-            "Live session view: transcript, file diffs, tool feed, timer",
-            "Dual scoring: AI-generated + manual reviewer",
-            "Candidate comparison across sessions",
-            "Team management with role-based access (admin/interviewer/viewer)",
+            "Developer: challenges, leaderboard, profiles, badges",
+            "Hiring: projects, rubric builder, tool constraints",
+            "Live observer: transcript, diffs, tool feed, timer",
+            "Dual scoring and multi-candidate comparison",
+            "Team management with role-based access",
           ],
         },
         {
           name: "API",
           tech: "FastAPI · Turso (libSQL) · Claude API",
           features: [
-            "Full session lifecycle management with HMAC webhooks",
-            "AI scoring pipeline: transcript + code → structured scorecard",
-            "AES-256-GCM encrypted API key storage",
-            "JWT auth with email verification",
-            "Automated candidate invitation emails via Resend",
+            "AI Collaboration Score: 3 axes, 11 signals",
+            "Full session lifecycle with HMAC webhooks",
+            "AES-256-GCM encrypted keys, JWT auth",
+            "Per-session cost tracking via proxy",
+            "Transactional email via Resend",
           ],
         },
       ],
     },
   },
 
-  /* ── 7. TRACTION ── */
+  /* ── 19. THE PATH ── */
   {
-    id: "traction",
+    id: "roadmap",
     type: "traction",
     dark: true,
     content: {
-      overline: "Traction & Status",
+      overline: "The Path",
       stats: [
-        { value: "847+", label: "Developer signups" },
-        { value: "3/3", label: "Components built (CLI + Web + API)" },
-        { value: "Pre-revenue", label: "Launching Q2 2026" },
+        { value: "Now", label: "Free developer platform, live" },
+        { value: "Next", label: "Grow the community and dataset" },
+        { value: "Then", label: "B2B hiring revenue" },
       ],
       milestones: [
-        { label: "Done", text: "Full MVP: CLI, dashboard, API, AI scoring, team management" },
-        { label: "Q2 2026", text: "Launch · First 10 design partners" },
-        { label: "Q3 2026", text: "Paid customers · Product-market fit" },
-        { label: "Q4 2026", text: "50 companies · $300K ARR target" },
+        { label: "Live", text: "Developers are taking on challenges and getting scored right now, in production" },
+        { label: "Near term", text: "Grow the free developer community and the agent-collaboration dataset" },
+        { label: "Then", text: "Monetize the business platform: agent-native interviews sold to companies" },
+        { label: "Later", text: "Developer Pro: company-tagged question banks and prep, the LeetCode Premium model" },
       ],
     },
   },
@@ -351,7 +419,7 @@ const SLIDES: SlideData[] = [
         {
           name: "Ege Hakan Karaagac",
           role: "Co-Founder & CEO",
-          bio: "6 years building scalable backend systems and AI products. Leads product development across the full stack — CLI, web dashboard, API, and AI scoring pipeline.",
+          bio: "6 years building scalable backend systems and AI products. Leads product across the full stack: CLI, web app, API, and the AI scoring pipeline.",
           logos: [
             { src: "/logos/team/accenture.svg", alt: "Accenture", h: 18 },
             { src: "/logos/team/amazon.svg", alt: "Amazon", h: 18 },
@@ -370,11 +438,11 @@ const SLIDES: SlideData[] = [
           ],
         },
       ],
-      hiring: "Hiring with this raise: 2 senior engineers + 1 growth lead.",
+      hiring: "A two-person team that shipped the CLI, web app, API, and scoring engine before taking a dollar.",
     },
   },
 
-  /* ── 9. COMPETITION / DIFFERENTIATION ── */
+  /* ── 18. COMPETITION ── */
   {
     id: "competitive",
     type: "competitive",
@@ -382,74 +450,36 @@ const SLIDES: SlideData[] = [
       overline: "Competition",
       title: "Incumbents can't do this yet.",
       competitors: [
-        { name: "CodeSignal", ai: "Chat co-pilot (Cosmo)", terminal: false, agentCapture: false, score: "~60%", revenue: "$90M raised" },
-        { name: "CoderPad", ai: "Chat sidebar (multi-model)", terminal: false, agentCapture: false, score: "~50%", revenue: "$17.8M rev" },
-        { name: "HackerRank", ai: "AI Interviewer (replaces human)", terminal: false, agentCapture: false, score: "~40%", revenue: "$221M rev" },
+        { name: "HackerRank", note: "$221M rev · 26M devs", ownTerminal: false, community: true, agentNative: false },
+        { name: "CodeSignal", note: "~$90M raised", ownTerminal: false, community: false, agentNative: true },
+        { name: "CoderPad", note: "~$18M rev", ownTerminal: false, community: false, agentNative: false },
+        { name: "Codility", note: "12M+ assessments", ownTerminal: false, community: false, agentNative: false },
+        { name: "LeetCode", note: "26M visitors", ownTerminal: false, community: true, agentNative: false },
       ],
-      kodwai: { ai: "Full autonomous agent (Claude Code)", terminal: true, agentCapture: true, score: "—" },
-      insight: "All three are browser-IDE platforms with chat assistants bolted on. Pivoting to terminal-native, agent-first architecture means rebuilding their core product.",
+      kodwai: { ownTerminal: true, community: true, agentNative: true },
+      insight: "Incumbents capture AI inside their own browser sandbox, and the ones with a community built it for puzzle prep. None pair a real agent in the developer's own terminal with a free developer-led community and hiring monetization. To our knowledge, as of mid-2026, that intersection is empty.",
+      footnote: "Funding and revenue figures are public reporting, 2024 to 2026.",
     },
   },
 
+  /* ── 16. MOAT ── */
   {
     id: "moat",
     type: "bigquote",
     dark: true,
     content: {
-      quote: "The moat is category ownership,\nnot technology. The Agent SDK\nis public — speed to market is\nwhat matters.",
-      attribution: "12–18 month window before incumbents retool.",
+      quote: "The Agent SDK is public.\nThe moat is the community and the dataset:\nreal, labeled agent-collaboration data\nthat no incumbent can buy.",
+      attribution: "Category ownership, won in a 12 to 18 month window.",
     },
   },
 
-  /* ── 10. THE ASK ── */
-  {
-    id: "ask",
-    type: "ask",
-    content: {
-      overline: "The Ask",
-      title: "Raising $750K pre-seed.",
-      instrument: "SAFE · $6M post-money cap",
-      goal: "Get to 50 paying companies and $300K ARR within 12 months.",
-      details: [
-        { label: "Amount", value: "$750K" },
-        { label: "Instrument", value: "SAFE (post-money)" },
-        { label: "Valuation cap", value: "$6M" },
-        { label: "Target close", value: "Q2 2026" },
-        { label: "Runway", value: "18 months" },
-      ],
-    },
-  },
-
-  /* ── 11. USE OF FUNDS / MILESTONES ── */
-  {
-    id: "use-of-funds",
-    type: "funds",
-    dark: true,
-    content: {
-      overline: "Use of Funds",
-      title: "Where the money goes.",
-      items: [
-        { label: "Engineering", pct: 55, amount: "$412K", detail: "2 senior engineers (frontend + backend) for 12 months" },
-        { label: "Go-to-market", pct: 25, amount: "$188K", detail: "Growth hire, content marketing, early enterprise sales" },
-        { label: "Infrastructure", pct: 10, amount: "$75K", detail: "Hosting, database, monitoring, security audit" },
-        { label: "Operations", pct: 10, amount: "$75K", detail: "Legal, accounting, compliance (EU AI Act prep)" },
-      ],
-      kpis: [
-        { milestone: "Month 3", target: "MVP live · 10 design partners" },
-        { milestone: "Month 6", target: "Paying customers · PMF signal" },
-        { milestone: "Month 12", target: "50 companies · $300K ARR · Series A ready" },
-      ],
-    },
-  },
-
-  /* ── 12. CLOSE ── */
+  /* ── 20. CLOSE ── */
   {
     id: "cta",
     type: "cta",
     content: {
-      title: "Let's build the future\nof technical hiring.",
-      subtitle: "We're creating a category, not entering one.",
-      contact: "hello@kodwai.com",
+      subtitle: "Developers prove how they build. Companies hire who can. One platform, one skill, the new standard for the AI-coding era.",
+      contact: "hakan@kodwai.com",
       url: "kodwai.com",
     },
   },
@@ -582,6 +612,48 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
             <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, letterSpacing: 2, marginTop: 32 }}>
               {c.attribution}
             </p>
+          </div>
+        </>
+      );
+
+    case "platforms":
+      return (
+        <>
+          {showChrome && <Logo dark={dark} />}
+          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
+          <div style={{ maxWidth: 1050 }}>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
+              {c.overline}
+            </p>
+            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
+              Developer-first. <span style={{ color: T.accent, fontStyle: "italic" }}>Business-funded.</span>
+            </h2>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+              {[c.left, c.right].map((col: { tag: string; desc: string; points: string[] }, i: number) => (
+                <div key={i} className="reveal" style={{
+                  padding: "24px 28px", borderRadius: 8,
+                  border: i === 0 ? `1px solid ${borderColor}` : `2px solid ${T.accent}`,
+                  background: i === 0 ? `${T.text}04` : "transparent",
+                }}>
+                  <p style={{ fontFamily: T.fontMono, fontSize: 10, color: i === 0 ? mutedColor : T.accent, letterSpacing: 2, textTransform: "uppercase", marginBottom: 14 }}>
+                    {col.tag}
+                  </p>
+                  <p style={{ fontFamily: T.fontDisplay, fontSize: 15, color: fg, lineHeight: 1.6, marginBottom: 16 }}>
+                    {col.desc}
+                  </p>
+                  {col.points.map((p: string, j: number) => (
+                    <div key={j} style={{ display: "flex", gap: 10, marginBottom: 8, alignItems: "flex-start" }}>
+                      <span style={{ color: T.accent, fontSize: 11, fontFamily: T.fontMono, marginTop: 3 }}>{i === 0 ? "→" : "◆"}</span>
+                      <span style={{ fontFamily: T.fontMono, fontSize: 11, color: mutedColor, lineHeight: 1.5 }}>{p}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className="reveal" style={{ marginTop: 20, padding: "14px 18px", background: `${T.accent}10`, borderRadius: 6, display: "flex", gap: 12, alignItems: "center" }}>
+              <span style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, fontWeight: 700, letterSpacing: 1, flexShrink: 0 }}>FLYWHEEL</span>
+              <span style={{ fontFamily: T.fontDisplay, fontSize: 14, color: fg, lineHeight: 1.5 }}>{c.note}</span>
+            </div>
           </div>
         </>
       );
@@ -728,7 +800,7 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
               {c.overline}
             </p>
             <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
-              Every dollar in, <span style={{ color: T.accent, fontStyle: "italic" }}>multiples out.</span>
+              Free developers. <span style={{ color: T.accent, fontStyle: "italic" }}>Paid companies.</span>
             </h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
               {c.cards.map((card: { metric: string; label: string; detail: string; comparison: string }, i: number) => (
@@ -894,11 +966,11 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
               <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: T.fontMono, fontSize: 12 }}>
                 <thead>
                   <tr>
-                    {["", "AI Type", "Terminal", "Agent Capture", "Overlap"].map((h, i) => (
+                    {["", "Own-terminal agent", "Free dev community", "Agent-skill native"].map((h, i) => (
                       <th key={i} style={{
                         textAlign: i === 0 ? "left" : "center", padding: "10px 14px",
                         borderBottom: `2px solid ${fg}`, borderTop: `2px solid ${fg}`,
-                        fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: mutedColor,
+                        fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: mutedColor,
                       }}>
                         {h}
                       </th>
@@ -906,29 +978,32 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
                   </tr>
                 </thead>
                 <tbody>
-                  {c.competitors.map((comp: { name: string; ai: string; terminal: boolean; agentCapture: boolean; score: string; revenue: string }, i: number) => (
+                  {c.competitors.map((comp: { name: string; note: string; ownTerminal: boolean; community: boolean; agentNative: boolean }, i: number) => (
                     <tr key={i}>
                       <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, fontWeight: 600, color: fg }}>
-                        {comp.name} <span style={{ fontWeight: 400, color: mutedColor, fontSize: 10 }}>{comp.revenue}</span>
+                        {comp.name} <span style={{ fontWeight: 400, color: mutedColor, fontSize: 10 }}>{comp.note}</span>
                       </td>
-                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: mutedColor }}>{comp.ai}</td>
-                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: `${mutedColor}88` }}>✗</td>
-                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: `${mutedColor}88` }}>✗</td>
-                      <td style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: mutedColor }}>{comp.score}</td>
+                      {[comp.ownTerminal, comp.community, comp.agentNative].map((v, j) => (
+                        <td key={j} style={{ padding: "10px 14px", borderBottom: `1px solid ${borderColor}`, textAlign: "center", color: v ? fg : `${mutedColor}66` }}>
+                          {v ? "✓" : "✗"}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                   <tr style={{ background: T.accent }}>
                     <td style={{ padding: "10px 14px", fontWeight: 700, color: "#fff" }}>kodwai</td>
-                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff" }}>{c.kodwai.ai}</td>
-                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>✓</td>
-                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>✓</td>
-                    <td style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>—</td>
+                    {[c.kodwai.ownTerminal, c.kodwai.community, c.kodwai.agentNative].map((v: boolean, j: number) => (
+                      <td key={j} style={{ padding: "10px 14px", textAlign: "center", color: "#fff", fontWeight: 700 }}>{v ? "✓" : "✗"}</td>
+                    ))}
                   </tr>
                 </tbody>
               </table>
             </div>
             <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 14, color: mutedColor, lineHeight: 1.6, marginTop: 20, fontStyle: "italic" }}>
               {c.insight}
+            </p>
+            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: `${mutedColor}aa`, letterSpacing: 0.5, marginTop: 12 }}>
+              {c.footnote}
             </p>
           </div>
         </>
@@ -1098,84 +1173,6 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
         </>
       );
 
-    /* ── ASK SLIDE ── */
-    case "ask":
-      return (
-        <>
-          {showChrome && <Logo dark={dark} />}
-          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
-          <div style={{ maxWidth: 900 }}>
-            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
-              {c.overline}
-            </p>
-            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(36px, 5vw, 56px)", letterSpacing: "-1.5px", marginBottom: 12, color: fg }}>
-              Raising <span style={{ color: T.accent, fontStyle: "italic" }}>$750K</span> pre-seed.
-            </h2>
-            <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 17, color: mutedColor, lineHeight: 1.6, marginBottom: 36 }}>
-              {c.goal}
-            </p>
-            <div className="reveal" style={{ display: "grid", gap: 0 }}>
-              {c.details.map((d: { label: string; value: string }, i: number) => (
-                <div key={i} style={{ display: "flex", gap: 20, padding: "16px 0", borderTop: `1px solid ${borderColor}`, alignItems: "baseline" }}>
-                  <span style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", width: 120, flexShrink: 0 }}>{d.label}</span>
-                  <span style={{ fontFamily: T.fontDisplay, fontSize: 22, color: d.label === "Amount" ? T.accent : fg, letterSpacing: "-0.5px" }}>{d.value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      );
-
-    /* ── USE OF FUNDS SLIDE ── */
-    case "funds":
-      return (
-        <>
-          {showChrome && <Logo dark={dark} />}
-          {showChrome && <SlideNumber n={index + 1} total={total} dark={dark} />}
-          <div style={{ maxWidth: 1050 }}>
-            <p className="reveal" style={{ fontFamily: T.fontMono, fontSize: 10, color: T.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 16 }}>
-              {c.overline}
-            </p>
-            <h2 className="reveal" style={{ fontFamily: T.fontDisplay, fontWeight: 400, fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-1px", marginBottom: 28, color: fg }}>
-              Where the money <span style={{ color: T.accent, fontStyle: "italic" }}>goes.</span>
-            </h2>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 36 }}>
-              {/* Allocation bars */}
-              <div className="reveal">
-                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Allocation</p>
-                {c.items.map((item: { label: string; pct: number; amount: string; detail: string }, i: number) => (
-                  <div key={i} style={{ marginBottom: 16 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                      <span style={{ fontFamily: T.fontMono, fontSize: 12, color: fg }}>{item.label}</span>
-                      <span style={{ fontFamily: T.fontMono, fontSize: 12, color: T.accent, fontWeight: 700 }}>{item.amount} ({item.pct}%)</span>
-                    </div>
-                    <div style={{ height: 6, background: borderColor, borderRadius: 3, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${item.pct}%`, background: T.accent, borderRadius: 3 }} />
-                    </div>
-                    <div style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, marginTop: 4 }}>{item.detail}</div>
-                  </div>
-                ))}
-              </div>
-              {/* KPI milestones */}
-              <div className="reveal">
-                <p style={{ fontFamily: T.fontMono, fontSize: 10, color: mutedColor, letterSpacing: 2, textTransform: "uppercase", marginBottom: 16 }}>Key milestones</p>
-                {c.kpis.map((kpi: { milestone: string; target: string }, i: number) => (
-                  <div key={i} style={{
-                    padding: "20px", marginBottom: 12,
-                    borderLeft: `3px solid ${i === c.kpis.length - 1 ? T.accent : borderColor}`,
-                    background: i === c.kpis.length - 1 ? `${T.accent}12` : "transparent",
-                    borderRadius: "0 6px 6px 0",
-                  }}>
-                    <div style={{ fontFamily: T.fontMono, fontSize: 11, color: i === c.kpis.length - 1 ? T.accent : mutedColor, fontWeight: 700, marginBottom: 4 }}>{kpi.milestone}</div>
-                    <div style={{ fontFamily: T.fontDisplay, fontSize: 15, color: fg, lineHeight: 1.5 }}>{kpi.target}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
-      );
-
     case "cta":
       return (
         <>
@@ -1185,7 +1182,7 @@ function SlideContent({ slide, index, total }: { slide: SlideData; index: number
               fontSize: "clamp(40px, 7vw, 68px)", lineHeight: 1.1,
               letterSpacing: "-2px", marginBottom: 24, whiteSpace: "pre-line", color: fg,
             }}>
-              Stop <span style={{ color: T.accent, fontStyle: "italic" }}>guessing.</span>{"\n"}Start measuring.
+              Where developers prove it,{"\n"}and companies <span style={{ color: T.accent, fontStyle: "italic" }}>hire</span> it.
             </h2>
             <p className="reveal" style={{ fontFamily: T.fontDisplay, fontSize: 18, color: mutedColor, lineHeight: 1.7, maxWidth: 520, marginBottom: 36 }}>
               {c.subtitle}

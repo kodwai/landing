@@ -126,7 +126,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
             <a href="https://x.com/kodwai_com" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>X</a>
             <a href="https://discord.gg/d663XRC7" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Discord</a>
-            <a href="mailto:hello@kodwai.com" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Email</a>
+            <a href="mailto:hakan@kodwai.com" style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 11, color: "#9a948a", textDecoration: "none" }}>Email</a>
             <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a", opacity: 0.4 }}>&copy; {new Date().getFullYear()}</span>
           </div>
         </div>

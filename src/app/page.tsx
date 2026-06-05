@@ -1,4 +1,5 @@
-import OptionE, { type Challenge } from "@/components/OptionE";
+import LandingPage from "@/components/landing/LandingPage";
+import type { Challenge } from "@/components/landing/system";
 import { turso } from "@/lib/turso";
 
 // Refresh the challenge catalog from Turso every 5 minutes.
@@ -68,7 +69,7 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <OptionE challenges={challenges} />
+      <LandingPage challenges={challenges} />
     </>
   );
 }

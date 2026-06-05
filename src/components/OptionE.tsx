@@ -935,7 +935,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
             {[
               { href: "https://x.com/kodwai_com", label: "x" },
               { href: "https://discord.gg/d663XRC7", label: "discord" },
-              { href: "mailto:hello@kodwai.com", label: "email" },
+              { href: "mailto:hakan@kodwai.com", label: "email" },
             ].map(l => (
               <a key={l.label} href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 0.6, textTransform: "uppercase", textDecoration: "none" }}>{l.label}</a>
             ))}

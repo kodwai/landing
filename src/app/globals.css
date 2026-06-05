@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -28,7 +28,11 @@
   --k-amber: #cf8a1a;       /* score mid, on light */
   --font-mono-jb: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-grotesk: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+  /* Editorial display serif (Outship-grade headlines), warm + optical. */
+  --font-serif-fr: 'Fraunces', 'Playfair Display', Georgia, 'Times New Roman', serif;
 }
+
+html { font-optical-sizing: auto; }
 
 @theme inline {
   --color-background: var(--warm-paper);
@@ -286,7 +290,7 @@ button:focus-visible {
   .k-chal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 }
 @media (max-width: 560px) {
-  .k-nav-blog { display: none !important; }
+  .k-nav-blog, .k-nav-hire { display: none !important; }
   .k-byoa { display: none !important; }
   .k-badge-grid { grid-template-columns: repeat(3, 1fr) !important; }
   .k-chal-grid { grid-template-columns: 1fr !important; }
@@ -327,4 +331,90 @@ button:focus-visible {
   .k-reveal, .k-item { opacity: 1 !important; transform: none !important; }
   .k-caret { animation: none !important; }
   .k-marquee-track { animation: none !important; transform: none !important; flex-wrap: wrap; justify-content: center; }
+  .k-orbit, .k-orbit-rev, .k-spin-slow, .k-float, .k-drift, .k-vmarquee-up, .k-vmarquee-down { animation: none !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Landing v2 ("editorial instrument") — shared utilities for the new sections.
+   Sections use inline styles + JS hover for most things; these cover what
+   inline styles cannot (keyframes, masonry columns, fade masks, hover-group).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Edge fade mask for horizontal marquees / scrollers */
+.k-fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.k-fade-y {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Vertical testimonial marquees (two columns scroll opposite directions) */
+@keyframes k-vmarquee-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+@keyframes k-vmarquee-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+.k-vmarquee { display: flex; flex-direction: column; gap: var(--k-vgap, 16px); will-change: transform; }
+.k-vmarquee-up { animation: k-vmarquee-up var(--k-vdur, 46s) linear infinite; }
+.k-vmarquee-down { animation: k-vmarquee-down var(--k-vdur, 52s) linear infinite; }
+.k-vmarquee-pause:hover .k-vmarquee { animation-play-state: paused; }
+
+/* Orbital integration constellation */
+@keyframes k-orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes k-orbit-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+.k-orbit { animation: k-orbit var(--k-orbit-dur, 60s) linear infinite; }
+.k-orbit-rev { animation: k-orbit-rev var(--k-orbit-dur, 60s) linear infinite; }
+/* counter-rotate the chip so its glyph stays upright while the ring spins */
+.k-orbit-chip { animation: k-orbit-rev var(--k-orbit-dur, 60s) linear infinite; }
+.k-orbit-rev .k-orbit-chip { animation: k-orbit var(--k-orbit-dur, 60s) linear infinite; }
+
+@keyframes k-spin-slow { to { transform: rotate(360deg); } }
+.k-spin-slow { animation: k-spin-slow 90s linear infinite; }
+
+@keyframes k-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.k-float { animation: k-float 6s ease-in-out infinite; }
+
+@keyframes k-drift { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,-6px); } }
+.k-drift { animation: k-drift 9s ease-in-out infinite; }
+
+/* Masonry columns for the testimonial wall (CSS columns, no JS) */
+.k-masonry { column-gap: 16px; }
+.k-masonry > * { break-inside: avoid; margin-bottom: 16px; }
+.k-masonry-3 { column-count: 3; }
+.k-masonry-2 { column-count: 2; }
+@media (max-width: 940px) { .k-masonry-3 { column-count: 2; } }
+@media (max-width: 600px) { .k-masonry-3, .k-masonry-2 { column-count: 1; } }
+
+/* Accordion (FAQ) using native <details> with a custom marker */
+.k-faq summary { list-style: none; cursor: pointer; }
+.k-faq summary::-webkit-details-marker { display: none; }
+.k-faq .k-faq-plus { transition: transform .35s cubic-bezier(0.16,1,0.3,1); }
+.k-faq details[open] .k-faq-plus { transform: rotate(45deg); }
+.k-faq .k-faq-body {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .42s cubic-bezier(0.16,1,0.3,1);
+}
+.k-faq details[open] .k-faq-body { grid-template-rows: 1fr; }
+.k-faq .k-faq-body > div { overflow: hidden; min-height: 0; }
+
+/* Hover-group helper: reveal a child only when the parent .k-hovergroup is hovered */
+.k-hovergroup .k-on-hover { opacity: 0; transition: opacity .3s cubic-bezier(0.16,1,0.3,1); }
+.k-hovergroup:hover .k-on-hover { opacity: 1; }
+
+/* Generic responsive 2-col → 1-col helper for the new editorial rows */
+.k-split-2 { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.k-split-even { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 48px); }
+@media (max-width: 900px) {
+  .k-split-2, .k-split-even { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .k-flip-mobile { display: flex; flex-direction: column; }
+  .k-flip-mobile > .k-flip-first { order: -1; }
+}
+
+/* Dotted/grid wells for product-mockup backings on the light page */
+.k-dotwell {
+  background-color: var(--k-paper-2);
+  background-image: radial-gradient(rgba(26,26,26,0.10) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Challenges browser motif: hidden on mobile (request) */
+@media (max-width: 760px) { .k-chal-motif { display: none !important; } }
