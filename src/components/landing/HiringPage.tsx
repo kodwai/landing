@@ -1,21 +1,33 @@
 "use client";
 
 /* ══════════════════════════════════════════════════════════════════════════
-   /hiring — the B2B interview track, split out from the developer landing so
-   each audience gets a clear, single-purpose page. Reuses the shared design
-   system and the HiringIntegrations band (features + ATS constellation),
-   wrapped in its own nav, hero, closing CTA, and footer.
+   /hiring — the B2B interview track, told as a full editorial page that
+   mirrors the developer landing's house style (warm-light cream, Fraunces
+   serif headlines + JetBrains Mono machine voice, two warm-dark punctuation
+   bands) and stays HONEST to what is actually built: custom interview
+   projects, one-link invites, a live observation dashboard, AI + manual
+   scoring against a custom rubric, candidate compare, and team roles. No ATS,
+   no billing, no template library, no video scrubber. Each band is its own
+   component under ./sections/hiring, built against ./system + ./data.
    ══════════════════════════════════════════════════════════════════════════ */
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  C, D, TYPE, MAXW, PAD, SECTION_PAD, CSS_EASE, APP_URL,
-  Eyebrow, Serif, Accent, PrimaryButton, GhostLink, OutlineButton,
-  useChoreography, track,
+  C, MAXW, PAD, SECTION_PAD, CSS_EASE,
+  Serif, Accent, PrimaryButton, GhostLink, OutlineButton,
+  useChoreography, useDrawOnView, track,
 } from "./system";
-import { FOOTER } from "./data";
-import HiringIntegrations from "./sections/HiringIntegrations";
+import { HIRING_FOOTER } from "./data";
+
+import Hero from "./sections/hiring/Hero";
+import Premise from "./sections/hiring/Premise";
+import HowCandidatesWork from "./sections/hiring/HowCandidatesWork";
+import LiveSession from "./sections/hiring/LiveSession";
+import Scoring from "./sections/hiring/Scoring";
+import Stats from "./sections/hiring/Stats";
+import NothingToConnect from "./sections/hiring/NothingToConnect";
+import Faq from "./sections/hiring/Faq";
 
 /* ─── Scroll-progress hairline ─── */
 function ScrollProgress() {
@@ -42,7 +54,7 @@ function ScrollProgress() {
   );
 }
 
-/* ─── Nav (mirrors the main nav, but pointed back at the developer page) ─── */
+/* ─── Nav (mirrors the main nav, pointed back at the developer page) ─── */
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -60,15 +72,48 @@ function Nav() {
       borderBottom: `1px solid ${scrolled ? C.line : "transparent"}`,
       transition: `padding .3s ${CSS_EASE}, background .3s ${CSS_EASE}, border-color .3s ${CSS_EASE}`,
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <Link href="/" onClick={() => track("nav_logo_clicked", { page: "hiring" })} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</Link>
         <span className="k-nav-blog" style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 1, textTransform: "uppercase" }}>for hiring</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
         <Link href="/" className="k-nav-hire" onClick={() => track("cta_clicked", { label: "for developers", location: "hiring_nav" })} style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 1, textTransform: "uppercase", textDecoration: "none" }}>for developers</Link>
-        <OutlineButton label="open app" event="open_app_clicked" eventProps={{ location: "hiring_nav" }} />
+        <OutlineButton label="set up interviews" event="cta_clicked" eventProps={{ location: "hiring_nav" }} />
       </div>
     </nav>
+  );
+}
+
+/* ─── Closing CTA (cream) — // 08 · begin ─── */
+function Closing() {
+  const ruleRef = useDrawOnView<SVGSVGElement>({ duration: 900 });
+  return (
+    <section style={{ background: C.bg, borderTop: `1px solid ${C.line}`, padding: `${SECTION_PAD} ${PAD}`, position: "relative", overflow: "hidden" }}>
+      <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(58% 60% at 50% 8%, rgba(194,54,22,0.07), transparent 70%)" }} />
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
+        <div className="k-reveal" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 14, marginBottom: 30 }}>
+          <span style={{ fontFamily: C.mono, fontSize: 12, color: C.accent, letterSpacing: 0.5 }}>{"//"}</span>
+          <span style={{ fontFamily: C.mono, fontSize: 12, color: C.faint, letterSpacing: 1 }}>08</span>
+          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, textTransform: "lowercase", letterSpacing: 2 }}>begin</span>
+        </div>
+        <Serif as="h2" size="display" className="k-reveal" style={{ margin: 0 }}>
+          Hire for how they <Accent>drive AI.</Accent>
+        </Serif>
+        <svg ref={ruleRef} className="k-reveal" width="200" height="22" viewBox="0 0 200 22" fill="none" stroke={C.accent} strokeWidth="1.6" strokeLinecap="round" aria-hidden style={{ display: "block", margin: "26px auto 0" }}>
+          <path d="M6 11 L 86 11" />
+          <path d="M114 11 L 194 11" />
+          <path d="M100 4 L 100 18" />
+          <circle cx="100" cy="11" r="4" fill="none" />
+        </svg>
+        <p className="k-reveal" style={{ fontFamily: C.sans, fontSize: "clamp(16px, 2.1vw, 20px)", lineHeight: 1.56, color: C.muted, maxWidth: "48ch", margin: "clamp(22px, 3vw, 30px) auto clamp(34px, 5vw, 46px)" }}>
+          The take-home is dead. Watch the real work, score it on your own rubric, and decide as a team, all from one link.
+        </p>
+        <div className="k-reveal" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "16px 24px" }}>
+          <PrimaryButton label="Set up interviews" large event="cta_clicked" eventProps={{ location: "hiring_closing" }} />
+          <GhostLink kicker="a developer?" label="start a challenge" href="/" event="cta_clicked" eventProps={{ location: "hiring_closing", path: "developer" }} />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -79,11 +124,11 @@ function Footer() {
       <div style={{ maxWidth: MAXW, margin: "0 auto", display: "grid", gridTemplateColumns: "1.4fr repeat(3, 1fr)", gap: "clamp(28px, 4vw, 48px)" }} className="k-foot-grid">
         <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 280 }}>
           <Link href="/" style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 22, color: C.text, textDecoration: "none", width: "fit-content" }}>kodwai</Link>
-          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.4, lineHeight: 1.6 }}>{FOOTER.tagline}</span>
+          <span style={{ fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.4, lineHeight: 1.6 }}>{HIRING_FOOTER.tagline}</span>
         </div>
-        {FOOTER.columns.map((col) => (
+        {HIRING_FOOTER.columns.map((col) => (
           <div key={col.head} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <span style={{ ...TYPE.label, color: C.faint }}>{col.head}</span>
+            <span style={{ fontFamily: C.mono, fontWeight: 500, fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: C.faint }}>{col.head}</span>
             {col.links.map((l) => {
               const internal = l.href.startsWith("/") || l.href.startsWith("#");
               const common = { fontFamily: C.mono, fontSize: 12, color: C.muted, letterSpacing: 0.3, textDecoration: "none" } as const;
@@ -96,7 +141,7 @@ function Footer() {
       </div>
       <div style={{ maxWidth: MAXW, margin: "clamp(36px, 5vw, 52px) auto 0", paddingTop: 22, borderTop: `1px solid ${C.line}`, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <span style={{ fontFamily: C.mono, fontSize: 11, color: C.faint }}>© {new Date().getFullYear()} kodwai</span>
-        <span style={{ fontFamily: C.mono, fontSize: 11, color: C.faint }}>built for teams hiring in the agent era</span>
+        <span style={{ fontFamily: C.mono, fontSize: 11, color: C.faint }}>{HIRING_FOOTER.bottom}</span>
       </div>
     </footer>
   );
@@ -112,44 +157,15 @@ export default function HiringPage() {
       <Nav />
 
       <main>
-        {/* ── Hiring hero (cream) ── */}
-        <section style={{ position: "relative", background: C.bg, padding: `clamp(118px, 16vh, 150px) ${PAD} clamp(56px, 8vw, 88px)`, overflow: "hidden" }}>
-          <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(60% 50% at 50% 0%, rgba(194,54,22,0.06), transparent 70%)" }} />
-          <div style={{ position: "relative", zIndex: 1, maxWidth: 980, margin: "0 auto", textAlign: "center" }}>
-            <div className="k-hero-el" style={{ display: "inline-flex", marginBottom: "clamp(22px, 3vw, 30px)" }}>
-              <Eyebrow label="for hiring teams" />
-            </div>
-            <h1 className="k-hero-el" style={{ ...TYPE.display, color: C.text, margin: "0 auto", maxWidth: "16ch", textWrap: "balance" }}>
-              See how candidates <span style={{ color: C.accent, fontStyle: "italic" }}>really</span> build.
-            </h1>
-            <p className="k-hero-el" style={{ ...TYPE.bodyLg, color: C.muted, maxWidth: "56ch", margin: "clamp(22px, 3vw, 30px) auto clamp(30px, 4vw, 40px)", textWrap: "pretty" }}>
-              Kodwai interviews measure how an engineer actually works with an AI agent on a realistic ticket:
-              the prompts, the recovery, the verification, the result. You get a transparent score, the full replay, and shared review for your team.
-            </p>
-            <div className="k-hero-el" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "18px 26px" }}>
-              <PrimaryButton label="Set up interviews" large event="cta_clicked" eventProps={{ location: "hiring_hero" }} />
-              <GhostLink kicker="a developer?" label="start a challenge" href="/" event="cta_clicked" eventProps={{ location: "hiring_hero", path: "developer" }} />
-            </div>
-          </div>
-        </section>
-
-        {/* ── The detail: features + ATS constellation (shared dark band) ── */}
-        <HiringIntegrations />
-
-        {/* ── Closing CTA (cream) ── */}
-        <section style={{ background: C.bg, borderTop: `1px solid ${C.line}`, padding: `${SECTION_PAD} ${PAD}`, textAlign: "center" }}>
-          <div className="k-reveal" style={{ maxWidth: 820, margin: "0 auto" }}>
-            <Serif as="h2" size="display" style={{ margin: 0 }}>
-              Hire for how they <Accent>drive AI.</Accent>
-            </Serif>
-            <p style={{ ...TYPE.bodyLg, color: C.muted, maxWidth: "46ch", margin: "clamp(24px, 3vw, 32px) auto clamp(36px, 5vw, 48px)" }}>
-              The take-home is dead. Watch real work, score it transparently, and fill roles faster.
-            </p>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <PrimaryButton label="Set up interviews" large event="cta_clicked" eventProps={{ location: "hiring_closing" }} />
-            </div>
-          </div>
-        </section>
+        <Hero />
+        <Premise />
+        <HowCandidatesWork />
+        <LiveSession />
+        <Scoring />
+        <Stats />
+        <NothingToConnect />
+        <Faq />
+        <Closing />
       </main>
 
       <Footer />

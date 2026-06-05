@@ -101,15 +101,120 @@ export const TESTIMONIALS = [
   { name: "Ravi N.", handle: "@ravin", role: "Infra", agent: "cursor", body: "Watching how someone recovers when the agent goes confidently wrong is the most honest signal of seniority I have seen." },
 ];
 
-/* ── Hiring track (B2B, secondary motion) ── */
+/* ══════════════════════════════════════════════════════════════════════════
+   HIRING TRACK  (B2B)  —  the /hiring page content.
+   Single source of truth, kept HONEST against what is actually built:
+   custom interview projects, one-link email invite, a live observation
+   dashboard (real-time transcript, file diffs, tools, timer, cost), AI scoring
+   against a CUSTOM per-role rubric (0-10 scale, with justification, strengths,
+   weaknesses), manual team scores + comments, candidate compare, and team
+   roles (admin / interviewer / viewer). We do NOT claim: ATS integrations,
+   pricing, a template library, video/scrubber playback, a candidate web
+   portal, scheduling, or analytics dashboards. House style: no em dashes.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* The agents a candidate already lives in (real, transparent marks in
+   /public/landing/logos). Used in the hero, trust strip, and closing band. */
+export const HIRING_AGENTS = [
+  { name: "Claude Code", src: "/landing/logos/claude.svg", srcLight: "/landing/logos/claude.svg" },
+] as const;
+
+/* "See exactly how candidates work" — the six real capabilities. */
 export const HIRING_FEATURES = [
-  { title: "Custom rubrics and time limits", body: "Weight the axes for the role and set the clock. The same engine, tuned to what you hire for." },
-  { title: "Bring your own challenges", body: "Use the catalog or upload a problem shaped like your real codebase." },
-  { title: "Replay the full session", body: "Prompts, commits, test runs, and the agent transcript, not just the final diff." },
-  { title: "Shared review for your team", body: "Score, evidence, and replay in one link. Decide together, fast." },
+  {
+    title: "Watch the session live",
+    body: "Follow the prompts, commits, test runs, tools, time, and cost as the candidate works. Not a recording you wait for, the real session as it happens.",
+  },
+  {
+    title: "Your problem, your rubric",
+    body: "Author a ticket shaped like your codebase and define the dimensions you score on and how much each one weighs. The same engine, tuned to the role.",
+  },
+  {
+    title: "A transparent AI score",
+    body: "Every finished session is scored against your rubric, with a written justification, strengths, and weaknesses for each dimension. No black box.",
+  },
+  {
+    title: "Score it yourself too",
+    body: "Add your own scores and leave comments on the session. AI review and human review sit side by side, never one instead of the other.",
+  },
+  {
+    title: "Compare candidates side by side",
+    body: "Put everyone for a role on one board and read the rubric as a heatmap. The strongest and weakest dimensions jump out at a glance.",
+  },
+  {
+    title: "Time, budget, and tools, controlled",
+    body: "Set the clock, cap the API spend, and allow or block tools per interview. The same constraints for every candidate, so the comparison is fair.",
+  },
 ];
 
-/* ── ATS / stack the hiring track connects to ── */
+/* The honest end-to-end interview flow (// from link to decision). */
+export const HIRING_FLOW = [
+  { n: "01", title: "Create the interview", body: "Write the problem, set a time limit and a budget, and define the rubric for the role. Save it once and reuse it for every candidate." },
+  { n: "02", title: "Send one link", body: "Add a candidate by name and email. They get a link with a single command to start. No portal for them to set up, no account to provision." },
+  { n: "03", title: "They solve locally", body: "The candidate works on their own machine, in Claude Code, on a real ticket. No browser sandbox, no artificial setup." },
+  { n: "04", title: "Watch it happen", body: "Follow the session live or open it after. Every prompt, commit, test run, and tool call, in the order it happened." },
+  { n: "05", title: "Score and compare", body: "Read the transparent score, add your own, leave comments for your team, and line the candidate up against the rest." },
+];
+
+/* Example CUSTOM rubric for the scorecard mock. Interview scores are 0-10 per
+   dimension (NOT the public 0-100 Direction/Outcome/Lift). Weights are the
+   team's own, shown here as an illustrative role rubric. */
+export const HIRING_RUBRIC = [
+  { name: "Problem decomposition", weight: 30, score: 8.5 },
+  { name: "Direction and verification", weight: 30, score: 9.0 },
+  { name: "Code quality", weight: 25, score: 8.0 },
+  { name: "Recovery under failure", weight: 15, score: 7.5 },
+];
+
+/* A sample AI review for a finished session (mirrors the real scoring output:
+   overall 0-10, per-dimension justification, strengths, weaknesses). */
+export const HIRING_AI_REVIEW = {
+  candidate: "Jamie Brooks",
+  role: "Senior Backend Engineer",
+  problem: "Sliding-window rate limiter",
+  overall: 8.4,
+  summary:
+    "A methodical session. Scoped the ticket before touching code, drove the agent with tight, verifiable steps, and recovered cleanly when the first approach to the limiter leaked memory.",
+  strengths: [
+    "Wrote a failing test before each change",
+    "Caught the agent's off-by-one in the window math",
+    "Kept commits small and clearly labelled",
+  ],
+  weaknesses: [
+    "Left clock-skew as an uncovered edge case",
+    "Did not write down the final trade-off",
+  ],
+};
+
+/* Candidate compare heatmap (illustrative). Scores 0-10 across the rubric. */
+export const HIRING_COMPARE = {
+  dims: ["Decompose", "Direction", "Quality", "Recovery"],
+  candidates: [
+    { name: "Jamie Brooks", handle: "@jamie", scores: [8.5, 9.0, 8.0, 7.5], overall: 8.4 },
+    { name: "Sarah Chen", handle: "@schen", scores: [7.0, 7.5, 9.0, 6.5], overall: 7.5 },
+    { name: "Kenji Tanaka", handle: "@ktanaka", scores: [6.0, 6.5, 7.0, 8.5], overall: 6.8 },
+  ],
+};
+
+/* Honest editorial stats for the hiring proof band. */
+export const HIRING_STATS = [
+  { value: "1", suffix: " link", caption: "to invite a candidate. No portal for them to set up and no account to provision.", count: false as const },
+  { value: 100, suffix: "%", caption: "local. They solve on their own machine, in Claude Code.", count: true as const },
+  { value: "live", caption: "Watch the prompts, commits, tests, and cost as the session happens, not days later.", count: false as const },
+  { value: 0, caption: "take-homes to grade at midnight. The session arrives scored, with the full replay.", count: false as const, display: "0" },
+];
+
+/* Hiring FAQ (honest). */
+export const HIRING_FAQ = [
+  { q: "How does a candidate take a Kodwai interview?", a: "You add them by name and email, and they get a link with one command to run. They solve the problem on their own machine in Claude Code, the agent they already know. There is no browser sandbox to fight and nothing to install beyond the CLI." },
+  { q: "What can I see while they work?", a: "The full session, live: every prompt, the commits, the test runs, the tools used, the time elapsed, and the API cost. You can follow along in real time or open the session afterward and read it in the order it happened." },
+  { q: "How are interviews scored?", a: "You define the rubric for the role, the dimensions, their weights, and what each one means. Every finished session is scored against that rubric with a written justification, strengths, and weaknesses per dimension. Your team can add manual scores and comments next to the AI score." },
+  { q: "Can I use my own problem?", a: "Yes. Author the ticket so it looks like your real codebase, then set the time limit, the budget, and the tools the candidate may use. Reuse it for every candidate so the comparison stays fair." },
+  { q: "Do you connect to my ATS?", a: "Not yet, and we will not pretend otherwise. There is nothing to wire up: you send a link and a scored session comes back. Share that session with your team with a link, and invite teammates as admins, interviewers, or viewers." },
+  { q: "Is the hiring track free?", a: "Solving public challenges is free for developers. The hiring track is how we keep Kodwai sustainable. Reach out and we will get your team set up." },
+];
+
+/* ── ATS / stack the hiring track connects to (legacy, unused: no real ATS) ── */
 export const INTEGRATIONS = [
   "Greenhouse", "Lever", "Ashby", "Workday", "GitHub", "GitLab", "Slack", "Linear",
 ];
@@ -123,6 +228,30 @@ export const FAQ = [
   { q: "How can a score be fair if a one-shot prompt passes the tests?", a: "Passing tests is necessary but not sufficient. The score is dominated by Direction, the part a careless prompt cannot fake. A solution that clears tests with no steering, no verification, and no decomposition scores poorly on the axis that matters most." },
   { q: "What does the public profile show?", a: "Your score, your rank, the badges you have earned, and the agents you drive, at kodwai.com/developers/you. It is built to send to anyone, including a hiring manager instead of a take-home." },
 ];
+
+/* ── Hiring footer (B2B, distinct from the developer footer) ── */
+export const HIRING_FOOTER = {
+  tagline: "interview the way engineers actually work",
+  bottom: "built for teams hiring in the agent era",
+  columns: [
+    { head: "For hiring", links: [
+      { label: "Set up interviews", href: "https://app.kodwai.com" },
+      { label: "See the real work", href: "#how-candidates-work" },
+      { label: "Transparent scoring", href: "#scoring" },
+      { label: "Nothing to connect", href: "#connect" },
+    ]},
+    { head: "Product", links: [
+      { label: "For developers", href: "/" },
+      { label: "Browse challenges", href: "https://app.kodwai.com" },
+      { label: "Blog", href: "/blog" },
+    ]},
+    { head: "Talk to us", links: [
+      { label: "Email", href: "mailto:hakan@kodwai.com" },
+      { label: "X", href: "https://x.com/kodwai_com" },
+      { label: "Discord", href: "https://discord.gg/d663XRC7" },
+    ]},
+  ],
+};
 
 /* ── Footer ── */
 export const FOOTER = {
