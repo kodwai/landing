@@ -10,7 +10,7 @@ import type { Challenge } from "./system";
 export const CATEGORY_CLAIM =
   "The first platform where developers test their AI vibe coding skills.";
 export const HERO_SUB =
-  "Solve real coding challenges on your own machine with your own AI agent, Claude Code or Cursor. Kodwai scores how well you direct the agent, not what you memorized, and ranks you on a public leaderboard.";
+  "Solve real coding challenges on your own machine with your own AI agent, Claude Code, Cursor, or Codex. Kodwai scores how well you direct the agent, not what you memorized, and ranks you on a public leaderboard.";
 export const TAGLINE = "measure real ai collaboration";
 
 /* ── Used only if the live Turso fetch fails ── */

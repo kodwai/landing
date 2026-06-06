@@ -25,7 +25,7 @@ async function getChallenges(): Promise<Challenge[]> {
 
 const SITE = "https://kodwai.com";
 const DESCRIPTION =
-  "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.";
+  "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.";
 
 // Structured data so search engines and AI answer engines can classify kodwai
 // from schema rather than guessing the category from prose.
