@@ -86,7 +86,7 @@ const SLIDES: SlideData[] = [
       overline: "Two platforms. One skill.",
       left: {
         tag: "Developer Platform · Free",
-        desc: "Solve real, ticket-sized challenges with Claude Code or Cursor, on your own machine. Get scored on how well you direct it. Climb a public leaderboard.",
+        desc: "Solve real, ticket-sized challenges with Claude Code, Cursor, or Codex, on your own machine. Get scored on how well you direct it. Climb a public leaderboard.",
         points: [
           "Free for every developer, forever",
           "The audience and the data moat",
@@ -141,7 +141,7 @@ const SLIDES: SlideData[] = [
         label: "How engineers actually work",
         items: [
           "Own terminal, real projects",
-          "A real agent: Claude Code, Cursor",
+          "A real agent: Claude Code, Cursor, Codex",
           "Ship by directing the agent well",
           "Decompose, verify, recover, judge",
           "The exact skill Kodwai measures",
@@ -157,12 +157,12 @@ const SLIDES: SlideData[] = [
     content: {
       overline: "The Developer Platform, Free and Live",
       logo: "kodwai",
-      tagline: "Pick a challenge, solve it on your own machine with Claude Code or Cursor, and submit the session. Kodwai captures every prompt, tool call, and decision, then scores how well you directed the agent. Climb a public leaderboard and build a profile that shows how you engineer, not what you memorized. Fully free.",
+      tagline: "Pick a challenge, solve it on your own machine with Claude Code, Cursor, or Codex, and submit the session. Kodwai captures every prompt, tool call, and decision, then scores how well you directed the agent. Climb a public leaderboard and build a profile that shows how you engineer, not what you memorized. Fully free.",
       proof: [
         { icon: "⚡", text: "npx @kodwai/cli challenge <slug> : one command, in your terminal" },
         { icon: "🎯", text: "AI Collaboration Score: Direction, Outcome, Lift across 11 signals" },
         { icon: "🏆", text: "Public leaderboard and a shareable developer profile" },
-        { icon: "∞", text: "Free for every developer. Bring Claude Code or Cursor and your own machine." },
+        { icon: "∞", text: "Free for every developer. Bring Claude Code, Cursor, or Codex and your own machine." },
       ],
     },
   },
@@ -184,7 +184,7 @@ const SLIDES: SlideData[] = [
         {
           number: "02",
           title: "Run the CLI",
-          desc: "Start it in your terminal and choose Claude Code or Cursor. Kodwai pulls the problem, starter files, and tests, initializes git, and starts the timer. You solve it for real.",
+          desc: "Start it in your terminal and choose Claude Code, Cursor, or Codex. Kodwai pulls the problem, starter files, and tests, initializes git, and starts the timer. You solve it for real.",
           time: "Your machine",
         },
         {

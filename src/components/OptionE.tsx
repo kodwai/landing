@@ -243,7 +243,7 @@ function GhostLink({ label, kicker, href = APP_URL }: { label: string; kicker?: 
 /* ─── Data ─── */
 const flow = [
   { n: "01", title: "Pick a challenge", body: "Browse real, ticket-sized problems across nine categories. Filter by difficulty and pick one that looks like the work you actually do.", chip: null, tags: null },
-  { n: "02", title: "Run the CLI", body: "Start it from your terminal and choose your agent. We download PROBLEM.md, starter files and tests, init a git repo, and start the timer.", chip: "npx @kodwai/cli challenge <slug>", tags: ["Claude Code", "Cursor"] },
+  { n: "02", title: "Run the CLI", body: "Start it from your terminal and choose your agent. We download PROBLEM.md, starter files and tests, init a git repo, and start the timer.", chip: "npx @kodwai/cli challenge <slug>", tags: ["Claude Code", "Cursor", "Codex"] },
   { n: "03", title: "Solve on your machine", body: "Work the problem with your own agent in your own editor. No sandbox to fight, no artificial constraints, just how you really build.", chip: null, tags: null },
   { n: "04", title: "Submit", body: "One command packages your code, git history, test runs, agent transcript and the time you took, then ships it for scoring.", chip: "npx @kodwai/cli submit", tags: null },
   { n: "05", title: "Get your score", body: "Direction, Outcome, and Lift land with per-signal evidence, so you can see why each axis scored the way it did. Then you are on the leaderboard.", chip: null, tags: null },
@@ -336,7 +336,7 @@ const leaderboard = [
   { rank: 1, name: "Jamie Brooks", handle: "@jamie", agent: "claude-code", score: 96 },
   { rank: 2, name: "Sarah Chen", handle: "@schen", agent: "claude-code", score: 94 },
   { rank: 3, name: "Kenji Tanaka", handle: "@ktanaka", agent: "cursor", score: 93 },
-  { rank: 4, name: "Alex Mendez", handle: "@amendez", agent: "claude-code", score: 91 },
+  { rank: 4, name: "Alex Mendez", handle: "@amendez", agent: "codex", score: 91 },
   { rank: 5, name: "Priya Rao", handle: "@priyar", agent: "claude-code", score: 90 },
 ];
 // Real achievement badges, imported from the app (public/badges/<slug>.png)
@@ -569,7 +569,7 @@ export default function OptionE({ challenges = [] }: { challenges?: Challenge[] 
           <div className="k-hero-el" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, flexWrap: "wrap", fontFamily: C.mono, fontSize: 11, color: C.faint, letterSpacing: 0.5 }}>
             <span>fully free</span><span style={{ color: C.line }}>/</span>
             <span className="k-byoa">bring your own agent</span><span className="k-byoa" style={{ color: C.line }}>/</span>
-            <span>claude code or cursor</span>
+            <span>claude code, cursor or codex</span>
           </div>
         </div>
 

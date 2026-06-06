@@ -55,7 +55,7 @@ export const LEADERBOARD = [
   { rank: 1, name: "Jamie Brooks", handle: "@jamie", agent: "claude-code", score: 96 },
   { rank: 2, name: "Sarah Chen", handle: "@schen", agent: "claude-code", score: 94 },
   { rank: 3, name: "Kenji Tanaka", handle: "@ktanaka", agent: "cursor", score: 93 },
-  { rank: 4, name: "Alex Mendez", handle: "@amendez", agent: "claude-code", score: 91 },
+  { rank: 4, name: "Alex Mendez", handle: "@amendez", agent: "codex", score: 91 },
   { rank: 5, name: "Priya Rao", handle: "@priyar", agent: "claude-code", score: 90 },
 ];
 
@@ -96,6 +96,7 @@ export const TESTIMONIALS = [
   { name: "Tomás V.", handle: "@tomasv", role: "Backend Lead", agent: "claude-code", body: "I sent my profile to a hiring manager instead of doing a take-home. Got the call back the same day." },
   { name: "Priya R.", handle: "@priyar", role: "Platform Eng", agent: "cursor", body: "It runs on my machine with my setup. No sandbox to fight, no fake constraints. That alone makes it worth it." },
   { name: "Jonas W.", handle: "@jonasw", role: "Frontend", agent: "claude-code", body: "Climbed from 71 to 92 in a week by actually reading the evidence on each axis. It is a practice tool that happens to rank you." },
+  { name: "Theo B.", handle: "@theob", role: "Backend Dev", agent: "codex", body: "Ran a challenge with Codex straight from my terminal. The Direction breakdown showed exactly where I over-trusted the agent and shipped too early." },
   { name: "Lena F.", handle: "@lenaf", role: "Senior SWE", agent: "aider", body: "The leaderboard is the first dev ranking I do not find embarrassing. It rewards judgment, not memorization." },
   { name: "Sam O.", handle: "@samo", role: "Eng Manager", agent: "claude-code", body: "We started screening with Kodwai. The transcript plus the score tells me in five minutes what a take-home told me in five days." },
   { name: "Ravi N.", handle: "@ravin", role: "Infra", agent: "cursor", body: "Watching how someone recovers when the agent goes confidently wrong is the most honest signal of seniority I have seen." },

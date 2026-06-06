@@ -26,7 +26,7 @@ const HEADLINE_WORDS: { text: string; strong?: boolean; highlight?: boolean }[] 
   { text: "vibe coding", highlight: true }, { text: "skills." },
 ];
 
-const TRUST = ["fully free", "bring your own agent", "claude code or cursor"];
+const TRUST = ["fully free", "bring your own agent", "claude code, cursor or codex"];
 
 export default function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
