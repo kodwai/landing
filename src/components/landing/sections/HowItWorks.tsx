@@ -470,9 +470,9 @@ export default function HowItWorks() {
                                 display: "inline-flex", alignItems: "center", gap: 7,
                               }}
                             >
-                              {(t === "Claude Code" || t === "Cursor") && (
+                              {(t === "Claude Code" || t === "Cursor" || t === "Codex") && (
                                 <Image
-                                  src={t === "Claude Code" ? "/landing/logos/claude.svg" : "/landing/logos/cursor.svg"}
+                                  src={t === "Claude Code" ? "/landing/logos/claude.svg" : t === "Cursor" ? "/landing/logos/cursor.svg" : "/landing/logos/codex.svg"}
                                   alt=""
                                   width={13}
                                   height={13}

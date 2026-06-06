@@ -26,7 +26,7 @@ export const FALLBACK_CHALLENGES: Challenge[] = [
 /* ── The five-step flow (pick → scored) ── */
 export const FLOW = [
   { n: "01", title: "Pick a challenge", body: "Browse real, ticket-sized problems across every category you actually ship in. Filter by difficulty and pick one that looks like the work you actually do.", chip: null as string | null, tags: null as string[] | null },
-  { n: "02", title: "Run the CLI", body: "Start it from your terminal and choose your agent. We download PROBLEM.md, starter files and tests, init a git repo, and start the timer.", chip: "npx @kodwai/cli challenge <slug>", tags: ["Claude Code", "Cursor"] },
+  { n: "02", title: "Run the CLI", body: "Start it from your terminal and choose your agent. We download PROBLEM.md, starter files and tests, init a git repo, and start the timer.", chip: "npx @kodwai/cli challenge <slug>", tags: ["Claude Code", "Cursor", "Codex"] },
   { n: "03", title: "Solve on your machine", body: "Work the problem with your own agent in your own editor. No sandbox to fight, no artificial constraints, just how you really build.", chip: null, tags: null },
   { n: "04", title: "Submit", body: "One command packages your code, git history, test runs, agent transcript, and the time you took, then ships it for scoring.", chip: "npx @kodwai/cli submit", tags: null },
   { n: "05", title: "Get your score", body: "Direction, Outcome, and Lift land with per-signal evidence, so you can see why each axis scored the way it did. Then you are on the leaderboard.", chip: null, tags: null },

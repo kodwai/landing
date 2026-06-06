@@ -12,11 +12,12 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "kodwai · AI-Agent Coding Challenges for Developers",
   description:
-    "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.",
+    "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.",
   keywords: [
     "AI coding challenge",
     "developer platform",
     "Claude Code",
+    "Codex",
     "AI coding agent",
     "coding leaderboard",
     "developer challenges",
@@ -32,14 +33,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "kodwai · AI-Agent Coding Challenges for Developers",
     description:
-      "Solve coding challenges with your preferred AI agent: Claude Code, Cursor, and more. Compete on leaderboards and build your profile.",
+      "Solve coding challenges with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards and build your profile.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "kodwai · AI-Agent Coding Challenges for Developers",
     description:
-      "Solve coding challenges with your preferred AI agent: Claude Code, Cursor, and more. Compete on leaderboards and build your profile.",
+      "Solve coding challenges with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards and build your profile.",
   },
 };
 
