@@ -1,0 +1,37 @@
+{
+  "name": "temp-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "pitch:pdf": "node scripts/export-pitch-pdf.mjs",
+    "pitch:pdf:short": "node scripts/export-pitch-pdf.mjs /pitch-short kodwai-pitch-deck-short.pdf"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/animejs": "^3.1.13",
+    "animejs": "^3.2.2",
+    "next": "16.2.1",
+    "posthog-js": "^1.376.4",
+    "posthog-node": "^5.35.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.1",
+    "puppeteer": "^24.40.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
