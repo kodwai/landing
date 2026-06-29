@@ -213,6 +213,27 @@ export default function Hero() {
               </span>
             ))}
           </div>
+
+          {/* Product Hunt — featured launch badge */}
+          <div
+            className="k-hero-el"
+            style={{ display: "flex", justifyContent: "center", marginTop: "clamp(24px, 3.4vw, 32px)" }}
+          >
+            <a
+              href="https://www.producthunt.com/products/kodwai-launc?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-kodwai"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1115189&theme=light&t=1782729954461"
+                alt="kodwai - The first platform that scores how you Vibe Code | Product Hunt"
+                width={250}
+                height={54}
+                style={{ width: 250, height: 54, display: "block" }}
+              />
+            </a>
+          </div>
         </div>
       </section>
 
