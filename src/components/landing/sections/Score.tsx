@@ -22,8 +22,8 @@ import { DIRECTION_DIMS, OUTCOME_DIMS, LIFT_DIMS } from "../data";
    data.ts ships the dimension lists; the editorial framing lives here. */
 const AXES = [
   { key: "direction", title: "Direction", weight: 50, desc: "how you steer, verify, and decompose", dims: DIRECTION_DIMS },
-  { key: "outcome", title: "Outcome", weight: 35, desc: "what actually shipped, and whether it holds", dims: OUTCOME_DIMS },
-  { key: "lift", title: "Lift", weight: 15, desc: "the edges a one-shot prompt misses", dims: LIFT_DIMS },
+  { key: "outcome", title: "Outcome", weight: 35, desc: "what shipped, replayed and stress-tested to prove it holds", dims: OUTCOME_DIMS },
+  { key: "lift", title: "Lift", weight: 15, desc: "how far you beat a solo AI, not just that you passed", dims: LIFT_DIMS },
 ] as const;
 
 const BREAKDOWN = [
@@ -72,7 +72,8 @@ export default function Score() {
           <p style={{ ...TYPE.body, color: C.muted, margin: 0, maxWidth: "46ch" }}>
             A one-shot &ldquo;solve this&rdquo; prompt clears the tests, so passing tests is
             not enough. The score is dominated by how you direct the agent, the part a
-            careless prompt cannot fake.
+            careless prompt cannot fake. The weights are learned, not hand-set, and every
+            score ships with a confidence interval instead of false precision.
           </p>
         </div>
 
@@ -119,8 +120,8 @@ export default function Score() {
             lineHeight: 1.7,
           }}
         >
-          scored 0 to 100 <Dot /> direction 50 <Dot /> outcome 35 <Dot /> lift 15{" "}
-          <Dot /> every signal cites its evidence
+          calibrated 0 to 100 <Dot /> weights learned, not hand-set <Dot /> lift measured
+          against a solo AI <Dot /> every signal cites its evidence
         </p>
       </Inner>
     </Band>
@@ -169,6 +170,8 @@ function RingCard({ stack }: { stack: boolean }) {
         }}
       >
         sample run <span style={{ color: C.accent }}>·</span> rate limiter
+        <br />
+        <span style={{ color: C.muted }}>95% confidence 87 to 94</span>
       </p>
 
       {/* axis breakdown, got / of, the headline weights paid out */}

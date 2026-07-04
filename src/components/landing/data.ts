@@ -48,6 +48,7 @@ export const OUTCOME_DIMS = [
 ];
 export const LIFT_DIMS = [
   { name: "Edge-case coverage", pct: 82 },
+  { name: "Lift over AI", pct: 74 },
 ];
 
 /* ── Leaderboard (illustrative) ── */
@@ -222,7 +223,7 @@ export const INTEGRATIONS = [
 
 /* ── FAQ ── */
 export const FAQ = [
-  { q: "What is vibe coding, and how do you score it?", a: "Vibe coding is building real software by directing an AI agent instead of typing every line yourself. Kodwai scores the session across three axes: Direction (how you steer, verify, and decompose), Outcome (what actually shipped and whether it passes), and Lift (the edge cases a one-shot prompt misses). Every signal cites its own evidence from your transcript, commits, and test runs." },
+  { q: "What is vibe coding, and how do you score it?", a: "Vibe coding is building real software by directing an AI agent instead of typing every line yourself. Kodwai scores the session across three axes: Direction (how you steer, verify, and decompose), Outcome (what shipped, replayed and stress-tested to prove it holds), and Lift (how far you beat a solo AI, not just that you passed). The axis weights are learned rather than hand-set, every signal cites its own evidence from your transcript, commits, and test runs, and your score comes with a confidence interval instead of false precision." },
   { q: "Which agents and languages are supported?", a: "Bring your own agent. Claude Code and Cursor are first-class, and anything you run in your terminal works, including Codex CLI, Aider, Cline, and more. Challenges span every mainstream category and most mainstream languages, since you solve on your machine with your own setup." },
   { q: "Do I solve challenges locally or in a sandbox?", a: "Locally, always. The CLI downloads the problem, starter files, and tests, inits a git repo, and starts the timer. You work in your own editor with your own agent. There is no browser sandbox to fight and no artificial constraints." },
   { q: "Is it really free?", a: "Yes. Solving challenges, your score, your profile, and the leaderboard are free for developers. The hiring track is the paid product, for teams running interviews." },
