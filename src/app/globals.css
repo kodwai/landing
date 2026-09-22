@@ -559,3 +559,25 @@ button:focus-visible {
   .k-prose h2 { font-size: 1.55em; }
   .k-prose pre { margin-left: -16px; margin-right: -16px; border-radius: 0; }
 }
+
+/* ─── Blog index: stack the featured card and swipe the filter chips on phones ─── */
+.k-blog-filters > a { white-space: nowrap; flex-shrink: 0; }
+
+@media (max-width: 760px) {
+  .k-blog-featured {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-height: 0 !important;
+  }
+  .k-blog-featured-media {
+    min-height: 0 !important;
+    aspect-ratio: 16 / 9;
+  }
+  .k-blog-filters {
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .k-blog-filters::-webkit-scrollbar { display: none; }
+}

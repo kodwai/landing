@@ -169,6 +169,7 @@ export default async function BlogListPage({
       {/* Category Tabs */}
       {(categories.length > 0 || tags.length > 0) && (
         <div
+          className="k-blog-filters"
           style={{
             display: "flex",
             justifyContent: "center",
@@ -267,6 +268,7 @@ export default async function BlogListPage({
               style={{ textDecoration: "none", color: "inherit", display: "block", marginBottom: 48 }}
             >
               <article
+                className="k-blog-featured"
                 style={{
                   display: "grid",
                   gridTemplateColumns: featuredPost.cover_image_url ? "1fr 1fr" : "1fr",
@@ -277,7 +279,7 @@ export default async function BlogListPage({
                 }}
               >
                 {featuredPost.cover_image_url && (
-                  <div style={{ overflow: "hidden", minHeight: 360 }}>
+                  <div className="k-blog-featured-media" style={{ overflow: "hidden", minHeight: 360 }}>
                     <img
                       src={featuredPost.cover_image_url}
                       alt={featuredPost.title}
@@ -293,7 +295,7 @@ export default async function BlogListPage({
                     justifyContent: "center",
                   }}
                 >
-                  <div style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "center" }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 16, alignItems: "center" }}>
                     {featuredPost.category && (
                       <span
                         style={{
@@ -310,7 +312,7 @@ export default async function BlogListPage({
                         {featuredPost.category.name}
                       </span>
                     )}
-                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a" }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: 10, color: "#9a948a", whiteSpace: "nowrap" }}>
                       {formatDate(featuredPost.published_at)}
                     </span>
                   </div>
@@ -377,7 +379,7 @@ export default async function BlogListPage({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(300px, 100%), 1fr))",
                 gap: 24,
                 marginBottom: 48,
               }}
