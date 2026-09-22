@@ -228,7 +228,7 @@ export const FAQ = [
   { q: "Do I solve challenges locally or in a sandbox?", a: "Locally, always. The CLI downloads the problem, starter files, and tests, inits a git repo, and starts the timer. You work in your own editor with your own agent. There is no browser sandbox to fight and no artificial constraints." },
   { q: "Is it really free?", a: "Yes. Solving challenges, your score, your profile, and the leaderboard are free for developers. The hiring track is the paid product, for teams running interviews." },
   { q: "How can a score be fair if a one-shot prompt passes the tests?", a: "Passing tests is necessary but not sufficient. The score is dominated by Direction, the part a careless prompt cannot fake. A solution that clears tests with no steering, no verification, and no decomposition scores poorly on the axis that matters most." },
-  { q: "What does the public profile show?", a: "Your score, your rank, the badges you have earned, and the agents you drive, at kodwai.com/developers/you. It is built to send to anyone, including a hiring manager instead of a take-home." },
+  { q: "What does the public profile show?", a: "Your score, your rank, the badges you have earned, and the agents you drive, at app.kodwai.com/developers/your-username. It is built to send to anyone, including a hiring manager instead of a take-home." },
 ];
 
 /* ── Hiring footer (B2B, distinct from the developer footer) ── */
@@ -244,7 +244,8 @@ export const HIRING_FOOTER = {
     ]},
     { head: "Product", links: [
       { label: "For developers", href: "/" },
-      { label: "Browse challenges", href: "https://app.kodwai.com" },
+      { label: "Browse challenges", href: "/challenges" },
+      { label: "The score, explained", href: "/ai-collaboration-score" },
       { label: "Blog", href: "/blog" },
     ]},
     { head: "Talk to us", links: [
@@ -261,13 +262,18 @@ export const FOOTER = {
   columns: [
     { head: "Platform", links: [
       { label: "Start a challenge", href: "https://app.kodwai.com" },
+      { label: "Browse challenges", href: "/challenges" },
       { label: "How it works", href: "#how" },
-      { label: "The score", href: "#score" },
+      { label: "The score, explained", href: "/ai-collaboration-score" },
       { label: "Leaderboard", href: "https://app.kodwai.com" },
     ]},
     { head: "Resources", links: [
       { label: "FAQ", href: "#faq" },
       { label: "Blog", href: "/blog" },
+      { label: "For hiring", href: "/hiring" },
+      { label: "kodwai vs LeetCode", href: "/compare/leetcode" },
+      { label: "kodwai vs HackerRank", href: "/compare/hackerrank" },
+      { label: "kodwai vs CodeSignal", href: "/compare/codesignal" },
     ]},
     { head: "Follow", links: [
       { label: "X", href: "https://x.com/kodwai_com" },

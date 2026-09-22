@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone CommonJS puppeteer script at the repo root, not app code.
+    "_cc2.js",
   ]),
 ]);
 

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CookieConsent from "@/components/CookieConsent";
+import { SITE_URL } from "@/lib/site";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -9,7 +10,12 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+// metadataBase resolves every relative metadata URL (og:image, canonicals)
+// against the canonical www host. Canonicals are set per page, never here:
+// children inherit layout metadata, so a root canonical would mark every page
+// as a duplicate of the homepage.
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "kodwai · AI-Agent Coding Challenges for Developers",
   description:
     "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.",

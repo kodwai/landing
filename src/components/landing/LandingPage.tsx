@@ -24,6 +24,7 @@ import Score from "./sections/Score";
 import Climb from "./sections/Climb";
 import Stats from "./sections/Stats";
 import Faq from "./sections/Faq";
+import HiringTeaser from "./sections/HiringTeaser";
 import ClosingFooter from "./sections/ClosingFooter";
 
 /* ─── Thin rust scroll-progress hairline at the very top ─── */
@@ -97,6 +98,7 @@ export default function LandingPage({ challenges = [] }: { challenges?: Challeng
         <Climb />
         <Stats />
         <Faq />
+        <HiringTeaser />
         <ClosingFooter />
       </main>
     </div>

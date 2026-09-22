@@ -103,7 +103,7 @@ export default function ScoreCard({ area }: { area: string }) {
               whiteSpace: "nowrap",
             }}
           >
-            "verified every claim before shipping."
+            &quot;verified every claim before shipping.&quot;
           </span>
         </div>
       </div>

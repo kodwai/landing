@@ -15,7 +15,7 @@
    hover. All motion is progressive enhancement and reduced-motion safe.
    ══════════════════════════════════════════════════════════════════════════ */
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import type { MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -110,14 +110,18 @@ export default function ClosingFooter() {
 
           {/* HUGE closing serif line */}
           <Serif as="h2" size="display" style={{ margin: 0 }}>
+            {/* Real spaces between the word spans (not margins), so text
+                extractors and screen readers read "Stop grinding puzzles." */}
             <span ref={headRef} style={{ display: "block" }}>
               {headWords.map((w, i) => (
-                <span key={i} className={K + "word"} style={{ display: "inline-block", marginRight: "0.26em" }}>{w}</span>
+                <Fragment key={i}>
+                  <span className={K + "word"} style={{ display: "inline-block" }}>{w}</span>{" "}
+                </Fragment>
               ))}
               <br />
-              <span className={K + "word"} style={{ display: "inline-block", marginRight: "0.26em" }}>Prove</span>
-              <span className={K + "word"} style={{ display: "inline-block", marginRight: "0.26em" }}>how</span>
-              <span className={K + "word"} style={{ display: "inline-block", marginRight: "0.26em" }}>you</span>
+              <span className={K + "word"} style={{ display: "inline-block" }}>Prove</span>{" "}
+              <span className={K + "word"} style={{ display: "inline-block" }}>how</span>{" "}
+              <span className={K + "word"} style={{ display: "inline-block" }}>you</span>{" "}
               <span className={K + "word"} style={{ display: "inline-block" }}><Accent>build.</Accent></span>
             </span>
           </Serif>

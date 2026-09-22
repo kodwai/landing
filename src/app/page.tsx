@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
 import LandingPage from "@/components/landing/LandingPage";
 import type { Challenge } from "@/components/landing/system";
 import { turso } from "@/lib/turso";
+import {
+  APP_URL, ORGANIZATION_ID, SAME_AS, SITE_DEFINITION, SITE_NAME, SITE_URL, WEBSITE_ID, jsonLdScript,
+} from "@/lib/site";
 
 // Refresh the challenge catalog from Turso every 5 minutes.
 export const revalidate = 300;
@@ -23,39 +27,42 @@ async function getChallenges(): Promise<Challenge[]> {
   }
 }
 
-const SITE = "https://kodwai.com";
-const DESCRIPTION =
-  "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.";
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // Structured data so search engines and AI answer engines can classify kodwai
-// from schema rather than guessing the category from prose.
+// from schema rather than guessing the category from prose. Every @id and url
+// uses the canonical www host; the description is the shared entity definition.
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Organization",
-      "@id": `${SITE}/#organization`,
-      name: "kodwai",
-      url: SITE,
-      description: DESCRIPTION,
-      logo: `${SITE}/icon`,
-      sameAs: ["https://x.com/kodwai_com", "https://discord.gg/d663XRC7"],
+      "@id": ORGANIZATION_ID,
+      name: SITE_NAME,
+      url: `${SITE_URL}/`,
+      description: SITE_DEFINITION,
+      logo: `${SITE_URL}/icon`,
+      sameAs: SAME_AS,
     },
     {
       "@type": "WebSite",
-      "@id": `${SITE}/#website`,
-      url: SITE,
-      name: "kodwai",
-      description: DESCRIPTION,
-      publisher: { "@id": `${SITE}/#organization` },
+      "@id": WEBSITE_ID,
+      url: `${SITE_URL}/`,
+      name: SITE_NAME,
+      description: SITE_DEFINITION,
+      publisher: { "@id": ORGANIZATION_ID },
     },
     {
       "@type": "WebApplication",
-      name: "kodwai",
-      url: SITE,
+      "@id": `${SITE_URL}/#webapp`,
+      name: SITE_NAME,
+      url: APP_URL,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Web",
-      description: DESCRIPTION,
+      description: SITE_DEFINITION,
+      publisher: { "@id": ORGANIZATION_ID },
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     },
   ],
@@ -67,7 +74,7 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <LandingPage challenges={challenges} />
     </>

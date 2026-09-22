@@ -17,10 +17,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode, ReactElement } from "react";
+import Link from "next/link";
 import anime from "animejs";
 import {
   C, CSS_EASE, EASE, MAXW, PAD, SECTION_PAD, TYPE,
-  Marker, Serif, Accent,
+  Marker, Serif, Accent, GhostLink,
   useResponsiveCols, diffStyle, track,
   type Challenge,
 } from "../system";
@@ -96,7 +97,12 @@ function CatPill({
 }
 
 export default function Challenges({ challenges }: { challenges: Challenge[] }) {
-  const catalog = challenges.length ? challenges : FALLBACK_CHALLENGES;
+  const live = challenges.length > 0;
+  const catalog = live ? challenges : FALLBACK_CHALLENGES;
+  // Live cards deep-link to their public, server-rendered page. The fallback
+  // set (shown only if the Turso read fails) has no pages, so it links to the
+  // catalog instead of a 404.
+  const cardHref = (slug: string) => (live ? `/challenges/${slug}` : "/challenges");
 
   // category counts, sorted by frequency
   const cats = useMemo(() => {
@@ -231,9 +237,9 @@ export default function Challenges({ challenges }: { challenges: Challenge[] }) 
           {visible.map((c, i) => {
             const ds = diffStyle[c.difficulty] || diffStyle.medium;
             return (
-              <a
+              <Link
                 key={c.slug}
-                href="https://app.kodwai.com"
+                href={cardHref(c.slug)}
                 className="k-chcard"
                 style={{
                   display: "flex", flexDirection: "column", textDecoration: "none",
@@ -323,14 +329,14 @@ export default function Challenges({ challenges }: { challenges: Challenge[] }) 
                     solve <span aria-hidden>&rarr;</span>
                   </span>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>
 
-        {/* ── show all / show fewer ── */}
-        {inCat.length > 3 && (
-          <div style={{ display: "flex", justifyContent: "center", marginTop: 32 }}>
+        {/* ── show all / show fewer, plus the full public catalog ── */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: "18px 28px", marginTop: 32 }}>
+          {inCat.length > 3 && (
             <button
               type="button"
               onClick={onExpand}
@@ -348,8 +354,9 @@ export default function Challenges({ challenges }: { challenges: Challenge[] }) 
               {showAll ? "show fewer" : `show all ${inCat.length}`}
               <span aria-hidden>{showAll ? "↑" : "↓"}</span>
             </button>
-          </div>
-        )}
+          )}
+          <GhostLink label="browse every challenge" href="/challenges" event="cta_clicked" eventProps={{ location: "home_challenges" }} />
+        </div>
       </div>
 
       {/* scoped: card focus ring + arrow nudge on hover (inline can't express :focus-visible / group hover) */}

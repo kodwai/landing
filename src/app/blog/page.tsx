@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { DEFAULT_OG_IMAGE } from "@/lib/site";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
 
@@ -46,6 +48,44 @@ function estimateReadTime(excerpt: string): string {
   const words = excerpt.split(/\s+/).length;
   const minutes = Math.max(3, Math.ceil(words / 40) + 2);
   return `${minutes} min read`;
+}
+
+const BLOG_TITLE = "Blog | kodwai";
+const BLOG_DESCRIPTION = "Insights on AI-agent coding, developer tools, and the future of technical interviews.";
+
+/* Canonical: page 1 and every filtered view point at /blog; later pages of
+   the unfiltered list are their own canonical so older posts stay reachable.
+   The og/twitter blocks are set here because a child openGraph replaces the
+   root one wholesale, which would otherwise show the homepage title. */
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; category?: string; tag?: string }>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const page = parseInt(params.page || "1") || 1;
+  const filtered = Boolean(params.category || params.tag);
+  const canonical = !filtered && page > 1 ? `/blog?page=${page}` : "/blog";
+
+  return {
+    alternates: {
+      canonical,
+      types: { "application/rss+xml": "/blog/rss.xml" },
+    },
+    openGraph: {
+      title: BLOG_TITLE,
+      description: BLOG_DESCRIPTION,
+      type: "website",
+      url: canonical,
+      images: [DEFAULT_OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: BLOG_TITLE,
+      description: BLOG_DESCRIPTION,
+      images: [DEFAULT_OG_IMAGE.url],
+    },
+  };
 }
 
 export default async function BlogListPage({
@@ -97,7 +137,7 @@ export default async function BlogListPage({
             marginBottom: 18,
           }}
         >
-          // insights &amp; updates
+          {"// insights & updates"}
         </p>
         <h1
           style={{

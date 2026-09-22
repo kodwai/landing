@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TableOfContents from "./TableOfContents";
+import { ORGANIZATION_ID, SITE_NAME, SITE_URL, jsonLdScript, toIsoUtc } from "@/lib/site";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
+
+// Posts are cached and refreshed at most once a minute (ISR).
+export const revalidate = 60;
 
 interface BlogCategory {
   id: string;
@@ -37,13 +42,32 @@ interface BlogPost {
   updated_at: string;
 }
 
+// Sibling API routes that share the /api/blog/{slug} shape but are not posts.
+const RESERVED_SLUGS = new Set(["sitemap", "rss", "categories", "tags"]);
+
+/* Null only when the API says the post does not exist (404). Any other
+   failure throws, so an API outage never serves a real post as a soft 404:
+   ISR keeps the last good page, and an uncached page returns a 5xx. */
 async function getPost(slug: string): Promise<BlogPost | null> {
+  if (RESERVED_SLUGS.has(slug)) return null;
+  const res = await fetch(`${API_URL}/api/blog/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Blog API returned ${res.status} for "${slug}"`);
+  const post = (await res.json()) as BlogPost;
+  if (!post || typeof post.slug !== "string" || typeof post.content_md !== "string") return null;
+  return post;
+}
+
+/* Prerender known posts so their metadata lands in <head> for every crawler.
+   Unknown slugs still render on demand (dynamicParams defaults to true). */
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   try {
-    const res = await fetch(`${API_URL}/api/blog/${slug}`, { next: { revalidate: 60 } });
-    if (!res.ok) return null;
-    return res.json();
+    const res = await fetch(`${API_URL}/api/blog/sitemap`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const posts: { slug: string }[] = await res.json();
+    return posts.map((p) => ({ slug: p.slug }));
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -54,16 +78,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
-  if (!post) return { title: "Post Not Found | kodwai" };
+  if (!post) notFound();
 
   return {
     title: `${post.seo_title || post.title} | kodwai Blog`,
     description: post.seo_description || post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+      types: { "application/rss+xml": "/blog/rss.xml" },
+    },
     openGraph: {
       title: post.seo_title || post.title,
       description: post.seo_description || post.excerpt,
       type: "article",
-      publishedTime: post.published_at || undefined,
+      url: `/blog/${post.slug}`,
+      publishedTime: toIsoUtc(post.published_at),
+      modifiedTime: toIsoUtc(post.updated_at),
       authors: [post.author_name],
     },
     twitter: {
@@ -71,6 +101,115 @@ export async function generateMetadata({
       title: post.seo_title || post.title,
       description: post.seo_description || post.excerpt,
     },
+  };
+}
+
+/* Heading ids. One slugger drives both the rendered heading ids (rehype pass
+   over the parsed tree, so inline code, links, and emphasis in a heading are
+   read as plain text) and the table of contents, so anchors always match.
+   Repeated headings get -1, -2 suffixes. */
+type HastNode = {
+  type: string;
+  tagName?: string;
+  value?: string;
+  properties?: Record<string, unknown>;
+  children?: HastNode[];
+};
+
+function createSlugger() {
+  const seen = new Map<string, number>();
+  return (text: string) => {
+    const base = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "section";
+    const n = seen.get(base) ?? 0;
+    seen.set(base, n + 1);
+    return n === 0 ? base : `${base}-${n}`;
+  };
+}
+
+function hastText(node: HastNode): string {
+  if (node.type === "text") return node.value ?? "";
+  return (node.children ?? []).map(hastText).join("");
+}
+
+function rehypeHeadingIds() {
+  return (tree: HastNode) => {
+    const slug = createSlugger();
+    const visit = (node: HastNode) => {
+      if (node.type === "element" && (node.tagName === "h2" || node.tagName === "h3")) {
+        node.properties = { ...node.properties, id: slug(hastText(node)) };
+        return;
+      }
+      node.children?.forEach(visit);
+    };
+    visit(tree);
+  };
+}
+
+/* Plain text of a markdown heading line: drop images, keep link text, strip
+   emphasis and code markers. Mirrors what the rendered heading shows. */
+function markdownHeadingText(line: string): string {
+  return line
+    .replace(/^#{2,3}\s+/, "")
+    .replace(/\s+#+\s*$/, "")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[`*_~]/g, "")
+    .trim();
+}
+
+function extractHeadings(markdown: string) {
+  const slug = createSlugger();
+  const headings: { id: string; text: string; level: number }[] = [];
+  let inFence = false;
+  for (const line of markdown.split("\n")) {
+    if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
+    if (inFence || !/^#{2,3}\s+\S/.test(line)) continue;
+    const text = markdownHeadingText(line);
+    headings.push({ id: slug(text), text, level: line.startsWith("### ") ? 3 : 2 });
+  }
+  return headings;
+}
+
+/* BlogPosting + BreadcrumbList. A team byline is credited to the
+   organization; a named byline is a Person. */
+function postJsonLd(post: BlogPost) {
+  const url = `${SITE_URL}/blog/${post.slug}`;
+  const isTeam = /\bteam\b|kodwai/i.test(post.author_name);
+  const organization = {
+    "@type": "Organization",
+    "@id": ORGANIZATION_ID,
+    name: SITE_NAME,
+    url: `${SITE_URL}/`,
+    logo: `${SITE_URL}/icon`,
+  };
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${url}#article`,
+        mainEntityOfPage: url,
+        url,
+        headline: post.title,
+        description: post.seo_description || post.excerpt,
+        image: post.cover_image_url || `${url}/opengraph-image`,
+        datePublished: toIsoUtc(post.published_at) ?? toIsoUtc(post.created_at),
+        dateModified: toIsoUtc(post.updated_at) ?? toIsoUtc(post.published_at),
+        author: isTeam ? organization : { "@type": "Person", name: post.author_name },
+        publisher: organization,
+        articleSection: post.category?.name,
+        keywords: post.tags.map((t) => t.name).join(", ") || undefined,
+        inLanguage: "en",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+          { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+          { "@type": "ListItem", position: 3, name: post.title, item: url },
+        ],
+      },
+    ],
   };
 }
 
@@ -100,49 +239,15 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
   const post = await getPost(slug);
+  if (!post) notFound();
 
-  // Extract headings for Table of Contents
-  const headings = post
-    ? (post.content_md.match(/^#{2,3}\s+.+$/gm) || []).map((line) => {
-        const level = line.startsWith("### ") ? 3 : 2;
-        const text = line.replace(/^#{2,3}\s+/, "");
-        const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-        return { id, text, level };
-      })
-    : [];
-
-  if (!post) {
-    return (
-      <div style={{ textAlign: "center", padding: "120px 0" }}>
-        <h1
-          style={{
-            fontFamily: "'Instrument Serif', Georgia, serif",
-            fontSize: 36,
-            color: "#1a1a1a",
-            marginBottom: 16,
-          }}
-        >
-          Post not found
-        </h1>
-        <Link
-          href="/blog"
-          style={{
-            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-            fontSize: 12,
-            color: "#c23616",
-            textDecoration: "none",
-            letterSpacing: 2,
-            textTransform: "uppercase",
-          }}
-        >
-          Back to blog
-        </Link>
-      </div>
-    );
-  }
+  // Table of contents, using the same slugger as the rendered heading ids
+  const headings = extractHeadings(post.content_md);
 
   return (
     <article>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(postJsonLd(post)) }} />
+
       {/* Breadcrumb */}
       <nav
         style={{
@@ -325,17 +430,12 @@ export default async function BlogPostPage({
           >
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHeadingIds]}
               components={{
-                h2: ({ children, ...props }) => {
-                  const text = String(children);
-                  const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-                  return <h2 id={id} style={{ scrollMarginTop: 100 }} {...props}>{children}</h2>;
-                },
-                h3: ({ children, ...props }) => {
-                  const text = String(children);
-                  const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-                  return <h3 id={id} style={{ scrollMarginTop: 100 }} {...props}>{children}</h3>;
-                },
+                // Pass only the id (set by rehypeHeadingIds) and children. Spreading
+                // all props would leak react-markdown's `node` onto the DOM.
+                h2: ({ id, children }) => <h2 id={id} style={{ scrollMarginTop: 100 }}>{children}</h2>,
+                h3: ({ id, children }) => <h3 id={id} style={{ scrollMarginTop: 100 }}>{children}</h3>,
               }}
             >
               {post.content_md}
