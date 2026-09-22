@@ -11,7 +11,7 @@ import { C, TYPE, Serif, Accent } from "@/components/landing/system";
 import { PublicShell, Section, Crumbs, Kicker, H2, P, SignupBand } from "@/components/landing/PublicShell";
 import { type Cited, type ComparePage, LAST_REVIEWED } from "@/lib/compare";
 
-const BYLINE = "Ege Hakan Karaagac, co-founder of kodwai";
+const BYLINE = "Hakan Karaagac, co-founder of kodwai";
 
 /* Text followed by numbered citation links into the sources list. */
 function CitedText({ c, order }: { c: Cited; order: string[] }) {

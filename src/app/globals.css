@@ -182,6 +182,15 @@ body {
 }
 
 @media (max-width: 899px) {
+  /* Blog post: drop the TOC column so the article fits phone widths */
+  .k-post-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .k-post-toc {
+    display: none;
+  }
+
   .k-cta-grid {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 56px !important;

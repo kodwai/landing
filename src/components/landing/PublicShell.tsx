@@ -20,7 +20,16 @@ import {
   Serif, OutlineButton, PrimaryButton, GhostLink, diffStyle, track,
 } from "./system";
 import { FOOTER } from "./data";
+import { SiteNavLinks, type SiteNavItem } from "./SiteNav";
 import { type ChallengeSummary, capitalize, signupUrl, truncate } from "@/lib/challenges";
+
+/* Header links: "blog" stays on every width; the rest fold away on narrow
+   screens so the CTA always fits. */
+const PUBLIC_NAV: SiteNavItem[] = [
+  { label: "challenges", href: "/challenges", hideBelow: "md" },
+  { label: "the score", href: "/ai-collaboration-score", hideBelow: "md" },
+  { label: "blog", href: "/blog" },
+];
 
 /* ─── Shell: sticky nav, content, footer ─── */
 export function PublicShell({ section, campaign, children }: { section: string; campaign: string; children: ReactNode }) {
@@ -35,13 +44,12 @@ export function PublicShell({ section, campaign, children }: { section: string; 
         borderBottom: `1px solid ${C.line}`,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 14, minWidth: 0 }}>
-          <Link href="/" onClick={() => track("nav_logo_clicked", { page: section })} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</Link>
+          <Link href="/" className="k-sn-logo" onClick={() => track("nav_logo_clicked", { page: section })} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</Link>
           <span className="k-nav-blog" style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 1, textTransform: "uppercase" }}>{section}</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <Link href="/challenges" className="k-nav-hire k-pub-navlink">challenges</Link>
-          <Link href="/ai-collaboration-score" className="k-nav-hire k-pub-navlink">the score</Link>
-          <OutlineButton label="start a challenge" href={signupUrl(campaign, "nav")} event="cta_clicked" eventProps={{ location: "public_nav", page: section }} />
+        <div className="k-sn-bar">
+          <SiteNavLinks page={section} items={PUBLIC_NAV} />
+          <span className="k-sn-cta"><OutlineButton label="start a challenge" href={signupUrl(campaign, "nav")} event="cta_clicked" eventProps={{ location: "public_nav", page: section }} /></span>
         </div>
       </nav>
 
@@ -80,8 +88,6 @@ export function PublicShell({ section, campaign, children }: { section: string; 
 function PublicStyles() {
   return (
     <style>{`
-      .k-pub-navlink { font-family: ${C.mono}; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: ${C.muted}; text-decoration: none; transition: color .25s ${CSS_EASE}; }
-      .k-pub-navlink:hover { color: ${C.accent}; }
       .k-pub-footlink { font-family: ${C.mono}; font-size: 12.5px; color: ${C.muted}; letter-spacing: .2px; text-decoration: none; width: fit-content; transition: color .25s ${CSS_EASE}; }
       .k-pub-footlink:hover { color: ${C.accent}; }
       .k-pub-foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: clamp(28px, 4vw, 56px); align-items: start; }

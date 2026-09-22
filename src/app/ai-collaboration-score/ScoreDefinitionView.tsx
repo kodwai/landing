@@ -21,7 +21,7 @@ const CAMPAIGN = "ai_collaboration_score";
 const SCORE_DEFINITION =
   "kodwai's AI Collaboration Score is a 0 to 100 score for one coding session with an AI coding agent (Claude Code, Cursor, or Codex) that measures how well the developer directed the agent, across three axes: Direction, Outcome, and Lift.";
 
-const BYLINE = "Ege Hakan Karaagac, co-founder of kodwai";
+const BYLINE = "Hakan Karaagac, co-founder of kodwai";
 const UPDATED = "2026-09-22";
 const HELLO_META = "https://www.hellointerview.com/blog/meta-ai-enabled-coding";
 const CORRIX = "https://app.corrix.ai/";

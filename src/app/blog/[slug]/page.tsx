@@ -409,9 +409,10 @@ export default async function BlogPostPage({
 
       {/* Content + TOC Sidebar */}
       <div
+        className="k-post-grid"
         style={{
           display: "grid",
-          gridTemplateColumns: headings.length > 0 ? "1fr 240px" : "1fr",
+          gridTemplateColumns: headings.length > 0 ? "minmax(0, 1fr) 240px" : "minmax(0, 1fr)",
           gap: 48,
           maxWidth: 1100,
           margin: "0 auto",
@@ -469,7 +470,7 @@ export default async function BlogPostPage({
 
         {/* TOC Sidebar */}
         {headings.length > 0 && (
-          <aside>
+          <aside className="k-post-toc">
             <TableOfContents headings={headings} />
           </aside>
         )}

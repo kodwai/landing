@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteNavLinks } from "@/components/landing/SiteNav";
 
 export const metadata: Metadata = {
   title: "Blog | kodwai",
@@ -17,16 +18,18 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
       {/* Faint code-grid field, matching the landing page */}
       <div className="k-field" aria-hidden />
 
-      {/* Nav */}
+      {/* Nav: same links as every landing header (home via the wordmark,
+          challenges, blog index), from the shared SiteNavLinks. */}
       <nav
         style={{
           position: "sticky",
           top: 0,
           zIndex: 100,
-          padding: "16px clamp(12px, 4vw, 48px)",
+          padding: "16px clamp(16px, 4vw, 48px)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          gap: 16,
           backdropFilter: "blur(20px)",
           background: "#faf8f4ee",
           borderBottom: "1px solid #e4e0d8",
@@ -35,6 +38,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <Link
             href="/"
+            className="k-sn-logo"
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontWeight: 550,
@@ -48,6 +52,7 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
           </Link>
           <Link
             href="/blog"
+            className="k-nav-blog"
             style={{
               fontFamily: "'JetBrains Mono', ui-monospace, monospace",
               fontSize: 11,
@@ -60,26 +65,32 @@ export default function BlogLayout({ children }: { children: React.ReactNode }) 
             blog
           </Link>
         </div>
-        <a
-          href="https://app.kodwai.com"
-          style={{
-            fontFamily: "'JetBrains Mono', ui-monospace, monospace",
-            fontSize: 11,
-            color: "#1a1a1a",
-            background: "transparent",
-            letterSpacing: 1.4,
-            textTransform: "uppercase",
-            textDecoration: "none",
-            padding: "9px 18px",
-            border: "1px solid #d6cfc1",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            transition: "color 0.3s, border-color 0.3s",
-          }}
-        >
-          open app <span aria-hidden>→</span>
-        </a>
+        <div className="k-sn-bar">
+          <SiteNavLinks page="blog" />
+          <span className="k-sn-cta">
+            <a
+              href="https://app.kodwai.com"
+              style={{
+                fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+                fontSize: 11,
+                color: "#1a1a1a",
+                background: "transparent",
+                letterSpacing: 1.4,
+                textTransform: "uppercase",
+                textDecoration: "none",
+                padding: "9px 18px",
+                border: "1px solid #d6cfc1",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+                transition: "color 0.3s, border-color 0.3s",
+              }}
+            >
+              open app <span aria-hidden>→</span>
+            </a>
+          </span>
+        </div>
       </nav>
 
       {/* Content */}

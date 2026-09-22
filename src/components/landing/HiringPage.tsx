@@ -19,6 +19,7 @@ import {
   useChoreography, useDrawOnView, track,
 } from "./system";
 import { HIRING_FOOTER } from "./data";
+import { SiteNavLinks, type SiteNavItem } from "./SiteNav";
 
 import Hero from "./sections/hiring/Hero";
 import Premise from "./sections/hiring/Premise";
@@ -54,7 +55,15 @@ function ScrollProgress() {
   );
 }
 
-/* ─── Nav (mirrors the main nav, pointed back at the developer page) ─── */
+/* ─── Nav (mirrors the main nav, pointed back at the developer page) ───
+   "for developers" keeps its cta_clicked event; on narrow screens it and
+   "challenges" fold away so "blog" and the CTA always fit. */
+const HIRING_NAV: SiteNavItem[] = [
+  { label: "for developers", href: "/", hideBelow: "md", event: "cta_clicked", eventProps: { location: "hiring_nav" } },
+  { label: "challenges", href: "/challenges", hideBelow: "md" },
+  { label: "blog", href: "/blog" },
+];
+
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -66,19 +75,19 @@ function Nav() {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: `${scrolled ? 11 : 15}px ${PAD}`,
-      display: "flex", justifyContent: "space-between", alignItems: "center",
+      display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16,
       background: scrolled ? "rgba(250,248,244,0.86)" : "rgba(250,248,244,0.6)",
       backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
       borderBottom: `1px solid ${scrolled ? C.line : "transparent"}`,
       transition: `padding .3s ${CSS_EASE}, background .3s ${CSS_EASE}, border-color .3s ${CSS_EASE}`,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <Link href="/" onClick={() => track("nav_logo_clicked", { page: "hiring" })} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</Link>
+        <Link href="/" className="k-sn-logo" onClick={() => track("nav_logo_clicked", { page: "hiring" })} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</Link>
         <span className="k-nav-blog" style={{ fontFamily: C.mono, fontSize: 11, color: C.accent, letterSpacing: 1, textTransform: "uppercase" }}>for hiring</span>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <Link href="/" className="k-nav-hire" onClick={() => track("cta_clicked", { label: "for developers", location: "hiring_nav" })} style={{ fontFamily: C.mono, fontSize: 11, color: C.muted, letterSpacing: 1, textTransform: "uppercase", textDecoration: "none" }}>for developers</Link>
-        <OutlineButton label="set up interviews" event="cta_clicked" eventProps={{ location: "hiring_nav" }} />
+      <div className="k-sn-bar">
+        <SiteNavLinks page="hiring" items={HIRING_NAV} />
+        <span className="k-sn-cta"><OutlineButton label="set up interviews" event="cta_clicked" eventProps={{ location: "hiring_nav" }} /></span>
       </div>
     </nav>
   );

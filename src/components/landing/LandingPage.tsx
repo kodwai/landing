@@ -13,6 +13,7 @@
 
 import { useEffect, useState } from "react";
 import { C, CSS_EASE, PAD, OutlineButton, useChoreography, track, type Challenge } from "./system";
+import { SiteNavLinks } from "./SiteNav";
 
 import Hero from "./sections/Hero";
 import Trust from "./sections/Trust";
@@ -64,17 +65,18 @@ function Nav() {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, padding: `${scrolled ? 11 : 15}px ${PAD}`,
-      display: "flex", justifyContent: "space-between", alignItems: "center",
+      display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16,
       background: scrolled ? "rgba(250,248,244,0.86)" : "rgba(250,248,244,0.6)",
       backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
       borderBottom: `1px solid ${scrolled ? C.line : "transparent"}`,
       transition: `padding .3s ${CSS_EASE}, background .3s ${CSS_EASE}, border-color .3s ${CSS_EASE}`,
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-        <a href="#top" onClick={() => track("nav_logo_clicked")} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</a>
+        <a href="#top" className="k-sn-logo" onClick={() => track("nav_logo_clicked")} style={{ fontFamily: C.serif, fontWeight: 500, fontSize: 24, letterSpacing: "-0.01em", color: C.text, textDecoration: "none" }}>kodwai</a>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <OutlineButton label="start a challenge" event="open_app_clicked" eventProps={{ location: "nav" }} />
+      <div className="k-sn-bar">
+        <SiteNavLinks page="home" />
+        <span className="k-sn-cta"><OutlineButton label="start a challenge" event="open_app_clicked" eventProps={{ location: "nav" }} /></span>
       </div>
     </nav>
   );
