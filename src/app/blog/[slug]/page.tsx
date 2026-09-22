@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import TableOfContents from "./TableOfContents";
 import { ORGANIZATION_ID, SITE_NAME, SITE_URL, jsonLdScript, toIsoUtc } from "@/lib/site";
 
@@ -420,23 +421,32 @@ export default async function BlogPostPage({
       >
         {/* Main Content */}
         <div>
-          <div
-            className="prose prose-lg max-w-none"
-            style={{
-              fontFamily: "'Instrument Serif', Georgia, serif",
-              fontSize: 18,
-              lineHeight: 1.8,
-              color: "#1a1a1a",
-            }}
-          >
+          {/* Article body: styled by .k-prose in globals.css */}
+          <div className="k-prose">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHeadingIds]}
+              rehypePlugins={[rehypeHeadingIds, [rehypeHighlight, { detect: false }]]}
               components={{
-                // Pass only the id (set by rehypeHeadingIds) and children. Spreading
-                // all props would leak react-markdown's `node` onto the DOM.
-                h2: ({ id, children }) => <h2 id={id} style={{ scrollMarginTop: 100 }}>{children}</h2>,
-                h3: ({ id, children }) => <h3 id={id} style={{ scrollMarginTop: 100 }}>{children}</h3>,
+                // Pass only the props each element needs. Spreading all props would leak
+                // react-markdown's `node` onto the DOM.
+                h2: ({ id, children }) => <h2 id={id}>{children}</h2>,
+                h3: ({ id, children }) => <h3 id={id}>{children}</h3>,
+                // Wide tables scroll inside their own box instead of the whole page.
+                table: ({ children }) => (
+                  <div className="k-prose-table">
+                    <table>{children}</table>
+                  </div>
+                ),
+                a: ({ href, children }) => {
+                  const external = !!href && /^https?:\/\//.test(href) && !/^https?:\/\/(www\.)?kodwai\.com/.test(href);
+                  return external ? (
+                    <a href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+                  ) : (
+                    <a href={href}>{children}</a>
+                  );
+                },
+                // eslint-disable-next-line @next/next/no-img-element
+                img: ({ src, alt }) => <img src={typeof src === "string" ? src : undefined} alt={alt ?? ""} loading="lazy" decoding="async" />,
               }}
             >
               {post.content_md}

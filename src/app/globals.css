@@ -41,7 +41,11 @@ html { font-optical-sizing: auto; }
   --font-mono: var(--font-mono);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Layered so Tailwind utilities and scoped styles (e.g. the blog's .k-prose) can set
+   margins and padding. Unlayered, this reset beat every layered rule. */
+@layer base {
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+}
 
 html { scroll-behavior: smooth; }
 
@@ -427,3 +431,131 @@ button:focus-visible {
 
 /* Challenges browser motif: hidden on mobile (request) */
 @media (max-width: 760px) { .k-chal-motif { display: none !important; } }
+
+
+/* ─── Blog article body (.k-prose) ───
+   Long-form reading styles for markdown rendered by react-markdown + remark-gfm +
+   rehype-highlight. ~70 characters per line, real paragraph/heading rhythm, GFM tables,
+   task lists and footnotes, and dark code blocks with syntax colors. */
+.k-prose {
+  --kp-ink: var(--ink);
+  --kp-body: oklch(30% 0.008 80);
+  --kp-muted: oklch(52% 0.012 80);
+  --kp-line: #e4e0d8;
+  --kp-soft: #f1ece3;
+  max-width: 70ch;
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: 19px;
+  line-height: 1.75;
+  color: var(--kp-body);
+  overflow-wrap: break-word;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+}
+.k-prose > :first-child { margin-top: 0; }
+.k-prose > :last-child { margin-bottom: 0; }
+
+.k-prose p { margin: 0 0 1.25em; }
+.k-prose strong { font-weight: 600; color: var(--kp-ink); }
+.k-prose em { font-style: italic; }
+
+.k-prose h2, .k-prose h3, .k-prose h4 {
+  color: var(--kp-ink);
+  font-family: 'Fraunces', Georgia, serif;
+  letter-spacing: -0.015em;
+  scroll-margin-top: 100px;
+  text-wrap: balance;
+}
+.k-prose h2 { font-size: 1.75em; font-weight: 600; line-height: 1.2; margin: 2.1em 0 0.65em; }
+.k-prose h3 { font-size: 1.3em; font-weight: 600; line-height: 1.3; margin: 1.8em 0 0.5em; }
+.k-prose h4 { font-size: 1.08em; font-weight: 600; line-height: 1.4; margin: 1.6em 0 0.4em; }
+.k-prose h2 + *, .k-prose h3 + *, .k-prose h4 + * { margin-top: 0; }
+
+.k-prose a {
+  color: var(--rust);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color .2s ease;
+}
+.k-prose a:hover { color: var(--rust-deep); text-decoration-thickness: 2px; }
+
+.k-prose ul, .k-prose ol { margin: 0 0 1.25em; padding-left: 1.6em; }
+.k-prose ul { list-style: disc; }
+.k-prose ol { list-style: decimal; }
+.k-prose li { margin: 0.45em 0; padding-left: 0.3em; }
+.k-prose li::marker { color: var(--kp-muted); }
+.k-prose ol > li::marker { font-variant-numeric: tabular-nums; }
+.k-prose li > ul, .k-prose li > ol { margin: 0.45em 0 0; }
+.k-prose li > p { margin: 0.45em 0; }
+/* GFM task lists */
+.k-prose li.task-list-item { list-style: none; margin-left: -1.3em; }
+.k-prose li.task-list-item input[type="checkbox"] { margin: 0 0.55em 0 0; accent-color: var(--rust); vertical-align: middle; }
+
+.k-prose blockquote {
+  margin: 1.6em 0;
+  padding: 0.2em 0 0.2em 1.1em;
+  border-left: 3px solid var(--rust);
+  color: var(--kp-muted);
+  font-style: italic;
+}
+.k-prose blockquote p:last-child { margin-bottom: 0; }
+
+.k-prose hr { border: 0; border-top: 1px solid var(--kp-line); margin: 3em 0; }
+
+.k-prose img { display: block; max-width: 100%; height: auto; margin: 2em auto; border-radius: 6px; }
+
+/* Inline code */
+.k-prose :not(pre) > code {
+  font-family: var(--font-mono-jb);
+  font-size: 0.84em;
+  background: var(--kp-soft);
+  color: var(--kp-ink);
+  border: 1px solid var(--kp-line);
+  border-radius: 4px;
+  padding: 0.12em 0.36em;
+}
+
+/* Code blocks: dark, like the site's terminal */
+.k-prose pre {
+  margin: 1.6em 0;
+  padding: 1.1em 1.3em;
+  background: #1c1a17;
+  color: #ece6da;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8em;
+  line-height: 1.65;
+  -webkit-overflow-scrolling: touch;
+}
+.k-prose pre code { font-family: var(--font-mono-jb); background: none; border: 0; padding: 0; font-size: inherit; color: inherit; }
+.k-prose .hljs-comment, .k-prose .hljs-quote { color: #8c8577; font-style: italic; }
+.k-prose .hljs-keyword, .k-prose .hljs-selector-tag, .k-prose .hljs-built_in, .k-prose .hljs-type { color: #f0a07e; }
+.k-prose .hljs-string, .k-prose .hljs-attr, .k-prose .hljs-regexp, .k-prose .hljs-addition { color: #b8cc8f; }
+.k-prose .hljs-number, .k-prose .hljs-literal, .k-prose .hljs-symbol, .k-prose .hljs-bullet { color: #e6c07b; }
+.k-prose .hljs-title, .k-prose .hljs-section, .k-prose .hljs-function .hljs-title { color: #8fbcd9; }
+.k-prose .hljs-variable, .k-prose .hljs-template-variable, .k-prose .hljs-params { color: #ece6da; }
+.k-prose .hljs-meta, .k-prose .hljs-deletion { color: #d78a8a; }
+.k-prose .hljs-emphasis { font-style: italic; }
+.k-prose .hljs-strong { font-weight: 700; }
+
+/* GFM tables: scroll inside their own box on narrow screens */
+.k-prose .k-prose-table { margin: 1.8em 0; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--kp-line); border-radius: 6px; }
+.k-prose table { width: 100%; border-collapse: collapse; font-size: 0.86em; line-height: 1.5; }
+.k-prose thead th { background: var(--kp-soft); color: var(--kp-ink); font-weight: 600; text-align: left; }
+.k-prose th, .k-prose td { padding: 0.65em 0.95em; border-bottom: 1px solid var(--kp-line); vertical-align: top; }
+.k-prose tbody tr:last-child td { border-bottom: 0; }
+.k-prose th[align="center"], .k-prose td[align="center"] { text-align: center; }
+.k-prose th[align="right"], .k-prose td[align="right"] { text-align: right; }
+
+/* GFM footnotes */
+.k-prose .footnotes { margin-top: 3em; padding-top: 1.2em; border-top: 1px solid var(--kp-line); font-size: 0.85em; color: var(--kp-muted); }
+.k-prose .footnotes h2 { font-size: 1em; margin-top: 0; }
+.k-prose sup a { text-decoration: none; }
+
+@media (max-width: 640px) {
+  .k-prose { font-size: 17.5px; line-height: 1.7; }
+  .k-prose h2 { font-size: 1.55em; }
+  .k-prose pre { margin-left: -16px; margin-right: -16px; border-radius: 0; }
+}
