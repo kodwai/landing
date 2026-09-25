@@ -17,8 +17,9 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "kodwai · AI-Agent Coding Challenges for Developers",
+  // The short form from the kodwai-context fact sheet, verbatim (under 160 chars).
   description:
-    "Solve real-world coding challenges on your own machine with your preferred AI agent: Claude Code, Cursor, Codex, and more. Compete on leaderboards, build your profile, and prove your AI collaboration skills.",
+    "Real coding challenges you solve with your own AI agent. kodwai scores how well you direct it: Direction, Outcome, Lift.",
   keywords: [
     "AI coding challenge",
     "developer platform",

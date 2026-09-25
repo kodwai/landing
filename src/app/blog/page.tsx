@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DEFAULT_OG_IMAGE } from "@/lib/site";
+import { DEFAULT_OG_IMAGE, ORGANIZATION_ID, SITE_NAME, SITE_URL, jsonLdScript, toIsoUtc } from "@/lib/site";
+import { breadcrumbJsonLd } from "@/lib/challenges";
 
 const API_URL = process.env.API_URL || "http://localhost:8000";
 
@@ -123,8 +124,35 @@ export default async function BlogListPage({
   const totalPages = Math.ceil(data.total / limit);
   const [featuredPost, ...restPosts] = data.posts;
 
+  // Built from the same server-side list the page renders, so the markup never
+  // drifts from what readers see. Each post's full BlogPosting lives on its own
+  // page; here it is referenced by @id.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      breadcrumbJsonLd([["Home", "/"], ["Blog", "/blog"]]),
+      {
+        "@type": "Blog",
+        "@id": `${SITE_URL}/blog#blog`,
+        url: `${SITE_URL}/blog`,
+        name: `${SITE_NAME} blog`,
+        description: BLOG_DESCRIPTION,
+        inLanguage: "en",
+        publisher: { "@id": ORGANIZATION_ID },
+        blogPost: data.posts.map((post) => ({
+          "@type": "BlogPosting",
+          "@id": `${SITE_URL}/blog/${post.slug}#article`,
+          url: `${SITE_URL}/blog/${post.slug}`,
+          headline: post.title,
+          datePublished: toIsoUtc(post.published_at),
+        })),
+      },
+    ],
+  };
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
       {/* Hero Header */}
       <div style={{ textAlign: "center", marginBottom: 48 }}>
         <p
